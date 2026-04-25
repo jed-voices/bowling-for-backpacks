@@ -1,7 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, CalendarDays, Gift, MapPin } from "lucide-react";
-import { bowlingPhotos } from "@/lib/bowling/photos";
+import { BowlingSplashPhotoRotation } from "@/components/bowling/BowlingSplashPhotoRotation";
 
 export default function SplashPage() {
   return (
@@ -38,15 +37,7 @@ export default function SplashPage() {
           </div>
 
           <div className="grid gap-4">
-            <div className="relative min-h-[340px] overflow-hidden rounded-sm border border-white/15 bg-white/10 shadow-soft sm:min-h-[430px]">
-              <Image src={bowlingPhotos.mission.src} alt={bowlingPhotos.mission.alt} fill priority sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
-              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,19,47,0.02),rgba(17,19,47,0.62))]" />
-              <div className="absolute bottom-0 left-0 right-0 p-5">
-                <p className="rounded-sm border-l-4 border-bfb-green bg-bfb-cream p-4 font-heading text-lg font-black leading-tight text-bfb-ink shadow-soft">
-                  Backpacks, supplies, and a stronger start for students.
-                </p>
-              </div>
-            </div>
+            <BowlingSplashPhotoRotation />
 
             <aside className="rounded-sm border border-white/15 bg-white/10 p-6 shadow-soft backdrop-blur">
               <p className="font-heading text-sm font-black uppercase tracking-[0.18em] text-bfb-green">Event snapshot</p>
