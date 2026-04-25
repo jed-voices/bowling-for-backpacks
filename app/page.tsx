@@ -1,5 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, CalendarDays, Gift, MapPin } from "lucide-react";
+import { bowlingPhotos } from "@/lib/bowling/photos";
 
 export default function SplashPage() {
   return (
@@ -8,7 +10,7 @@ export default function SplashPage() {
       <div className="absolute inset-x-0 top-0 h-px bg-bfb-green/70" />
 
       <section className="relative flex min-h-screen items-center px-6 py-14">
-        <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[minmax(0,0.95fr)_360px] lg:items-center">
+        <div className="mx-auto grid w-full max-w-7xl gap-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(360px,0.72fr)] lg:items-center">
           <div>
             <p className="inline-flex rounded-sm border border-bfb-green/40 bg-white/10 px-3 py-2 font-heading text-xs font-black uppercase tracking-[0.22em] text-bfb-green">
               City Center Christmas in July
@@ -25,55 +27,39 @@ export default function SplashPage() {
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link
-                href="/bowling-for-backpacks#registration"
-                className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-white px-6 py-4 font-heading text-sm font-black uppercase tracking-wide text-bfb-navy shadow-sm transition hover:bg-bfb-green"
-              >
+              <Link href="/bowling-for-backpacks#registration" className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-white px-6 py-4 font-heading text-sm font-black uppercase tracking-wide text-bfb-navy shadow-sm transition hover:bg-bfb-green">
                 Register or Sponsor
                 <ArrowRight aria-hidden="true" size={17} />
               </Link>
-              <Link
-                href="/bowling-for-backpacks"
-                className="inline-flex min-h-13 items-center justify-center rounded-sm border border-white/30 bg-white/10 px-6 py-4 font-heading text-sm font-black uppercase tracking-wide text-white transition hover:border-bfb-green hover:bg-white/20"
-              >
+              <Link href="/bowling-for-backpacks" className="inline-flex min-h-13 items-center justify-center rounded-sm border border-white/30 bg-white/10 px-6 py-4 font-heading text-sm font-black uppercase tracking-wide text-white transition hover:border-bfb-green hover:bg-white/20">
                 View Event Details
               </Link>
             </div>
           </div>
 
-          <aside className="rounded-sm border border-white/15 bg-white/10 p-6 shadow-soft backdrop-blur">
-            <p className="font-heading text-sm font-black uppercase tracking-[0.18em] text-bfb-green">
-              Event snapshot
-            </p>
-            <div className="mt-6 space-y-5">
-              <div className="flex gap-3">
-                <CalendarDays aria-hidden="true" className="mt-1 text-bfb-green" size={22} />
-                <div>
-                  <p className="font-heading text-lg font-black">July 16, 2026</p>
-                  <p className="text-sm leading-6 text-white/65">Two bowling sessions plus community connection.</p>
-                </div>
-              </div>
-              <div className="flex gap-3">
-                <MapPin aria-hidden="true" className="mt-1 text-bfb-blue" size={22} />
-                <div>
-                  <p className="font-heading text-lg font-black">Andy B&apos;s</p>
-                  <p className="text-sm leading-6 text-white/65">Oklahoma City</p>
-                </div>
-              </div>
-              <div className="flex gap-3">
-                <Gift aria-hidden="true" className="mt-1 text-bfb-green" size={22} />
-                <div>
-                  <p className="font-heading text-lg font-black">Teams, lanes, sponsors, gifts</p>
-                  <p className="text-sm leading-6 text-white/65">Choose the way you want to help students start strong.</p>
-                </div>
+          <div className="grid gap-4">
+            <div className="relative min-h-[340px] overflow-hidden rounded-sm border border-white/15 bg-white/10 shadow-soft sm:min-h-[430px]">
+              <Image src={bowlingPhotos.mission.src} alt={bowlingPhotos.mission.alt} fill priority sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,19,47,0.02),rgba(17,19,47,0.62))]" />
+              <div className="absolute bottom-0 left-0 right-0 p-5">
+                <p className="rounded-sm border-l-4 border-bfb-green bg-bfb-cream p-4 font-heading text-lg font-black leading-tight text-bfb-ink shadow-soft">
+                  Backpacks, supplies, and a stronger start for students.
+                </p>
               </div>
             </div>
-            <div className="mt-6 rounded-sm border border-bfb-green/30 bg-bfb-green/10 p-4">
-              <p className="text-sm font-bold leading-6 text-white/85">
-                Spots are limited. Reserving early helps City Center plan well and serve families with dignity.
-              </p>
-            </div>
-          </aside>
+
+            <aside className="rounded-sm border border-white/15 bg-white/10 p-6 shadow-soft backdrop-blur">
+              <p className="font-heading text-sm font-black uppercase tracking-[0.18em] text-bfb-green">Event snapshot</p>
+              <div className="mt-6 grid gap-5 sm:grid-cols-3 lg:grid-cols-1">
+                <div className="flex gap-3"><CalendarDays aria-hidden="true" className="mt-1 text-bfb-green" size={22} /><div><p className="font-heading text-lg font-black">July 16, 2026</p><p className="text-sm leading-6 text-white/65">Two bowling sessions plus community connection.</p></div></div>
+                <div className="flex gap-3"><MapPin aria-hidden="true" className="mt-1 text-bfb-blue" size={22} /><div><p className="font-heading text-lg font-black">Andy B&apos;s</p><p className="text-sm leading-6 text-white/65">Oklahoma City</p></div></div>
+                <div className="flex gap-3"><Gift aria-hidden="true" className="mt-1 text-bfb-green" size={22} /><div><p className="font-heading text-lg font-black">Teams, lanes, sponsors, gifts</p><p className="text-sm leading-6 text-white/65">Choose the way you want to help students start strong.</p></div></div>
+              </div>
+              <div className="mt-6 rounded-sm border border-bfb-green/30 bg-bfb-green/10 p-4">
+                <p className="text-sm font-bold leading-6 text-white/85">Spots are limited. Reserving early helps City Center plan well and serve families with dignity.</p>
+              </div>
+            </aside>
+          </div>
         </div>
       </section>
     </main>
