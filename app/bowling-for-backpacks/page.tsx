@@ -11,6 +11,7 @@ import { BowlingSessionSection } from "@/components/bowling/BowlingSessionSectio
 import { BowlingSponsorshipGrid } from "@/components/bowling/BowlingSponsorshipGrid";
 import { BowlingSupportProvides } from "@/components/bowling/BowlingSupportProvides";
 import { BowlingWhyItMatters } from "@/components/bowling/BowlingWhyItMatters";
+import { BowlingStickyMobileCTA } from "@/components/bowling/BowlingStickyMobileCTA";
 import { listBowlingRegistrations } from "@/lib/bowling/database";
 
 export const metadata: Metadata = {
@@ -53,6 +54,7 @@ export default async function BowlingForBackpacksPage() {
       <BowlingRegistrationForm registrations={liveRegistrations ?? undefined} />
       <BowlingFAQ />
       <BowlingFooterCTA />
+      <BowlingStickyMobileCTA />
     </main>
   );
 }
