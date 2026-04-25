@@ -152,33 +152,25 @@ const rowToRegistration = (row: BowlingRegistrationRow): BowlingRegistrationReco
   bowlers: (row.bowling_bowlers ?? []).map(rowToBowler),
 });
 
-export const createBowlingRegistration = async (
-  registration: BowlingRegistrationRecord,
-) => {
+export const createBowlingRegistration = async (registration: BowlingRegistrationRecord) => {
   const supabase = getSupabaseAdmin();
 
   if (!supabase) {
     return { configured: false as const, registration };
   }
 
-  const { error } = await supabase
-    .from("bowling_registrations")
-    .insert(registrationToRow(registration));
+  const { error } = await supabase.from("bowling_registrations").insert(registrationToRow(registration));
 
   if (error) {
     throw new Error(error.message);
   }
 
   const bowlerRows = registration.bowlers
-    .filter((bowler) =>
-      Boolean(bowler.firstName || bowler.lastName || bowler.email || bowler.phone || bowler.notes),
-    )
+    .filter((bowler) => Boolean(bowler.firstName || bowler.lastName || bowler.email || bowler.phone || bowler.notes))
     .map((bowler) => bowlerToRow(registration.id, bowler));
 
   if (bowlerRows.length > 0) {
-    const { error: bowlersError } = await supabase
-      .from("bowling_bowlers")
-      .insert(bowlerRows);
+    const { error: bowlersError } = await supabase.from("bowling_bowlers").insert(bowlerRows);
 
     if (bowlersError) {
       throw new Error(bowlersError.message);
@@ -186,18 +178,14 @@ export const createBowlingRegistration = async (
   }
 
   if (registration.registrationType === "lane-sponsor") {
-    const sponsorName =
-      registration.organization ||
-      `${registration.buyerFirstName} ${registration.buyerLastName}`.trim();
+    const sponsorName = registration.organization || `${registration.buyerFirstName} ${registration.buyerLastName}`.trim();
 
-    const { error: laneSponsorError } = await supabase
-      .from("bowling_lane_sponsors")
-      .insert({
-        registration_id: registration.id,
-        sponsor_name: sponsorName,
-        recognition_name: sponsorName,
-        payment_status: registration.paymentStatus,
-      });
+    const { error: laneSponsorError } = await supabase.from("bowling_lane_sponsors").insert({
+      registration_id: registration.id,
+      sponsor_name: sponsorName,
+      recognition_name: sponsorName,
+      payment_status: registration.paymentStatus,
+    });
 
     if (laneSponsorError) {
       throw new Error(laneSponsorError.message);
@@ -246,10 +234,7 @@ export const listBowlingRegistrations = async () => {
   return (data ?? []).map((row) => rowToRegistration(row as BowlingRegistrationRow));
 };
 
-export const updateBowlingRegistrationPayment = async (
-  registrationId: string,
-  update: PaymentUpdateInput,
-) => {
+export const updateBowlingRegistrationPayment = async (registrationId: string, update: PaymentUpdateInput) => {
   const supabase = getSupabaseAdmin();
 
   if (!supabase) {
@@ -270,19 +255,35 @@ export const updateBowlingRegistrationPayment = async (
   }
 
   if (update.paymentStatus === "paid") {
-    await supabase
-      .from("bowling_lane_sponsors")
-      .update({ payment_status: "paid" })
-      .eq("registration_id", registrationId);
+    await supabase.from("bowling_lane_sponsors").update({ payment_status: "paid" }).eq("registration_id", registrationId);
   }
 
   return { configured: true as const };
 };
 
-export const updateBowlingTeamDetails = async (
+export const updateBowlingRegistrationExportStatus = async (
   registrationId: string,
-  update: TeamUpdateInput,
+  exportStatus: BowlingRegistrationRecord["exportStatus"],
 ) => {
+  const supabase = getSupabaseAdmin();
+
+  if (!supabase) {
+    return { configured: false as const };
+  }
+
+  const { error } = await supabase
+    .from("bowling_registrations")
+    .update({ export_status: exportStatus })
+    .eq("id", registrationId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return { configured: true as const };
+};
+
+export const updateBowlingTeamDetails = async (registrationId: string, update: TeamUpdateInput) => {
   const supabase = getSupabaseAdmin();
 
   if (!supabase) {
@@ -298,25 +299,18 @@ export const updateBowlingTeamDetails = async (
     throw new Error(registrationError.message);
   }
 
-  const { error: deleteError } = await supabase
-    .from("bowling_bowlers")
-    .delete()
-    .eq("registration_id", registrationId);
+  const { error: deleteError } = await supabase.from("bowling_bowlers").delete().eq("registration_id", registrationId);
 
   if (deleteError) {
     throw new Error(deleteError.message);
   }
 
   const bowlerRows = update.bowlers
-    .filter((bowler) =>
-      Boolean(bowler.firstName || bowler.lastName || bowler.email || bowler.phone || bowler.notes),
-    )
+    .filter((bowler) => Boolean(bowler.firstName || bowler.lastName || bowler.email || bowler.phone || bowler.notes))
     .map((bowler) => bowlerToRow(registrationId, bowler));
 
   if (bowlerRows.length > 0) {
-    const { error: insertError } = await supabase
-      .from("bowling_bowlers")
-      .insert(bowlerRows);
+    const { error: insertError } = await supabase.from("bowling_bowlers").insert(bowlerRows);
 
     if (insertError) {
       throw new Error(insertError.message);
