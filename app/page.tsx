@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, CalendarDays, Gift, MapPin } from "lucide-react";
 import { BowlingSplashPhotoRotation } from "@/components/bowling/BowlingSplashPhotoRotation";
+import { BowlingPresentingSponsorHero } from "@/components/bowling/BowlingPresentingSponsorHero";
 
 export default function SplashPage() {
   return (
@@ -24,6 +25,8 @@ export default function SplashPage() {
               This City Center fundraiser turns a summer night of fun into backpacks,
               school supplies, and practical support for students and families across Oklahoma City.
             </p>
+
+            <BowlingPresentingSponsorHero />
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link href="/bowling-for-backpacks#registration" className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-white px-6 py-4 font-heading text-sm font-black uppercase tracking-wide text-bfb-navy shadow-sm transition hover:bg-bfb-green">
