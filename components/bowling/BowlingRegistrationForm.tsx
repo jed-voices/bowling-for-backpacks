@@ -127,7 +127,7 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
     if (!validation.ok) {
       setErrors(validation.errors);
       setSubmitState("error");
-      setSubmitMessage("Please review the highlighted fields before continuing.");
+      setSubmitMessage("A few details need attention before we can finish this up.");
       return;
     }
 
@@ -146,7 +146,7 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
 
       if (!response.ok || !payload.registration) {
         setErrors(payload.errors ?? {});
-        throw new Error("Registration could not be saved.");
+        throw new Error("We could not save the registration. Please review the form and try again.");
       }
 
       if (form.paymentPreference === "card") {
@@ -168,7 +168,7 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
 
         if (!checkoutResponse.ok || !checkoutPayload.url) {
           setErrors(checkoutPayload.errors ?? {});
-          throw new Error(checkoutPayload.error ?? "Checkout could not be started.");
+          throw new Error(checkoutPayload.error ?? "We could not start checkout. Please try again or choose invoice/check.");
         }
 
         router.push(checkoutPayload.url);
@@ -201,14 +201,14 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
             className="rounded-sm border border-bfb-ink/10 bg-white p-5 shadow-soft sm:p-8"
           >
             <div className="max-w-3xl">
-              <p className="bfb-eyebrow">Register</p>
+              <p className="bfb-eyebrow">Reserve your spot</p>
               <h2 id="bowling-registration" className="bfb-heading mt-4">
-                Get your team, lane, sponsorship, or gift in motion.
+                Choose your lane, sponsorship, or gift.
               </h2>
               <p className="bfb-copy mt-5">
-                Keep it quick: choose how you want to join the Christmas-in-July
-                fundraiser, pick a session if needed, and complete only the details
-                staff needs next.
+                This takes about two minutes. Choose how you want to participate,
+                add the basic contact details, and City Center will follow up on anything
+                that needs a human touch.
               </p>
             </div>
 
@@ -223,8 +223,11 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
 
             <fieldset className="mt-9">
               <legend className="font-heading text-2xl font-black text-bfb-ink">
-                How would you like to participate?
+                Start here
               </legend>
+              <p className="mt-2 text-sm leading-6 text-bfb-ink/65">
+                Pick the option that fits. You can pay now, request an invoice, or pledge by check before submitting.
+              </p>
               <FieldError message={errors.registrationType} />
               <div className="mt-5 grid gap-3 md:grid-cols-4">
                 {bowlingRegistrationOptions.map((option) => {
@@ -260,7 +263,7 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
 
             {form.registrationType === "sponsorship" ? (
               <fieldset className="mt-8">
-                <legend className="field-label">Sponsorship level</legend>
+                <legend className="field-label">Choose a sponsorship level</legend>
                 <div className="grid gap-3 md:grid-cols-2">
                   {bowlingSponsorships
                     .filter((sponsor) => sponsor.id !== "lane-sponsor" && sponsor.id !== "friend")
@@ -300,8 +303,11 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
             {needsSession(form.registrationType) ? (
               <fieldset className="mt-8">
                 <legend className="font-heading text-xl font-black text-bfb-ink">
-                  Session preference
+                  Pick your preferred session
                 </legend>
+                <p className="mt-2 text-sm leading-6 text-bfb-ink/65">
+                  Each team reserves one lane. If you do not know every bowler yet, that is okay.
+                </p>
                 <FieldError message={errors.sessionId} />
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
                   {bowlingSessions.map((session) => {
@@ -330,10 +336,9 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
                           {session.name}
                         </span>
                         <span className="mt-2 block text-sm leading-6 text-bfb-ink/65">
-                          {session.time}. {session.laneCapacity} lanes available.{" "}
-                          {remaining > 0
-                            ? `${remaining} lanes remaining.`
-                            : "This session is currently full. Join the waitlist or choose another session."}
+                          {session.time}. {remaining > 0
+                            ? `${remaining} of ${session.laneCapacity} lanes still available.`
+                            : "This session is currently full. Choose another session and our team can help with options."}
                         </span>
                       </label>
                     );
@@ -387,7 +392,7 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
                 />
               </label>
               <label className="md:col-span-2">
-                <span className="field-label">Organization, company, church, or family name</span>
+                <span className="field-label">Company, church, family, or organization</span>
                 <div className="relative">
                   <Building2
                     aria-hidden="true"
@@ -409,13 +414,13 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
                     className="bfb-field"
                     value={form.teamName}
                     onChange={(event) => updateForm("teamName", event.target.value)}
-                    placeholder="Optional, but encouraged"
+                    placeholder="Optional. You can add this later."
                   />
                 </label>
               ) : null}
               {form.registrationType === "sponsorship" || form.registrationType === "lane-sponsor" ? (
                 <label className={needsSession(form.registrationType) ? "" : "md:col-span-2"}>
-                  <span className="field-label">Sponsor logo placeholder</span>
+                  <span className="field-label">Sponsor logo or website</span>
                   <div className="rounded-sm border border-bfb-ink/10 bg-bfb-cream p-4">
                     <div className="relative">
                       <Upload aria-hidden="true" className="text-bfb-blue" size={21} />
@@ -423,23 +428,22 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
                         className="bfb-field mt-3"
                         value={form.sponsorLogoName}
                         onChange={(event) => updateForm("sponsorLogoName", event.target.value)}
-                        placeholder="Filename, Drive link, or website URL"
+                        placeholder="Drive link, website URL, or filename"
                       />
                     </div>
                     <p className="mt-3 text-sm text-bfb-ink/60">
-                      Optional. This helps staff match your sponsorship with the right
-                      logo during follow-up.
+                      Optional. If you do not have it handy, we can collect it after registration.
                     </p>
                   </div>
                 </label>
               ) : null}
               <label className="md:col-span-2">
-                <span className="field-label">Notes</span>
+                <span className="field-label">Anything we should know?</span>
                 <textarea
                   className="bfb-field min-h-24"
                   value={form.notes}
                   onChange={(event) => updateForm("notes", event.target.value)}
-                  placeholder="Anything staff should know"
+                  placeholder="Team requests, invoice notes, sponsor details, or questions"
                 />
               </label>
             </div>
@@ -455,7 +459,7 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
 
             <div className="mt-9 grid gap-5 md:grid-cols-2">
               <label>
-                <span className="field-label">Optional additional gift</span>
+                <span className="field-label">Add a gift for backpacks and supplies</span>
                 <div className="relative">
                   <Gift
                     aria-hidden="true"
@@ -477,8 +481,11 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
 
             <fieldset className="mt-9">
               <legend className="font-heading text-xl font-black text-bfb-ink">
-                Payment preference
+                How would you like to finish?
               </legend>
+              <p className="mt-2 text-sm leading-6 text-bfb-ink/65">
+                Online card payment is fastest. Invoice and check options save your registration and alert our team for follow-up.
+              </p>
               <div className="mt-4 grid gap-3 md:grid-cols-3">
                 {(Object.keys(paymentPreferenceLabels) as BowlingPaymentPreference[]).map((preference) => {
                   const Icon = paymentIcons[preference];
@@ -520,10 +527,10 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
                 <span>
                   <span className="flex items-center gap-2 font-heading font-black text-bfb-ink">
                     <UsersRound aria-hidden="true" size={18} />
-                    Save and send team link
+                    Let me update bowlers later
                   </span>
                   <span className="mt-2 block text-sm leading-6 text-bfb-ink/60">
-                    Team captains can add or edit bowler names later.
+                    We will save a team link so your captain can add or edit names after registering.
                   </span>
                 </span>
               </label>
@@ -534,13 +541,16 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
               type="submit"
               disabled={submitState === "submitting"}
             >
-              {submitState === "submitting" ? "Saving..." : paymentCtaLabels[form.paymentPreference]}
+              {submitState === "submitting" ? "Securing your spot..." : paymentCtaLabels[form.paymentPreference]}
               {form.paymentPreference === "card" ? (
                 <CreditCard aria-hidden="true" size={17} />
               ) : (
                 <CheckCircle2 aria-hidden="true" size={17} />
               )}
             </button>
+            <p className="mt-4 text-sm leading-6 text-bfb-ink/60">
+              After you submit, you will receive confirmation and City Center will follow up if anything else is needed.
+            </p>
           </form>
 
           <BowlingCheckoutSummary form={form} registrations={registrations} />
