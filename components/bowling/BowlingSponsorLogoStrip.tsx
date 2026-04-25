@@ -1,10 +1,64 @@
-const sponsors = [
-  "Presenting Sponsor",
-  "Corporate Session Sponsor",
-  "Family Night Sponsor",
-  "Lane Sponsors",
-  "Friends of City Center",
+import Image from "next/image";
+
+type Sponsor = {
+  name: string;
+  logo?: string;
+  href: string;
+};
+
+const sponsorTiers: { label: string; featured?: boolean; sponsors: Sponsor[] }[] = [
+  {
+    label: "Presenting Sponsor",
+    featured: true,
+    sponsors: [
+      {
+        name: "Presenting Sponsor Available",
+        href: "/bowling-for-backpacks#sponsorships",
+      },
+    ],
+  },
+  {
+    label: "Session Sponsors",
+    sponsors: [
+      { name: "Corporate Session Sponsor Available", href: "/bowling-for-backpacks#sponsorships" },
+      { name: "Family Night Sponsor Available", href: "/bowling-for-backpacks#sponsorships" },
+    ],
+  },
+  {
+    label: "Community Partners",
+    sponsors: [
+      { name: "Lane Sponsors", href: "/bowling-for-backpacks#sponsorships" },
+      { name: "Friends of City Center", href: "/bowling-for-backpacks#sponsorships" },
+    ],
+  },
 ];
+
+function SponsorCard({ sponsor, featured = false }: { sponsor: Sponsor; featured?: boolean }) {
+  const content = sponsor.logo ? (
+    <Image
+      src={sponsor.logo}
+      alt={sponsor.name}
+      width={featured ? 240 : 180}
+      height={featured ? 100 : 80}
+      className="max-h-16 w-auto object-contain grayscale transition duration-300 group-hover:grayscale-0"
+    />
+  ) : (
+    <span className="font-heading text-xs font-black uppercase tracking-wide text-bfb-navy/70">
+      {sponsor.name}
+    </span>
+  );
+
+  return (
+    <a
+      href={sponsor.href}
+      className={`group flex items-center justify-center rounded-sm border border-white/15 bg-white px-4 py-4 text-center shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-soft ${
+        featured ? "min-h-24" : "min-h-20"
+      }`}
+    >
+      {content}
+    </a>
+  );
+}
 
 export function BowlingSponsorLogoStrip() {
   return (
@@ -15,7 +69,7 @@ export function BowlingSponsorLogoStrip() {
             Sponsor recognition
           </p>
           <p className="mt-2 text-sm leading-6 text-white/70">
-            Partner logos will be featured here as sponsorships are confirmed.
+            Confirmed sponsor logos will be featured by tier as partnerships come in.
           </p>
         </div>
         <a
@@ -26,13 +80,17 @@ export function BowlingSponsorLogoStrip() {
         </a>
       </div>
 
-      <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-        {sponsors.map((sponsor) => (
-          <div
-            key={sponsor}
-            className="flex min-h-20 items-center justify-center rounded-sm border border-white/15 bg-white/90 px-4 py-4 text-center font-heading text-xs font-black uppercase tracking-wide text-bfb-navy shadow-sm"
-          >
-            {sponsor}
+      <div className="mt-5 space-y-5">
+        {sponsorTiers.map((tier) => (
+          <div key={tier.label}>
+            <p className="mb-2 font-heading text-[11px] font-black uppercase tracking-[0.18em] text-white/55">
+              {tier.label}
+            </p>
+            <div className={`grid gap-3 ${tier.featured ? "grid-cols-1" : "sm:grid-cols-2"}`}>
+              {tier.sponsors.map((sponsor) => (
+                <SponsorCard key={sponsor.name} sponsor={sponsor} featured={tier.featured} />
+              ))}
+            </div>
           </div>
         ))}
       </div>
