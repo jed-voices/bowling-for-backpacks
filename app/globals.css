@@ -1,0 +1,147 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Great Vibes";
+  src: url("/fonts/GreatVibes-Regular.ttf") format("truetype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400;
+}
+
+:root {
+  --cc-dark-blue: #11132f;
+  --cc-navy: #112f6d;
+  --cc-sky-blue: #3f9fec;
+  --cc-light-blue: #e8e9ea;
+  --cc-light-green: #5dcba3;
+  --sftc-ink: #11132f;
+  --sftc-evening-navy: #0d1b3d;
+  --sftc-brand-navy: #112f6d;
+  --sftc-ivory: #f7f2ea;
+  --sftc-stone: #e8e9ea;
+  --sftc-brass: #b8965a;
+  --sftc-soft-gold: #d8be82;
+  --sftc-hope-green: #5dcba3;
+  --bfb-ink: #11132f;
+  --bfb-navy: #112f6d;
+  --bfb-blue: #3f9fec;
+  --bfb-light: #e8e9ea;
+  --bfb-green: #5dcba3;
+  --bfb-cream: #f7f8f4;
+  --font-heading: "Proxima Nova", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Arbeit", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-accent: "Sweet Sucker Punch", "Marker Felt", cursive;
+  --font-script: "Great Vibes", "Brush Script MT", cursive;
+  --font-display: "Cormorant Garamond", "Canela", "IvyPresto Display", Georgia, serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--sftc-ivory);
+  color: var(--sftc-ink);
+  font-family: var(--font-body);
+  text-rendering: optimizeLegibility;
+}
+
+img {
+  max-width: 100%;
+}
+
+::selection {
+  background: rgba(93, 203, 163, 0.35);
+}
+
+:focus-visible {
+  outline: 3px solid var(--sftc-hope-green);
+  outline-offset: 4px;
+}
+
+@layer components {
+  .section-shell {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12;
+  }
+
+  .eyebrow {
+    @apply font-heading text-xs font-semibold uppercase leading-none text-sftc-brass;
+    letter-spacing: 0.14em;
+  }
+
+  .display-heading {
+    @apply font-display text-4xl font-medium leading-[1.02] text-sftc-ink sm:text-5xl lg:text-6xl;
+  }
+
+  .section-heading {
+    @apply font-heading text-3xl font-semibold leading-tight text-sftc-ink sm:text-4xl;
+  }
+
+  .body-copy {
+    @apply text-base leading-7 text-sftc-ink/75 sm:text-lg;
+  }
+
+  .button-primary {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-sm bg-sftc-brass px-5 py-3 font-heading text-sm font-semibold uppercase text-sftc-ink transition hover:bg-sftc-gold focus-visible:outline-sftc-hope;
+    letter-spacing: 0.08em;
+  }
+
+  .button-secondary {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-sm border border-white/45 px-5 py-3 font-heading text-sm font-semibold uppercase text-white transition hover:border-white hover:bg-white/10 focus-visible:outline-sftc-hope;
+    letter-spacing: 0.08em;
+  }
+
+  .button-quiet {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-sm border border-sftc-ink/15 px-4 py-2 font-heading text-sm font-semibold text-sftc-ink transition hover:border-sftc-brass hover:bg-white/50;
+  }
+
+  .field-label {
+    @apply mb-2 block font-heading text-sm font-semibold text-sftc-ink;
+  }
+
+  .field-input {
+    @apply min-h-12 w-full rounded-sm border border-sftc-ink/15 bg-white px-3 py-2 text-base text-sftc-ink shadow-sm transition placeholder:text-sftc-ink/35 focus:border-sftc-navy focus:outline-none focus:ring-2 focus:ring-sftc-hope/35;
+  }
+
+  .field-help {
+    @apply mt-2 text-sm leading-6 text-sftc-ink/60;
+  }
+
+  .bfb-shell {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12;
+  }
+
+  .bfb-eyebrow {
+    @apply font-heading text-xs font-bold uppercase leading-none text-bfb-navy;
+    letter-spacing: 0;
+  }
+
+  .bfb-heading {
+    @apply font-heading text-3xl font-bold leading-tight text-bfb-ink sm:text-4xl lg:text-5xl;
+  }
+
+  .bfb-copy {
+    @apply text-base leading-7 text-bfb-ink/75 sm:text-lg;
+  }
+
+  .bfb-primary {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-sm bg-bfb-navy px-5 py-3 font-heading text-sm font-bold uppercase text-white shadow-sm transition hover:bg-bfb-blue focus-visible:outline-bfb-green;
+    letter-spacing: 0;
+  }
+
+  .bfb-secondary {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-sm border border-bfb-navy/20 bg-white px-5 py-3 font-heading text-sm font-bold uppercase text-bfb-navy transition hover:border-bfb-blue hover:bg-bfb-light/60 focus-visible:outline-bfb-green;
+    letter-spacing: 0;
+  }
+
+  .bfb-field {
+    @apply min-h-12 w-full rounded-sm border border-bfb-ink/15 bg-white px-3 py-2 text-base text-bfb-ink shadow-sm transition placeholder:text-bfb-ink/35 focus:border-bfb-blue focus:outline-none focus:ring-2 focus:ring-bfb-green/35;
+  }
+}

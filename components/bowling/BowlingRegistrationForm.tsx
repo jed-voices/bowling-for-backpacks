@@ -1,0 +1,551 @@
+"use client";
+
+import { FormEvent, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Building2,
+  CheckCircle2,
+  CreditCard,
+  FileText,
+  Gift,
+  Landmark,
+  Upload,
+  UsersRound,
+} from "lucide-react";
+import { BowlerListBuilder } from "./BowlerListBuilder";
+import { BowlingCheckoutSummary } from "./BowlingCheckoutSummary";
+import {
+  bowlingRegistrationOptions,
+  bowlingSessions,
+  bowlingSponsorships,
+  getSponsorshipById,
+  paymentCtaLabels,
+  paymentPreferenceLabels,
+  teamRegistration,
+} from "@/lib/bowling/config";
+import type {
+  BowlingPaymentPreference,
+  BowlingRegistrationInput,
+  BowlingRegistrationRecord,
+  BowlingRegistrationType,
+} from "@/lib/bowling/types";
+import {
+  buildBowlerList,
+  formatCurrency,
+  needsSession,
+  remainingLanes,
+  remainingLanesFromRegistrations,
+  validateBowlingRegistrationInput,
+} from "@/lib/bowling/validation";
+
+const initialForm: BowlingRegistrationInput = {
+  registrationType: "team",
+  packageId: "team",
+  buyerFirstName: "",
+  buyerLastName: "",
+  buyerEmail: "",
+  buyerPhone: "",
+  organization: "",
+  teamName: "",
+  sessionId: "corporate-session",
+  bowlers: buildBowlerList(),
+  sponsorLogoName: "",
+  optionalGift: 0,
+  notes: "",
+  paymentPreference: "card",
+  saveTeamLink: true,
+};
+
+const paymentIcons = {
+  card: CreditCard,
+  invoice: FileText,
+  check: Landmark,
+};
+
+type SubmitState = "idle" | "submitting" | "error";
+
+const FieldError = ({ message }: { message?: string }) =>
+  message ? <p className="mt-2 text-sm font-bold text-red-700">{message}</p> : null;
+
+type BowlingRegistrationFormProps = {
+  registrations?: BowlingRegistrationRecord[];
+};
+
+export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFormProps) {
+  const router = useRouter();
+  const [form, setForm] = useState<BowlingRegistrationInput>(initialForm);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitState, setSubmitState] = useState<SubmitState>("idle");
+  const [submitMessage, setSubmitMessage] = useState("");
+
+  const selectedSponsor = useMemo(
+    () => getSponsorshipById(form.packageId),
+    [form.packageId],
+  );
+
+  const updateForm = <Key extends keyof BowlingRegistrationInput>(
+    key: Key,
+    value: BowlingRegistrationInput[Key],
+  ) => {
+    setForm((current) => ({ ...current, [key]: value }));
+    setErrors((current) => {
+      const next = { ...current };
+      delete next[key as string];
+      return next;
+    });
+  };
+
+  const selectRegistrationType = (registrationType: BowlingRegistrationType) => {
+    setForm((current) => {
+      const nextPackageId =
+        registrationType === "team"
+          ? teamRegistration.id
+          : registrationType === "lane-sponsor"
+            ? "lane-sponsor"
+            : registrationType === "sponsorship"
+              ? "presenting"
+              : "gift";
+
+      return {
+        ...current,
+        registrationType,
+        packageId: nextPackageId,
+        sessionId: needsSession(registrationType) ? current.sessionId || "corporate-session" : "",
+        bowlers: needsSession(registrationType) ? buildBowlerList(current.bowlers) : [],
+        saveTeamLink: needsSession(registrationType),
+      };
+    });
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSubmitState("submitting");
+    setSubmitMessage("");
+
+    const validation = validateBowlingRegistrationInput(form, "client-preview");
+
+    if (!validation.ok) {
+      setErrors(validation.errors);
+      setSubmitState("error");
+      setSubmitMessage("Please review the highlighted fields before continuing.");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/bowling/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+      const payload = (await response.json()) as {
+        registration?: { id: string };
+        errors?: Record<string, string>;
+      };
+
+      if (!response.ok || !payload.registration) {
+        setErrors(payload.errors ?? {});
+        throw new Error("Registration could not be saved.");
+      }
+
+      if (form.paymentPreference === "card") {
+        const checkoutResponse = await fetch("/api/bowling/checkout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            registrationId: payload.registration.id,
+            registrationInput: form,
+          }),
+        });
+        const checkoutPayload = (await checkoutResponse.json()) as {
+          url?: string;
+          error?: string;
+          errors?: Record<string, string>;
+        };
+
+        if (!checkoutResponse.ok || !checkoutPayload.url) {
+          setErrors(checkoutPayload.errors ?? {});
+          throw new Error(checkoutPayload.error ?? "Checkout could not be started.");
+        }
+
+        router.push(checkoutPayload.url);
+        return;
+      }
+
+      router.push(
+        `/bowling-for-backpacks/confirmation?registrationId=${payload.registration.id}&payment=${form.paymentPreference}`,
+      );
+    } catch (error) {
+      setSubmitState("error");
+      setSubmitMessage(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong while saving the registration.",
+      );
+    }
+  };
+
+  return (
+    <section
+      id="registration"
+      className="bg-bfb-cream py-20"
+      aria-labelledby="bowling-registration"
+    >
+      <div className="bfb-shell">
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
+          <form
+            onSubmit={handleSubmit}
+            className="rounded-sm border border-bfb-ink/10 bg-white p-5 shadow-soft sm:p-8"
+          >
+            <div className="max-w-3xl">
+              <p className="bfb-eyebrow">Register</p>
+              <h2 id="bowling-registration" className="bfb-heading mt-4">
+                Get your team, lane, sponsorship, or gift in motion.
+              </h2>
+              <p className="bfb-copy mt-5">
+                Keep it quick: choose how you want to join the Christmas-in-July
+                fundraiser, pick a session if needed, and complete only the details
+                staff needs next.
+              </p>
+            </div>
+
+            {submitMessage ? (
+              <div
+                className="mt-6 rounded-sm border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-800"
+                role="alert"
+              >
+                {submitMessage}
+              </div>
+            ) : null}
+
+            <fieldset className="mt-9">
+              <legend className="font-heading text-2xl font-black text-bfb-ink">
+                How would you like to participate?
+              </legend>
+              <FieldError message={errors.registrationType} />
+              <div className="mt-5 grid gap-3 md:grid-cols-4">
+                {bowlingRegistrationOptions.map((option) => {
+                  const isSelected = form.registrationType === option.id;
+
+                  return (
+                    <label
+                      key={option.id}
+                      className={`cursor-pointer rounded-sm border p-4 transition ${
+                        isSelected
+                          ? "border-bfb-blue bg-bfb-blue/10"
+                          : "border-bfb-ink/10 bg-white hover:border-bfb-blue/60"
+                      }`}
+                    >
+                      <input
+                        className="sr-only"
+                        type="radio"
+                        name="registrationType"
+                        checked={isSelected}
+                        onChange={() => selectRegistrationType(option.id)}
+                      />
+                      <span className="block font-heading text-base font-black text-bfb-ink">
+                        {option.name}
+                      </span>
+                      <span className="mt-2 block text-sm font-bold text-bfb-navy">
+                        {option.price > 0 ? formatCurrency(option.price) : "Any amount"}
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+            </fieldset>
+
+            {form.registrationType === "sponsorship" ? (
+              <fieldset className="mt-8">
+                <legend className="field-label">Sponsorship level</legend>
+                <div className="grid gap-3 md:grid-cols-2">
+                  {bowlingSponsorships
+                    .filter((sponsor) => sponsor.id !== "lane-sponsor" && sponsor.id !== "friend")
+                    .map((sponsor) => (
+                      <label
+                        key={sponsor.id}
+                        className={`cursor-pointer rounded-sm border p-4 ${
+                          form.packageId === sponsor.id
+                            ? "border-bfb-green bg-bfb-green/10"
+                            : "border-bfb-ink/10 bg-white"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="packageId"
+                          checked={form.packageId === sponsor.id}
+                          onChange={() => updateForm("packageId", sponsor.id)}
+                        />
+                        <span className="ml-2 font-heading font-black text-bfb-ink">
+                          {sponsor.name}
+                        </span>
+                        <span className="mt-2 block text-sm font-bold text-bfb-navy">
+                          {formatCurrency(sponsor.price)}
+                        </span>
+                      </label>
+                    ))}
+                </div>
+                <FieldError message={errors.packageId} />
+                {selectedSponsor ? (
+                  <p className="mt-3 text-sm leading-6 text-bfb-ink/65">
+                    {selectedSponsor.description}
+                  </p>
+                ) : null}
+              </fieldset>
+            ) : null}
+
+            {needsSession(form.registrationType) ? (
+              <fieldset className="mt-8">
+                <legend className="font-heading text-xl font-black text-bfb-ink">
+                  Session preference
+                </legend>
+                <FieldError message={errors.sessionId} />
+                <div className="mt-4 grid gap-3 md:grid-cols-2">
+                  {bowlingSessions.map((session) => {
+                    const remaining = registrations
+                      ? remainingLanesFromRegistrations(session.id, registrations)
+                      : remainingLanes(session.id);
+                    const isSelected = form.sessionId === session.id;
+
+                    return (
+                      <label
+                        key={session.id}
+                        className={`cursor-pointer rounded-sm border p-4 ${
+                          isSelected
+                            ? "border-bfb-blue bg-bfb-blue/10"
+                            : "border-bfb-ink/10 bg-white hover:border-bfb-blue/60"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="sessionId"
+                          checked={isSelected}
+                          onChange={() => updateForm("sessionId", session.id)}
+                          disabled={remaining <= 0}
+                        />
+                        <span className="ml-2 font-heading font-black text-bfb-ink">
+                          {session.name}
+                        </span>
+                        <span className="mt-2 block text-sm leading-6 text-bfb-ink/65">
+                          {session.time}. {session.laneCapacity} lanes available.{" "}
+                          {remaining > 0
+                            ? `${remaining} lanes remaining.`
+                            : "This session is currently full. Join the waitlist or choose another session."}
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </fieldset>
+            ) : null}
+
+            <div className="mt-8 grid gap-5 md:grid-cols-2">
+              <label>
+                <span className="field-label">First name</span>
+                <input
+                  className="bfb-field"
+                  value={form.buyerFirstName}
+                  onChange={(event) => updateForm("buyerFirstName", event.target.value)}
+                  aria-invalid={Boolean(errors.buyerFirstName)}
+                  autoComplete="given-name"
+                />
+                <FieldError message={errors.buyerFirstName} />
+              </label>
+              <label>
+                <span className="field-label">Last name</span>
+                <input
+                  className="bfb-field"
+                  value={form.buyerLastName}
+                  onChange={(event) => updateForm("buyerLastName", event.target.value)}
+                  aria-invalid={Boolean(errors.buyerLastName)}
+                  autoComplete="family-name"
+                />
+                <FieldError message={errors.buyerLastName} />
+              </label>
+              <label>
+                <span className="field-label">Email</span>
+                <input
+                  className="bfb-field"
+                  type="email"
+                  value={form.buyerEmail}
+                  onChange={(event) => updateForm("buyerEmail", event.target.value)}
+                  aria-invalid={Boolean(errors.buyerEmail)}
+                  autoComplete="email"
+                />
+                <FieldError message={errors.buyerEmail} />
+              </label>
+              <label>
+                <span className="field-label">Phone</span>
+                <input
+                  className="bfb-field"
+                  value={form.buyerPhone}
+                  onChange={(event) => updateForm("buyerPhone", event.target.value)}
+                  autoComplete="tel"
+                />
+              </label>
+              <label className="md:col-span-2">
+                <span className="field-label">Organization, company, church, or family name</span>
+                <div className="relative">
+                  <Building2
+                    aria-hidden="true"
+                    className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-bfb-ink/35"
+                    size={17}
+                  />
+                  <input
+                    className="bfb-field pl-10"
+                    value={form.organization}
+                    onChange={(event) => updateForm("organization", event.target.value)}
+                    autoComplete="organization"
+                  />
+                </div>
+              </label>
+              {needsSession(form.registrationType) ? (
+                <label>
+                  <span className="field-label">Team name</span>
+                  <input
+                    className="bfb-field"
+                    value={form.teamName}
+                    onChange={(event) => updateForm("teamName", event.target.value)}
+                    placeholder="Optional, but encouraged"
+                  />
+                </label>
+              ) : null}
+              {form.registrationType === "sponsorship" || form.registrationType === "lane-sponsor" ? (
+                <label className={needsSession(form.registrationType) ? "" : "md:col-span-2"}>
+                  <span className="field-label">Sponsor logo placeholder</span>
+                  <div className="rounded-sm border border-bfb-ink/10 bg-bfb-cream p-4">
+                    <div className="relative">
+                      <Upload aria-hidden="true" className="text-bfb-blue" size={21} />
+                      <input
+                        className="bfb-field mt-3"
+                        value={form.sponsorLogoName}
+                        onChange={(event) => updateForm("sponsorLogoName", event.target.value)}
+                        placeholder="Filename, Drive link, or website URL"
+                      />
+                    </div>
+                    <p className="mt-3 text-sm text-bfb-ink/60">
+                      Optional. This helps staff match your sponsorship with the right
+                      logo during follow-up.
+                    </p>
+                  </div>
+                </label>
+              ) : null}
+              <label className="md:col-span-2">
+                <span className="field-label">Notes</span>
+                <textarea
+                  className="bfb-field min-h-24"
+                  value={form.notes}
+                  onChange={(event) => updateForm("notes", event.target.value)}
+                  placeholder="Anything staff should know"
+                />
+              </label>
+            </div>
+
+            {needsSession(form.registrationType) ? (
+              <div className="mt-9">
+                <BowlerListBuilder
+                  bowlers={form.bowlers}
+                  onChange={(bowlers) => updateForm("bowlers", bowlers)}
+                />
+              </div>
+            ) : null}
+
+            <div className="mt-9 grid gap-5 md:grid-cols-2">
+              <label>
+                <span className="field-label">Optional additional gift</span>
+                <div className="relative">
+                  <Gift
+                    aria-hidden="true"
+                    className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-bfb-ink/35"
+                    size={17}
+                  />
+                  <input
+                    className="bfb-field pl-10"
+                    type="number"
+                    min={0}
+                    step={25}
+                    value={form.optionalGift}
+                    onChange={(event) => updateForm("optionalGift", Number(event.target.value) || 0)}
+                  />
+                </div>
+                <FieldError message={errors.optionalGift} />
+              </label>
+            </div>
+
+            <fieldset className="mt-9">
+              <legend className="font-heading text-xl font-black text-bfb-ink">
+                Payment preference
+              </legend>
+              <div className="mt-4 grid gap-3 md:grid-cols-3">
+                {(Object.keys(paymentPreferenceLabels) as BowlingPaymentPreference[]).map((preference) => {
+                  const Icon = paymentIcons[preference];
+                  const isSelected = form.paymentPreference === preference;
+
+                  return (
+                    <label
+                      key={preference}
+                      className={`cursor-pointer rounded-sm border p-4 ${
+                        isSelected
+                          ? "border-bfb-green bg-bfb-green/10"
+                          : "border-bfb-ink/10 bg-white"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="paymentPreference"
+                        checked={isSelected}
+                        onChange={() => updateForm("paymentPreference", preference)}
+                      />
+                      <span className="ml-2 inline-flex items-center gap-2 font-heading font-black text-bfb-ink">
+                        <Icon aria-hidden="true" size={18} />
+                        {paymentPreferenceLabels[preference]}
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+            </fieldset>
+
+            {needsSession(form.registrationType) ? (
+              <label className="mt-7 flex gap-3 rounded-sm bg-bfb-green/15 p-4">
+                <input
+                  className="mt-1"
+                  type="checkbox"
+                  checked={form.saveTeamLink}
+                  onChange={(event) => updateForm("saveTeamLink", event.target.checked)}
+                />
+                <span>
+                  <span className="flex items-center gap-2 font-heading font-black text-bfb-ink">
+                    <UsersRound aria-hidden="true" size={18} />
+                    Save and send team link
+                  </span>
+                  <span className="mt-2 block text-sm leading-6 text-bfb-ink/60">
+                    Team captains can add or edit bowler names later.
+                  </span>
+                </span>
+              </label>
+            ) : null}
+
+            <button
+              className="bfb-primary mt-8 w-full sm:w-auto"
+              type="submit"
+              disabled={submitState === "submitting"}
+            >
+              {submitState === "submitting" ? "Saving..." : paymentCtaLabels[form.paymentPreference]}
+              {form.paymentPreference === "card" ? (
+                <CreditCard aria-hidden="true" size={17} />
+              ) : (
+                <CheckCircle2 aria-hidden="true" size={17} />
+              )}
+            </button>
+          </form>
+
+          <BowlingCheckoutSummary form={form} registrations={registrations} />
+        </div>
+      </div>
+    </section>
+  );
+}
