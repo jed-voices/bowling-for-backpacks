@@ -359,7 +359,7 @@ function StatusPill({ status }: { status: "registering" | "building" }) {
 }
 
 function DataSourcePill({ source }: { source: "live" | "preview" }) {
-  const label = source === "live" ? "Live data" : "Preview data";
+  const label = source === "live" ? "Live data" : "Prototype";
   const className =
     source === "live"
       ? "border-cc-navy bg-cc-navy text-white"

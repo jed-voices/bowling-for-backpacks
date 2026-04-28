@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { sampleRegistrations } from "@/lib/gala/config";
 import { bloomerangExports } from "@/lib/gala/export-bloomerang";
 import {
   buildBackendPayload,
   greaterGivingExports,
 } from "@/lib/gala/export-greater-giving";
+import type { GalaRegistrationRecord } from "@/lib/gala/types";
 import { isDevelopmentAuthenticated } from "@/lib/events/development-auth";
 
 type ExportRouteProps = {
@@ -41,32 +41,33 @@ export async function GET(request: Request, { params }: ExportRouteProps) {
   }
 
   const { type } = await params;
+  const registrations: GalaRegistrationRecord[] = [];
 
   switch (type) {
     case "greater-giving-sales":
       return csvResponse(
-        greaterGivingExports.salesCsv(sampleRegistrations),
-        "greater-giving-sales-preview.csv",
+        greaterGivingExports.salesCsv(registrations),
+        "greater-giving-sales.csv",
       );
     case "greater-giving-supporters":
       return csvResponse(
-        greaterGivingExports.supportersCsv(sampleRegistrations),
-        "greater-giving-supporters-preview.csv",
+        greaterGivingExports.supportersCsv(registrations),
+        "greater-giving-supporters.csv",
       );
     case "chance-to-win":
       return csvResponse(
-        greaterGivingExports.chanceCsv(sampleRegistrations),
-        "chance-to-win-preview.csv",
+        greaterGivingExports.chanceCsv(registrations),
+        "chance-to-win.csv",
       );
     case "bloomerang-transactions":
       return csvResponse(
-        bloomerangExports.transactionsCsv(sampleRegistrations),
-        "bloomerang-transactions-preview.csv",
+        bloomerangExports.transactionsCsv(registrations),
+        "bloomerang-transactions.csv",
       );
     case "backend-json":
-      return NextResponse.json(buildBackendPayload(sampleRegistrations), {
+      return NextResponse.json(buildBackendPayload(registrations), {
         headers: {
-          "Content-Disposition": 'attachment; filename="gala-backend-preview.json"',
+          "Content-Disposition": 'attachment; filename="gala-backend.json"',
         },
       });
     default:

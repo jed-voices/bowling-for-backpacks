@@ -1,11 +1,10 @@
-import { sampleBowlingRegistrations, bowlingSessions } from "@/lib/bowling/config";
+import { bowlingSessions } from "@/lib/bowling/config";
 import {
   isBowlingDatabaseConfigured,
   listBowlingRegistrations,
 } from "@/lib/bowling/database";
 import type { BowlingRegistrationRecord } from "@/lib/bowling/types";
 import { remainingLanesFromRegistrations } from "@/lib/bowling/validation";
-import { sampleRegistrations } from "@/lib/gala/config";
 import type { GalaRegistrationRecord } from "@/lib/gala/types";
 import { formatCurrency } from "@/lib/gala/validation";
 import { isDevelopmentAuthConfigured } from "./development-auth";
@@ -145,7 +144,7 @@ const buildLaunchReadiness = (): LaunchReadinessItem[] => [
     status: isBowlingDatabaseConfigured() ? "ready" : "needs_setup",
     detail: isBowlingDatabaseConfigured()
       ? "Bowling registrations will persist to Supabase."
-      : "Bowling is still using preview fallback data when Supabase is absent.",
+      : "Bowling live registrations are not connected in this environment.",
     nextStep: isBowlingDatabaseConfigured()
       ? "Submit one test registration and confirm it appears in Supabase."
       : "Run the Supabase migration and add SUPABASE_URL plus SUPABASE_SERVICE_ROLE_KEY.",
@@ -183,7 +182,7 @@ const buildLaunchReadiness = (): LaunchReadinessItem[] => [
 const buildBowlingSummary = async (): Promise<EventOperationsSummary> => {
   const event = cityCenterEvents.find((item) => item.id === "bowling-for-backpacks");
   const liveRegistrations = await listBowlingRegistrations();
-  const registrations = liveRegistrations ?? sampleBowlingRegistrations;
+  const registrations = liveRegistrations ?? [];
   const dataSource = liveRegistrations ? "live" : "preview";
   const totalValue = registrations.reduce(
     (sum, registration) => sum + registration.grandTotal,
@@ -231,7 +230,7 @@ const buildBowlingSummary = async (): Promise<EventOperationsSummary> => {
       {
         label: "Visible value",
         value: formatCurrency(totalValue),
-        detail: dataSource === "live" ? "Supabase" : "Preview data",
+        detail: dataSource === "live" ? "Supabase" : "No live connection",
       },
       {
         label: "Open payments",
@@ -280,14 +279,9 @@ const buildBowlingSummary = async (): Promise<EventOperationsSummary> => {
 
 const buildGalaSummary = (): EventOperationsSummary => {
   const event = cityCenterEvents.find((item) => item.id === "stories-from-the-center");
-  const registrations = sampleRegistrations;
+  const registrations: GalaRegistrationRecord[] = [];
   const totalValue = registrations.reduce(
     (sum, registration) => sum + registration.grandTotal,
-    0,
-  );
-  const seats = registrations.reduce((sum, registration) => sum + registration.seats, 0);
-  const chanceEntries = registrations.reduce(
-    (sum, registration) => sum + registration.chanceEntryQuantity,
     0,
   );
   const openPayments = countOpenGalaPayments(registrations);
@@ -306,48 +300,46 @@ const buildGalaSummary = (): EventOperationsSummary => {
     registrationCount: registrations.length,
     openPaymentCount: openPayments,
     exportQueueCount: exportQueue,
-    readinessLabel:
-      openPayments + exportQueue + incompleteGuests === 0
-        ? "Clean"
-        : "Needs follow-up",
-    readinessDetail: `${seats} seats represented / ${chanceEntries} chance-to-win entries`,
+    readinessLabel: "Prototype",
+    readinessDetail:
+      "No live Gala registrations are connected yet. This card will populate when the Gala backend is built.",
     metrics: [
       {
         label: "Registrations",
         value: registrations.length.toString(),
-        detail: `${seats} seats represented`,
+        detail: "Live Gala data not connected",
       },
       {
         label: "Visible value",
         value: formatCurrency(totalValue),
-        detail: "Preview data",
+        detail: "No live Gala value yet",
       },
       {
         label: "Open payments",
         value: openPayments.toString(),
-        detail: "Pending, invoice, or check",
+        detail: "Will populate after launch",
       },
       {
         label: "Export queue",
         value: exportQueue.toString(),
-        detail: "Greater Giving and Bloomerang",
+        detail: "Greater Giving and Bloomerang after launch",
       },
     ],
     followUps: [
       {
         label: "Payment follow-up",
         count: openPayments,
-        detail: "Confirm invoice, card, and check status.",
+        detail: "Will populate after Gala registration is live.",
       },
       {
         label: "Guest lists",
         count: incompleteGuests,
-        detail: "Collect names, meals, and table notes.",
+        detail: "Will populate after Gala registration is live.",
       },
       {
         label: "Export review",
         count: exportQueue,
-        detail: "Review Greater Giving and Bloomerang readiness.",
+        detail: "Will populate after Gala registration is live.",
       },
     ],
     exports: [

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LockKeyhole } from "lucide-react";
 import { BowlingAdminConsole } from "@/components/bowling/BowlingAdminConsole";
-import { sampleBowlingRegistrations } from "@/lib/bowling/config";
 import { listBowlingRegistrations } from "@/lib/bowling/database";
 import { isDevelopmentAuthenticated } from "@/lib/events/development-auth";
 
@@ -24,7 +23,7 @@ export default async function AdminBowlingPage({ searchParams }: AdminBowlingPag
     process.env.NODE_ENV !== "production" ||
     (previewKey && key === previewKey);
   const liveRegistrations = isAllowed ? await listBowlingRegistrations() : null;
-  const registrations = liveRegistrations ?? sampleBowlingRegistrations;
+  const registrations = liveRegistrations ?? [];
   const dataSource = liveRegistrations ? "live" : "preview";
 
   if (!isAllowed) {

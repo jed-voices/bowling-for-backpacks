@@ -2,8 +2,11 @@
 
 import { useMemo, useState } from "react";
 import { Download, Search, ShieldCheck } from "lucide-react";
-import { sampleRegistrations } from "@/lib/gala/config";
-import type { ExportStatus, PaymentStatus } from "@/lib/gala/types";
+import type {
+  ExportStatus,
+  GalaRegistrationRecord,
+  PaymentStatus,
+} from "@/lib/gala/types";
 import { formatCurrency } from "@/lib/gala/validation";
 
 const paymentStatusLabels: Record<PaymentStatus, string> = {
@@ -44,16 +47,20 @@ const exportLinks = [
 
 type AdminExportConsoleProps = {
   exportKey?: string;
+  registrations?: GalaRegistrationRecord[];
 };
 
-export function AdminExportConsole({ exportKey }: AdminExportConsoleProps) {
+export function AdminExportConsole({
+  exportKey,
+  registrations: sourceRegistrations = [],
+}: AdminExportConsoleProps) {
   const [query, setQuery] = useState("");
   const [paymentFilter, setPaymentFilter] = useState("all");
 
   const registrations = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
 
-    return sampleRegistrations.filter((registration) => {
+    return sourceRegistrations.filter((registration) => {
       const matchesQuery = normalizedQuery
         ? [
             registration.buyerFirstName,
@@ -72,7 +79,7 @@ export function AdminExportConsole({ exportKey }: AdminExportConsoleProps) {
 
       return matchesQuery && matchesPayment;
     });
-  }, [paymentFilter, query]);
+  }, [paymentFilter, query, sourceRegistrations]);
 
   const totalValue = registrations.reduce(
     (sum, registration) => sum + registration.grandTotal,
@@ -95,7 +102,8 @@ export function AdminExportConsole({ exportKey }: AdminExportConsoleProps) {
               Registration preview
             </h2>
             <p className="mt-2 text-sm leading-6 text-cc-dark-blue/65">
-              Static preview data is shown until Supabase is connected.
+              Live Gala records will appear here after Supabase registration is
+              connected.
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">
@@ -145,7 +153,7 @@ export function AdminExportConsole({ exportKey }: AdminExportConsoleProps) {
               </tr>
             </thead>
             <tbody className="divide-y divide-cc-navy/10">
-              {registrations.map((registration) => {
+              {registrations.length > 0 ? registrations.map((registration) => {
                 const completedGuests = registration.guests.filter(
                   (guest) => guest.firstName || guest.lastName,
                 ).length;
@@ -184,7 +192,16 @@ export function AdminExportConsole({ exportKey }: AdminExportConsoleProps) {
                     </td>
                   </tr>
                 );
-              })}
+              }) : (
+                <tr>
+                  <td
+                    className="py-6 pr-4 text-sm leading-6 text-cc-dark-blue/65"
+                    colSpan={7}
+                  >
+                    No live Gala registrations are connected yet.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -197,8 +214,8 @@ export function AdminExportConsole({ exportKey }: AdminExportConsoleProps) {
               Export console
             </h2>
             <p className="mt-2 text-sm leading-6 text-cc-dark-blue/65">
-              These routes currently export preview records through the same utility
-              functions that will be used after Supabase is connected.
+              These routes are ready for the Gala workflow and will export live
+              records after the backend is connected.
             </p>
           </div>
           <ShieldCheck aria-hidden="true" className="hidden text-cc-light-green lg:block" size={30} />
