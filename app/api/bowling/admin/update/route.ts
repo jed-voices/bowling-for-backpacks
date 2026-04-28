@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
 import { updateBowlingRegistrationPayment, updateBowlingRegistrationExportStatus } from "@/lib/bowling/database";
+import { isDevelopmentAuthenticated } from "@/lib/events/development-auth";
 
 const ADMIN_SECRET = process.env.ADMIN_SECRET;
 
 export async function POST(request: Request) {
   const body = await request.json();
+  const hasDevelopmentAccess = await isDevelopmentAuthenticated();
 
-  if (!ADMIN_SECRET || body.secret !== ADMIN_SECRET) {
+  if (!hasDevelopmentAccess && (!ADMIN_SECRET || body.secret !== ADMIN_SECRET)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -28,7 +30,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Update failed" }, { status: 500 });
   }
 }

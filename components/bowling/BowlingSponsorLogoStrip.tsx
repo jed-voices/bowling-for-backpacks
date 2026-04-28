@@ -8,27 +8,27 @@ type Sponsor = {
 
 const sponsorTiers: { label: string; featured?: boolean; sponsors: Sponsor[] }[] = [
   {
-    label: "Presenting Sponsor",
+    label: "Event Sponsor",
     featured: true,
     sponsors: [
       {
-        name: "Presenting Sponsor Available",
+        name: "Event Sponsor Available",
         href: "/bowling-for-backpacks#sponsorships",
       },
     ],
   },
   {
-    label: "Session Sponsors",
+    label: "Team Sponsors",
     sponsors: [
-      { name: "Corporate Session Sponsor Available", href: "/bowling-for-backpacks#sponsorships" },
-      { name: "Family Night Sponsor Available", href: "/bowling-for-backpacks#sponsorships" },
+      { name: "Corporate Team Available", href: "/bowling-for-backpacks#sponsorships" },
+      { name: "Community Team Available", href: "/bowling-for-backpacks#sponsorships" },
     ],
   },
   {
     label: "Community Partners",
     sponsors: [
       { name: "Lane Sponsors", href: "/bowling-for-backpacks#sponsorships" },
-      { name: "Friends of City Center", href: "/bowling-for-backpacks#sponsorships" },
+      { name: "Gift Partners", href: "/bowling-for-backpacks#sponsorships" },
     ],
   },
 ];
@@ -43,7 +43,7 @@ function SponsorCard({ sponsor, featured = false }: { sponsor: Sponsor; featured
       className="max-h-16 w-auto object-contain grayscale transition duration-300 group-hover:grayscale-0"
     />
   ) : (
-    <span className="font-heading text-xs font-black uppercase tracking-wide text-bfb-navy/70">
+    <span className="font-heading text-xs font-black uppercase text-bfb-navy/70">
       {sponsor.name}
     </span>
   );
@@ -65,7 +65,7 @@ export function BowlingSponsorLogoStrip() {
     <div className="rounded-sm border border-white/15 bg-white/10 p-5 shadow-soft backdrop-blur">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="font-heading text-xs font-black uppercase tracking-[0.2em] text-bfb-green">
+          <p className="font-heading text-xs font-black uppercase text-bfb-green">
             Sponsor recognition
           </p>
           <p className="mt-2 text-sm leading-6 text-white/70">
@@ -74,7 +74,7 @@ export function BowlingSponsorLogoStrip() {
         </div>
         <a
           href="/bowling-for-backpacks#sponsorships"
-          className="inline-flex min-h-10 items-center justify-center rounded-sm border border-white/25 px-4 py-2 font-heading text-xs font-black uppercase tracking-wide text-white transition hover:border-bfb-green hover:bg-white/10"
+          className="inline-flex min-h-10 items-center justify-center rounded-sm border border-white/25 px-4 py-2 font-heading text-xs font-black uppercase text-white transition hover:border-bfb-green hover:bg-white/10"
         >
           Become a Sponsor
         </a>
@@ -83,7 +83,7 @@ export function BowlingSponsorLogoStrip() {
       <div className="mt-5 space-y-5">
         {sponsorTiers.map((tier) => (
           <div key={tier.label}>
-            <p className="mb-2 font-heading text-[11px] font-black uppercase tracking-[0.18em] text-white/55">
+            <p className="mb-2 font-heading text-xs font-black uppercase text-white/55">
               {tier.label}
             </p>
             <div className={`grid gap-3 ${tier.featured ? "grid-cols-1" : "sm:grid-cols-2"}`}>

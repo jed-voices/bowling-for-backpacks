@@ -103,7 +103,7 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
           : registrationType === "lane-sponsor"
             ? "lane-sponsor"
             : registrationType === "sponsorship"
-              ? "presenting"
+              ? "event-sponsor"
               : "gift";
 
       return {
@@ -266,7 +266,7 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
                 <legend className="field-label">Choose a sponsorship level</legend>
                 <div className="grid gap-3 md:grid-cols-2">
                   {bowlingSponsorships
-                    .filter((sponsor) => sponsor.id !== "lane-sponsor" && sponsor.id !== "friend")
+                    .filter((sponsor) => sponsor.id === "event-sponsor")
                     .map((sponsor) => (
                       <label
                         key={sponsor.id}
@@ -484,7 +484,8 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
                 How would you like to finish?
               </legend>
               <p className="mt-2 text-sm leading-6 text-bfb-ink/65">
-                Online card payment is fastest. Invoice and check options save your registration and alert our team for follow-up.
+                Online card payment is fastest. Invoice and check options let
+                City Center send the right next step to your contact email.
               </p>
               <div className="mt-4 grid gap-3 md:grid-cols-3">
                 {(Object.keys(paymentPreferenceLabels) as BowlingPaymentPreference[]).map((preference) => {

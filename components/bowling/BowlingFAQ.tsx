@@ -19,7 +19,7 @@ const faqs = [
   {
     question: "Can my company request an invoice?",
     answer:
-      "Yes. Choose request invoice during registration and staff can follow up with invoice details.",
+      "Yes. Choose request invoice during registration and City Center will send invoice details to your contact email.",
   },
   {
     question: "Can I sponsor without bowling?",

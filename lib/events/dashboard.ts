@@ -1,0 +1,320 @@
+import { sampleBowlingRegistrations, bowlingSessions } from "@/lib/bowling/config";
+import { listBowlingRegistrations } from "@/lib/bowling/database";
+import type { BowlingRegistrationRecord } from "@/lib/bowling/types";
+import { remainingLanesFromRegistrations } from "@/lib/bowling/validation";
+import { sampleRegistrations } from "@/lib/gala/config";
+import type { GalaRegistrationRecord } from "@/lib/gala/types";
+import { formatCurrency } from "@/lib/gala/validation";
+import { cityCenterEvents } from "./directory";
+
+type Metric = {
+  label: string;
+  value: string;
+  detail?: string;
+};
+
+type FollowUp = {
+  label: string;
+  count: number;
+  detail: string;
+};
+
+type ExportLink = {
+  label: string;
+  href: string;
+};
+
+export type EventOperationsSummary = {
+  id: string;
+  name: string;
+  label: string;
+  href: string;
+  adminHref: string;
+  dataSource: "live" | "preview";
+  status: "registering" | "building";
+  totalValue: number;
+  registrationCount: number;
+  openPaymentCount: number;
+  exportQueueCount: number;
+  readinessLabel: string;
+  readinessDetail: string;
+  metrics: Metric[];
+  followUps: FollowUp[];
+  exports: ExportLink[];
+};
+
+export type DevelopmentDashboard = {
+  totalEvents: number;
+  totalRegistrations: number;
+  totalValue: number;
+  totalOpenPayments: number;
+  totalExportQueue: number;
+  events: EventOperationsSummary[];
+};
+
+const openPaymentStatuses = ["pending", "invoice_requested", "check_pledged"];
+
+const countOpenBowlingPayments = (registrations: BowlingRegistrationRecord[]) =>
+  registrations.filter((registration) =>
+    openPaymentStatuses.includes(registration.paymentStatus),
+  ).length;
+
+const countOpenGalaPayments = (registrations: GalaRegistrationRecord[]) =>
+  registrations.filter((registration) =>
+    openPaymentStatuses.includes(registration.paymentStatus),
+  ).length;
+
+const countBowlingMissingLogos = (registrations: BowlingRegistrationRecord[]) =>
+  registrations.filter(
+    (registration) =>
+      (registration.registrationType === "sponsorship" ||
+        registration.registrationType === "lane-sponsor") &&
+      !registration.sponsorLogoName,
+  ).length;
+
+const countIncompleteBowlerLists = (registrations: BowlingRegistrationRecord[]) =>
+  registrations.filter((registration) => {
+    if (registration.laneCount < 1) {
+      return false;
+    }
+
+    const namedBowlers = registration.bowlers.filter(
+      (bowler) => bowler.firstName || bowler.lastName,
+    ).length;
+
+    return namedBowlers < 6;
+  }).length;
+
+const countIncompleteGuestLists = (registrations: GalaRegistrationRecord[]) =>
+  registrations.filter((registration) => {
+    const namedGuests = registration.guests.filter(
+      (guest) => guest.firstName || guest.lastName,
+    ).length;
+
+    return namedGuests < registration.seats;
+  }).length;
+
+const countExportQueue = (
+  registrations: Array<BowlingRegistrationRecord | GalaRegistrationRecord>,
+) =>
+  registrations.filter((registration) => registration.exportStatus !== "exported")
+    .length;
+
+const buildBowlingSummary = async (): Promise<EventOperationsSummary> => {
+  const event = cityCenterEvents.find((item) => item.id === "bowling-for-backpacks");
+  const liveRegistrations = await listBowlingRegistrations();
+  const registrations = liveRegistrations ?? sampleBowlingRegistrations;
+  const dataSource = liveRegistrations ? "live" : "preview";
+  const totalValue = registrations.reduce(
+    (sum, registration) => sum + registration.grandTotal,
+    0,
+  );
+  const teams = registrations.filter((registration) => registration.laneCount > 0);
+  const openPayments = countOpenBowlingPayments(registrations);
+  const exportQueue = countExportQueue(registrations);
+  const missingLogos = countBowlingMissingLogos(registrations);
+  const incompleteBowlers = countIncompleteBowlerLists(registrations);
+  const laneStatus = bowlingSessions
+    .map((session) => {
+      const remaining =
+        dataSource === "live"
+          ? remainingLanesFromRegistrations(session.id, registrations)
+          : Math.max(0, session.laneCapacity - session.registeredTeams);
+
+      return `${session.name}: ${remaining} open`;
+    })
+    .join(" / ");
+
+  return {
+    id: event?.id ?? "bowling-for-backpacks",
+    name: event?.name ?? "Christmas in July | Bowling for Backpacks",
+    label: event?.label ?? "Christmas in July",
+    href: event?.href ?? "/bowling-for-backpacks",
+    adminHref: event?.adminHref ?? "/admin/bowling-for-backpacks",
+    dataSource,
+    status: event?.status ?? "registering",
+    totalValue,
+    registrationCount: registrations.length,
+    openPaymentCount: openPayments,
+    exportQueueCount: exportQueue,
+    readinessLabel:
+      openPayments + exportQueue + missingLogos + incompleteBowlers === 0
+        ? "Clean"
+        : "Needs follow-up",
+    readinessDetail: laneStatus,
+    metrics: [
+      {
+        label: "Registrations",
+        value: registrations.length.toString(),
+        detail: `${teams.length} team or sponsor lanes`,
+      },
+      {
+        label: "Visible value",
+        value: formatCurrency(totalValue),
+        detail: dataSource === "live" ? "Supabase" : "Preview data",
+      },
+      {
+        label: "Open payments",
+        value: openPayments.toString(),
+        detail: "Pending, invoice, or check",
+      },
+      {
+        label: "Export queue",
+        value: exportQueue.toString(),
+        detail: "Not exported or needs review",
+      },
+    ],
+    followUps: [
+      {
+        label: "Payment follow-up",
+        count: openPayments,
+        detail: "Confirm card, invoice, and check status.",
+      },
+      {
+        label: "Sponsor logos",
+        count: missingLogos,
+        detail: "Collect lane and sponsorship recognition assets.",
+      },
+      {
+        label: "Bowler lists",
+        count: incompleteBowlers,
+        detail: "Ask captains to complete team names.",
+      },
+    ],
+    exports: [
+      {
+        label: "Donor Export",
+        href: "/api/bowling/admin/exports/bloomerang-transactions",
+      },
+      {
+        label: "Ops List",
+        href: "/api/bowling/admin/exports/operations",
+      },
+      {
+        label: "Raw Data",
+        href: "/api/bowling/admin/exports/backend-json",
+      },
+    ],
+  };
+};
+
+const buildGalaSummary = (): EventOperationsSummary => {
+  const event = cityCenterEvents.find((item) => item.id === "stories-from-the-center");
+  const registrations = sampleRegistrations;
+  const totalValue = registrations.reduce(
+    (sum, registration) => sum + registration.grandTotal,
+    0,
+  );
+  const seats = registrations.reduce((sum, registration) => sum + registration.seats, 0);
+  const chanceEntries = registrations.reduce(
+    (sum, registration) => sum + registration.chanceEntryQuantity,
+    0,
+  );
+  const openPayments = countOpenGalaPayments(registrations);
+  const exportQueue = countExportQueue(registrations);
+  const incompleteGuests = countIncompleteGuestLists(registrations);
+
+  return {
+    id: event?.id ?? "stories-from-the-center",
+    name: event?.name ?? "Stories From the Center",
+    label: event?.label ?? "Annual Gala",
+    href: event?.href ?? "/gala",
+    adminHref: event?.adminHref ?? "/admin/gala",
+    dataSource: "preview",
+    status: event?.status ?? "building",
+    totalValue,
+    registrationCount: registrations.length,
+    openPaymentCount: openPayments,
+    exportQueueCount: exportQueue,
+    readinessLabel:
+      openPayments + exportQueue + incompleteGuests === 0
+        ? "Clean"
+        : "Needs follow-up",
+    readinessDetail: `${seats} seats represented / ${chanceEntries} chance-to-win entries`,
+    metrics: [
+      {
+        label: "Registrations",
+        value: registrations.length.toString(),
+        detail: `${seats} seats represented`,
+      },
+      {
+        label: "Visible value",
+        value: formatCurrency(totalValue),
+        detail: "Preview data",
+      },
+      {
+        label: "Open payments",
+        value: openPayments.toString(),
+        detail: "Pending, invoice, or check",
+      },
+      {
+        label: "Export queue",
+        value: exportQueue.toString(),
+        detail: "Greater Giving and Bloomerang",
+      },
+    ],
+    followUps: [
+      {
+        label: "Payment follow-up",
+        count: openPayments,
+        detail: "Confirm invoice, card, and check status.",
+      },
+      {
+        label: "Guest lists",
+        count: incompleteGuests,
+        detail: "Collect names, meals, and table notes.",
+      },
+      {
+        label: "Export review",
+        count: exportQueue,
+        detail: "Review Greater Giving and Bloomerang readiness.",
+      },
+    ],
+    exports: [
+      {
+        label: "Sales Import",
+        href: "/api/gala/admin/exports/greater-giving-sales",
+      },
+      {
+        label: "Supporter Import",
+        href: "/api/gala/admin/exports/greater-giving-supporters",
+      },
+      {
+        label: "Drawing Entries",
+        href: "/api/gala/admin/exports/chance-to-win",
+      },
+      {
+        label: "Donor Export",
+        href: "/api/gala/admin/exports/bloomerang-transactions",
+      },
+      {
+        label: "Raw Data",
+        href: "/api/gala/admin/exports/backend-json",
+      },
+    ],
+  };
+};
+
+export const getDevelopmentDashboard = async (): Promise<DevelopmentDashboard> => {
+  const events = [await buildBowlingSummary(), buildGalaSummary()];
+
+  return {
+    totalEvents: events.length,
+    totalRegistrations: events.reduce(
+      (sum, event) => sum + event.registrationCount,
+      0,
+    ),
+    totalValue: events.reduce((sum, event) => sum + event.totalValue, 0),
+    totalOpenPayments: events.reduce(
+      (sum, event) => sum + event.openPaymentCount,
+      0,
+    ),
+    totalExportQueue: events.reduce(
+      (sum, event) => sum + event.exportQueueCount,
+      0,
+    ),
+    events,
+  };
+};
+
+export { formatCurrency };

@@ -1,61 +1,228 @@
 import Link from "next/link";
-import { ArrowRight, CalendarDays, Gift, MapPin } from "lucide-react";
-import { BowlingSplashPhotoRotation } from "@/components/bowling/BowlingSplashPhotoRotation";
-import { BowlingPresentingSponsorHero } from "@/components/bowling/BowlingPresentingSponsorHero";
+import Image from "next/image";
+import type { Metadata } from "next";
+import {
+  ArrowRight,
+  CalendarDays,
+  Gift,
+  LockKeyhole,
+  UsersRound,
+} from "lucide-react";
+import { isDevelopmentAuthenticated } from "@/lib/events/development-auth";
+import { cityCenterEvents, upcomingInitiatives } from "@/lib/events/directory";
 
-export default function SplashPage() {
+export const metadata: Metadata = {
+  title: "OK City Center Events",
+  description:
+    "The City Center events gateway for supporters, families, sponsors, and development access.",
+};
+
+export default async function HomePage() {
+  const featuredEvent = cityCenterEvents[0];
+  const hasDevelopmentAccess = await isDevelopmentAuthenticated();
+
   return (
-    <main className="relative min-h-screen overflow-hidden bg-bfb-navy text-white">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(93,203,163,0.22),transparent_28%),radial-gradient(circle_at_84%_18%,rgba(63,159,236,0.28),transparent_34%),linear-gradient(135deg,#11132F_0%,#112F6D_56%,#11132F_100%)]" />
-      <div className="absolute inset-x-0 top-0 h-px bg-bfb-green/70" />
+    <main className="min-h-screen bg-cc-light-blue/45 font-body text-cc-dark-blue">
+      <section className="relative overflow-hidden bg-sftc-evening text-white">
+        <Image
+          src={featuredEvent.image}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover opacity-30"
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(18,18,48,0.94),rgba(33,52,104,0.74),rgba(22,34,46,0.46))]" />
 
-      <section className="relative flex min-h-screen items-center px-6 py-14">
-        <div className="mx-auto grid w-full max-w-7xl gap-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(360px,0.72fr)] lg:items-center">
+        <div className="section-shell relative pt-5">
+          <nav className="flex items-center justify-between gap-4 border-b border-white/10 pb-4 text-sm text-white/75">
+            <Link href="/" className="font-heading font-semibold text-white">
+              City Center Events
+            </Link>
+            <div className="flex items-center gap-4 sm:gap-5">
+              <Link href="/supporters" className="transition hover:text-white">
+                Supporters
+              </Link>
+              <Link href="/development" className="transition hover:text-white">
+                {hasDevelopmentAccess ? "Dashboard" : "Development"}
+              </Link>
+            </div>
+          </nav>
+        </div>
+
+        <div className="section-shell relative grid min-h-[calc(100svh-70px)] items-center gap-8 py-10 sm:gap-10 sm:py-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(360px,0.56fr)] lg:py-20">
           <div>
-            <p className="inline-flex rounded-sm border border-bfb-green/40 bg-white/10 px-3 py-2 font-heading text-xs font-black uppercase tracking-[0.22em] text-bfb-green">
-              City Center Christmas in July
+            <p className="font-heading text-xs font-semibold uppercase text-sftc-hope">
+              OKCityCenterEvents.org
             </p>
-            <h1 className="mt-6 max-w-4xl font-heading text-5xl font-black uppercase leading-[0.94] sm:text-7xl lg:text-8xl">
-              Bowling for Backpacks
+            <h1 className="mt-5 max-w-4xl font-heading text-4xl font-semibold leading-[1.04] text-white sm:text-6xl lg:text-7xl">
+              One front door for City Center events.
             </h1>
-            <p className="mt-6 max-w-2xl text-xl font-semibold leading-8 text-white/90 sm:text-2xl sm:leading-9">
-              Bowl a frame. Sponsor a lane. Help students walk into the school year ready.
-            </p>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-white/75 sm:text-lg sm:leading-8">
-              This City Center fundraiser turns a summer night of fun into backpacks,
-              school supplies, and practical support for students and families across Oklahoma City.
+            <p className="mt-5 max-w-2xl text-base leading-7 text-white/80 sm:mt-6 sm:text-xl sm:leading-8">
+              Supporters can find the right event and register. City Center
+              development can sign in through a separate path when the work
+              calls for it.
             </p>
 
-            <BowlingPresentingSponsorHero />
-
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link href="/bowling-for-backpacks#registration" className="inline-flex min-h-13 items-center justify-center gap-2 rounded-sm bg-white px-6 py-4 font-heading text-sm font-black uppercase tracking-wide text-bfb-navy shadow-sm transition hover:bg-bfb-green">
-                Register or Sponsor
+            <div className="mt-7 flex flex-col gap-4 sm:mt-9 sm:flex-row sm:items-center">
+              <Link
+                href="/supporters"
+                className="inline-flex items-center gap-2 font-heading text-base font-semibold text-white underline decoration-sftc-hope decoration-2 underline-offset-8 transition hover:text-sftc-hope"
+              >
+                View supporter events
                 <ArrowRight aria-hidden="true" size={17} />
               </Link>
-              <Link href="/bowling-for-backpacks" className="inline-flex min-h-13 items-center justify-center rounded-sm border border-white/30 bg-white/10 px-6 py-4 font-heading text-sm font-black uppercase tracking-wide text-white transition hover:border-bfb-green hover:bg-white/20">
-                View Event Details
+              <Link
+                href="/development"
+                className="inline-flex items-center gap-2 text-sm text-white/70 transition hover:text-white"
+              >
+                <LockKeyhole aria-hidden="true" size={15} />
+                Development access
               </Link>
             </div>
           </div>
 
-          <div className="grid gap-4">
-            <BowlingSplashPhotoRotation />
+          <aside className="border border-white/20 bg-white/10 p-5 shadow-soft backdrop-blur sm:p-6">
+            <p className="font-heading text-xs font-semibold uppercase text-sftc-hope">
+              Now registering
+            </p>
+            <h2 className="mt-3 font-heading text-2xl font-semibold leading-tight text-white sm:text-3xl">
+              {featuredEvent.name}
+            </h2>
+            <p className="mt-4 text-sm leading-6 text-white/70">
+              {featuredEvent.summary}
+            </p>
+            <dl className="mt-6 grid gap-4 border-y border-white/20 py-5 text-sm text-white/75">
+              <div className="flex gap-3">
+                <CalendarDays aria-hidden="true" className="text-sftc-hope" size={19} />
+                <div>
+                  <dt className="sr-only">Date</dt>
+                  <dd>{featuredEvent.date}</dd>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <Gift aria-hidden="true" className="text-sftc-gold" size={19} />
+                <div>
+                  <dt className="sr-only">Event type</dt>
+                  <dd>{featuredEvent.label}</dd>
+                </div>
+              </div>
+            </dl>
+            <Link
+              href={featuredEvent.href}
+              className="mt-6 inline-flex items-center gap-2 font-heading text-sm font-semibold uppercase text-white underline decoration-sftc-hope decoration-2 underline-offset-8 transition hover:text-sftc-hope"
+            >
+              {featuredEvent.primaryAction}
+              <ArrowRight aria-hidden="true" size={17} />
+            </Link>
+          </aside>
+        </div>
+      </section>
 
-            <aside className="rounded-sm border border-white/15 bg-white/10 p-6 shadow-soft backdrop-blur">
-              <p className="font-heading text-sm font-black uppercase tracking-[0.18em] text-bfb-green">Event snapshot</p>
-              <div className="mt-6 grid gap-5 sm:grid-cols-3 lg:grid-cols-1">
-                <div className="flex gap-3"><CalendarDays aria-hidden="true" className="mt-1 text-bfb-green" size={22} /><div><p className="font-heading text-lg font-black">July 16, 2026</p><p className="text-sm leading-6 text-white/65">Two bowling sessions plus community connection.</p></div></div>
-                <div className="flex gap-3"><MapPin aria-hidden="true" className="mt-1 text-bfb-blue" size={22} /><div><p className="font-heading text-lg font-black">Andy B&apos;s</p><p className="text-sm leading-6 text-white/65">Oklahoma City</p></div></div>
-                <div className="flex gap-3"><Gift aria-hidden="true" className="mt-1 text-bfb-green" size={22} /><div><p className="font-heading text-lg font-black">Teams, lanes, sponsors, gifts</p><p className="text-sm leading-6 text-white/65">Choose the way you want to help students start strong.</p></div></div>
-              </div>
-              <div className="mt-6 rounded-sm border border-bfb-green/30 bg-bfb-green/10 p-4">
-                <p className="text-sm font-bold leading-6 text-white/85">Spots are limited. Reserving early helps City Center plan well and serve families with dignity.</p>
-              </div>
-            </aside>
+      <section className="section-shell py-16 sm:py-20">
+        <div className="grid gap-6 lg:grid-cols-3">
+          <div className="lg:col-span-1">
+            <p className="cc-eyebrow">Two clear paths</p>
+            <h2 className="cc-heading mt-3">
+              The public path stays focused on people.
+            </h2>
+            <p className="cc-copy mt-4">
+              Families, sponsors, and partners should see the event story
+              first. City Center access stays separate so the community experience
+              remains simple.
+            </p>
+          </div>
+
+          <div className="grid gap-4 lg:col-span-2 sm:grid-cols-2">
+            <GatewayPanel
+              icon={<UsersRound aria-hidden="true" size={22} />}
+              title="Supporter view"
+              copy="Browse active events, choose how to participate, and complete registration without internal tools in the way."
+              href="/supporters"
+              action="Open supporter gateway"
+            />
+            <GatewayPanel
+              icon={<LockKeyhole aria-hidden="true" size={22} />}
+              title="Development view"
+              copy="A private sign-in for City Center team members when they need the internal event desk."
+              href="/development"
+              action="Development access"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-cc-navy/10 bg-white py-16 sm:py-20">
+        <div className="section-shell">
+          <div className="grid gap-8 lg:grid-cols-[0.72fr_1fr] lg:items-end">
+            <div>
+              <p className="cc-eyebrow">2026 initiatives</p>
+              <h2 className="cc-heading mt-3">
+                A clearer view of what is ahead.
+              </h2>
+            </div>
+            <p className="cc-copy">
+              Sponsors and donors should be able to see the year taking shape,
+              not only the event currently open for registration.
+            </p>
+          </div>
+
+          <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+            {upcomingInitiatives.map((initiative) => (
+              <article
+                key={initiative.name}
+                className="flex min-h-56 flex-col rounded-sm border border-cc-navy/10 bg-cc-light-blue/25 p-5"
+              >
+                <p className="font-heading text-xs font-bold uppercase text-cc-sky-blue">
+                  {initiative.timing}
+                </p>
+                <h3 className="mt-4 font-heading text-xl font-bold leading-tight text-cc-dark-blue">
+                  {initiative.name}
+                </h3>
+                <p className="mt-3 text-sm leading-6 text-cc-dark-blue/65">
+                  {initiative.focus}
+                </p>
+                <p className="mt-auto pt-5 font-heading text-xs font-bold uppercase text-cc-navy/45">
+                  {initiative.status}
+                </p>
+              </article>
+            ))}
           </div>
         </div>
       </section>
     </main>
+  );
+}
+
+function GatewayPanel({
+  icon,
+  title,
+  copy,
+  href,
+  action,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  copy: string;
+  href: string;
+  action: string;
+}) {
+  return (
+    <article className="cc-card p-6">
+      <div className="flex h-11 w-11 items-center justify-center rounded-sm bg-cc-light-blue text-cc-navy">
+        {icon}
+      </div>
+      <h3 className="mt-5 font-heading text-2xl font-bold text-cc-dark-blue">
+        {title}
+      </h3>
+      <p className="mt-3 text-base leading-7 text-cc-dark-blue/70">{copy}</p>
+      <Link
+        href={href}
+        className="cc-secondary mt-6"
+      >
+        {action}
+        <ArrowRight aria-hidden="true" size={16} />
+      </Link>
+    </article>
   );
 }

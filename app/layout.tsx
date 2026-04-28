@@ -4,12 +4,13 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: {
     default:
-      "Bowling for Backpacks | Bringing Christmas to Students for Back to School",
+      "Christmas in July | Bowling for Backpacks | Bringing Christmas to Students for Back to School",
     template: "%s | City Center",
   },
   description:
-    "Register a team, sponsor a lane, or make a gift for Bowling for Backpacks, City Center's Christmas in July fundraiser bringing Christmas to students for back to school.",
+    "Register a team, sponsor a lane, or make a gift for Christmas in July | Bowling for Backpacks, City Center's fundraiser bringing Christmas to students for back to school.",
   keywords: [
+    "Christmas in July | Bowling for Backpacks",
     "Bowling for Backpacks",
     "bringing Christmas to students for back to school",
     "Christmas in July Oklahoma City",
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
     "backpacks for students OKC",
     "school supplies fundraiser Oklahoma City",
     "support youth and families Oklahoma City",
-    "City Center back to school bash",
+    "City Center Back 2 School Bash",
   ],
 };
 

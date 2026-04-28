@@ -35,7 +35,7 @@ export function CheckoutSummary({
   const PaymentIcon = paymentIcons[paymentPreference];
 
   return (
-    <aside className="sticky top-6 rounded-sm border border-sftc-ink/10 bg-white p-5 shadow-soft">
+    <aside className="min-w-0 rounded-sm border border-sftc-ink/10 bg-white p-5 shadow-soft lg:sticky lg:top-6">
       <h3 className="font-heading text-xl font-semibold text-sftc-ink">Order summary</h3>
       <div className="mt-5 space-y-4 text-sm">
         <div className="flex justify-between gap-4">

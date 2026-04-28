@@ -10,11 +10,11 @@ const config: Config = {
     extend: {
       colors: {
         cc: {
-          "dark-blue": "#11132F",
-          navy: "#112F6D",
-          "sky-blue": "#3F9FEC",
-          "light-blue": "#E8E9EA",
-          "light-green": "#5DCBA3",
+          "dark-blue": "#213468",
+          navy: "#121230",
+          "sky-blue": "#213468",
+          "light-blue": "#ABBCC6",
+          "light-green": "#89AF94",
         },
         sftc: {
           ink: "#11132F",

@@ -8,7 +8,7 @@ export function BowlingImpactSection() {
     <section className="bg-white py-16 sm:py-20" aria-labelledby="bowling-impact">
       <div className="bfb-shell">
         <div className="max-w-3xl">
-          <p className="bfb-eyebrow">Back-to-school impact</p>
+          <p className="bfb-eyebrow">Back 2 School impact</p>
           <h2 id="bowling-impact" className="bfb-heading mt-4">
             {bowlingCopy.impact.headline}
           </h2>

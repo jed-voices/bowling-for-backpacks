@@ -1,23 +1,23 @@
 export const bowlingCopy = {
   announcement:
-    "July 16, 2026 / Andy B's / Christmas in July: bringing Christmas to students for back to school.",
+    "July 16, 2026 / Andy B's / Christmas in July | Bowling for Backpacks.",
   hero: {
     eyebrow: "Christmas in July\nBowling for Backpacks",
     headline: "Bringing Christmas to Students for Back to School!",
     alternateHeadline: "A joyful night of bowling. A stronger start for students.",
     body:
-      "Bowling for Backpacks brings Christmas-in-July generosity to a joyful City Center fundraiser that helps provide backpacks, school supplies, and practical back-to-school support for students and families in Oklahoma City.",
+      "Christmas in July | Bowling for Backpacks brings summer-holiday generosity to a joyful City Center fundraiser that helps provide backpacks, school supplies, and practical Back 2 School support for students and families in Oklahoma City.",
     detailLine:
-      "Christmas in July / Team Registration / Lane Sponsorships / Backpacks / School Supplies",
+      "Christmas in July / Team Sponsor / Lane Sponsor / Backpacks / School Supplies",
   },
   positioning:
-    "Bowling for Backpacks is a Christmas-in-July City Center fundraiser bringing Christmas to students for back to school through backpacks, school supplies, and practical support for families in Oklahoma City.",
+    "Christmas in July | Bowling for Backpacks is a City Center fundraiser bringing Christmas to students for back to school through backpacks, school supplies, and practical support for families in Oklahoma City.",
   why: {
     eyebrow: "Why This Matters",
     headline: "A backpack can carry more than supplies.",
     paragraphs: [
       "For many families, the start of a school year brings more than excitement. It brings pressure. Supplies, clothes, schedules, transportation, and the quiet worry of wanting a child to walk into class prepared.",
-      "City Center exists in that space with practical support and steady relationships. Bowling for Backpacks helps provide the kind of relief that protects dignity and reminds students they are seen, supported, and not starting the year alone.",
+      "City Center exists in that space with practical support and steady relationships. Christmas in July | Bowling for Backpacks helps provide the kind of relief that protects dignity and reminds students they are seen, supported, and not starting the year alone.",
     ],
     quote:
       "Relief of needs. Restoration of lives. Sometimes Christmas in July begins with a backpack, a pencil, and someone who cares.",
@@ -63,7 +63,7 @@ export const bowlingCopy = {
       "Two bowling sessions designed for different groups",
       "Team lanes for companies, families, churches, and friend groups",
       "Lane sponsorships for practical generosity",
-      "Back-to-school support for students and families",
+      "Back 2 School support for students and families",
       "Fast registration with invoice, check, or card options",
     ],
   },

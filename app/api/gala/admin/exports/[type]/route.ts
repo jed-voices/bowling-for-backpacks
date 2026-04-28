@@ -5,13 +5,18 @@ import {
   buildBackendPayload,
   greaterGivingExports,
 } from "@/lib/gala/export-greater-giving";
+import { isDevelopmentAuthenticated } from "@/lib/events/development-auth";
 
 type ExportRouteProps = {
   params: Promise<{ type: string }>;
 };
 
-const isAdminRequest = (request: Request) => {
+const isAdminRequest = async (request: Request) => {
   if (process.env.NODE_ENV !== "production") {
+    return true;
+  }
+
+  if (await isDevelopmentAuthenticated()) {
     return true;
   }
 
@@ -31,7 +36,7 @@ const csvResponse = (csv: string, filename: string) =>
   });
 
 export async function GET(request: Request, { params }: ExportRouteProps) {
-  if (!isAdminRequest(request)) {
+  if (!(await isAdminRequest(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

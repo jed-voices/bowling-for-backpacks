@@ -91,8 +91,8 @@ const primaryNavItems = [
 
 const heroHighlights = [
   "Christmas in July",
-  "Team Registration",
-  "Lane Sponsorships",
+  "Team Sponsor",
+  "Lane Sponsor",
   "Backpacks",
   "School Supplies",
 ];
@@ -103,7 +103,7 @@ export function BowlingHero() {
       <CityCenterSiteHeader />
 
       <section className="relative overflow-hidden bg-bfb-navy">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_84%_18%,rgba(63,159,236,0.24),transparent_34%),linear-gradient(135deg,#11132F_0%,#112F6D_54%,#11132F_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,#11132F_0%,#112F6D_54%,#11132F_100%)]" />
         <div className="absolute inset-x-0 top-0 h-px bg-bfb-green/70" />
         <div className="bfb-shell relative grid gap-10 py-12 sm:py-16 lg:min-h-[760px] lg:grid-cols-[minmax(0,0.96fr)_minmax(420px,0.74fr)] lg:items-center lg:gap-16 lg:py-20">
           <div className="max-w-[720px]">
@@ -138,7 +138,7 @@ export function BowlingHero() {
                 href="#sponsorships"
                 className="inline-flex min-h-12 items-center justify-center gap-2 rounded-sm border border-white/30 bg-white/10 px-5 py-3 font-heading text-sm font-bold uppercase text-white transition hover:border-bfb-green hover:bg-white/20 focus-visible:outline-bfb-green"
               >
-                Sponsor the Event
+                Event Sponsor - $5,000
               </a>
             </div>
 

@@ -20,6 +20,7 @@ export type BowlingSponsorship = {
   description: string;
   benefits: string[];
   includesTeam?: boolean;
+  featured?: boolean;
 };
 
 export type BowlingOption = {

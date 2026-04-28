@@ -21,23 +21,23 @@ const exportStatusLabels: Record<ExportStatus, string> = {
 
 const exportLinks = [
   {
-    label: "Greater Giving Sales",
+    label: "Sales Import",
     href: "/api/gala/admin/exports/greater-giving-sales",
   },
   {
-    label: "Greater Giving Supporters",
+    label: "Supporter Import",
     href: "/api/gala/admin/exports/greater-giving-supporters",
   },
   {
-    label: "Chance-to-Win",
+    label: "Drawing Entries",
     href: "/api/gala/admin/exports/chance-to-win",
   },
   {
-    label: "Bloomerang Transactions",
+    label: "Donor Export",
     href: "/api/gala/admin/exports/bloomerang-transactions",
   },
   {
-    label: "Backend JSON",
+    label: "Raw Data",
     href: "/api/gala/admin/exports/backend-json",
   },
 ];
@@ -88,13 +88,13 @@ export function AdminExportConsole({ exportKey }: AdminExportConsoleProps) {
         <Metric label="Visible value" value={formatCurrency(totalValue)} />
       </div>
 
-      <section className="rounded-sm border border-sftc-ink/10 bg-white p-5 shadow-sm">
+      <section className="ops-card p-5">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <h2 className="font-heading text-xl font-semibold text-sftc-ink">
+            <h2 className="font-heading text-xl font-bold text-cc-dark-blue">
               Registration preview
             </h2>
-            <p className="mt-2 text-sm leading-6 text-sftc-ink/60">
+            <p className="mt-2 text-sm leading-6 text-cc-dark-blue/65">
               Static preview data is shown until Supabase is connected.
             </p>
           </div>
@@ -103,11 +103,11 @@ export function AdminExportConsole({ exportKey }: AdminExportConsoleProps) {
               <span className="sr-only">Search registrations</span>
               <Search
                 aria-hidden="true"
-                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sftc-ink/35"
+                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-cc-dark-blue/35"
                 size={17}
               />
               <input
-                className="field-input w-full pl-10 sm:w-72"
+                className="ops-field w-full pl-10 sm:w-72"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search"
@@ -116,7 +116,7 @@ export function AdminExportConsole({ exportKey }: AdminExportConsoleProps) {
             <label>
               <span className="sr-only">Filter payment status</span>
               <select
-                className="field-input"
+                className="ops-field"
                 value={paymentFilter}
                 onChange={(event) => setPaymentFilter(event.target.value)}
               >
@@ -134,7 +134,7 @@ export function AdminExportConsole({ exportKey }: AdminExportConsoleProps) {
         <div className="mt-6 overflow-x-auto">
           <table className="w-full min-w-[960px] border-collapse text-left text-sm">
             <thead>
-              <tr className="border-y border-sftc-ink/12 text-xs uppercase text-sftc-ink/50">
+              <tr className="border-y border-cc-navy/10 text-xs uppercase text-cc-dark-blue/55">
                 <th className="py-3 pr-4 font-heading">Buyer</th>
                 <th className="py-3 pr-4 font-heading">Package</th>
                 <th className="py-3 pr-4 font-heading">Payment</th>
@@ -144,7 +144,7 @@ export function AdminExportConsole({ exportKey }: AdminExportConsoleProps) {
                 <th className="py-3 pr-4 font-heading">Total</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-sftc-ink/10">
+            <tbody className="divide-y divide-cc-navy/10">
               {registrations.map((registration) => {
                 const completedGuests = registration.guests.filter(
                   (guest) => guest.firstName || guest.lastName,
@@ -153,15 +153,15 @@ export function AdminExportConsole({ exportKey }: AdminExportConsoleProps) {
                 return (
                   <tr key={registration.id}>
                     <td className="py-4 pr-4 align-top">
-                      <p className="font-semibold text-sftc-ink">
+                      <p className="font-semibold text-cc-dark-blue">
                         {registration.buyerFirstName} {registration.buyerLastName}
                       </p>
-                      <p className="mt-1 text-sftc-ink/60">{registration.buyerEmail}</p>
-                      <p className="mt-1 text-sftc-ink/60">{registration.organization}</p>
+                      <p className="mt-1 text-cc-dark-blue/60">{registration.buyerEmail}</p>
+                      <p className="mt-1 text-cc-dark-blue/60">{registration.organization}</p>
                     </td>
                     <td className="py-4 pr-4 align-top">
-                      <p className="font-semibold text-sftc-ink">{registration.packageName}</p>
-                      <p className="mt-1 text-sftc-ink/60">
+                      <p className="font-semibold text-cc-dark-blue">{registration.packageName}</p>
+                      <p className="mt-1 text-cc-dark-blue/60">
                         {registration.greaterGivingPackageNumber}
                       </p>
                     </td>
@@ -190,18 +190,18 @@ export function AdminExportConsole({ exportKey }: AdminExportConsoleProps) {
         </div>
       </section>
 
-      <section className="rounded-sm border border-sftc-ink/10 bg-white p-5 shadow-sm">
+      <section className="ops-card p-5">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <h2 className="font-heading text-xl font-semibold text-sftc-ink">
+            <h2 className="font-heading text-xl font-bold text-cc-dark-blue">
               Export console
             </h2>
-            <p className="mt-2 text-sm leading-6 text-sftc-ink/60">
+            <p className="mt-2 text-sm leading-6 text-cc-dark-blue/65">
               These routes currently export preview records through the same utility
               functions that will be used after Supabase is connected.
             </p>
           </div>
-          <ShieldCheck aria-hidden="true" className="hidden text-sftc-hope lg:block" size={30} />
+          <ShieldCheck aria-hidden="true" className="hidden text-cc-light-green lg:block" size={30} />
         </div>
         <div className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
           {exportLinks.map((link) => {
@@ -210,7 +210,7 @@ export function AdminExportConsole({ exportKey }: AdminExportConsoleProps) {
               : link.href;
 
             return (
-            <a key={link.href} href={href} className="button-quiet justify-between">
+            <a key={link.href} href={href} className="ops-secondary justify-between">
               {link.label}
               <Download aria-hidden="true" size={16} />
             </a>
@@ -224,9 +224,9 @@ export function AdminExportConsole({ exportKey }: AdminExportConsoleProps) {
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-sm border border-sftc-ink/10 bg-white p-5 shadow-sm">
-      <p className="text-sm font-semibold uppercase text-sftc-ink/48">{label}</p>
-      <p className="mt-3 font-heading text-3xl font-semibold text-sftc-ink">{value}</p>
+    <div className="ops-card p-5">
+      <p className="text-sm font-semibold uppercase text-cc-dark-blue/55">{label}</p>
+      <p className="mt-3 font-heading text-3xl font-bold text-cc-dark-blue">{value}</p>
     </div>
   );
 }
@@ -239,9 +239,9 @@ function StatusPill({
   tone: "blue" | "green" | "gold";
 }) {
   const classes = {
-    blue: "bg-sftc-navy/10 text-sftc-navy",
-    green: "bg-sftc-hope/18 text-sftc-ink",
-    gold: "bg-sftc-gold/28 text-sftc-ink",
+    blue: "bg-cc-sky-blue/15 text-cc-navy",
+    green: "bg-cc-light-green/20 text-cc-navy",
+    gold: "bg-cc-light-blue/70 text-cc-navy",
   };
 
   return (

@@ -81,7 +81,7 @@ export const buildBowlingBloomerangRows = (
         ...baseRow(registration),
         Amount: registration.donationTotal,
         "Non-deductible": 0,
-        Note: "Additional Bowling for Backpacks gift.",
+        Note: `Additional ${bowlingEventConfig.name} gift.`,
       });
     }
 

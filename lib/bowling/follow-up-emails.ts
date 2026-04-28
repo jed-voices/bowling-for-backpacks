@@ -60,7 +60,7 @@ function wrapEmailHtml({
             <tr>
               <td style="padding:36px 32px;">
                 <p style="margin:0 0 14px;color:#112F6D;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;">${escapeHtml(eyebrow)}</p>
-                <h1 style="margin:0;color:#11132F;font-size:34px;line-height:1.05;font-weight:900;">${escapeHtml(headline)}</h1>
+                <h1 style="margin:0;color:#112F6D;font-size:34px;line-height:1.05;font-weight:900;">${escapeHtml(headline)}</h1>
                 <div style="margin-top:20px;color:#30324F;font-size:17px;line-height:1.65;">${body}</div>
                 ${ctaLabel && ctaHref ? `<p style="margin:28px 0 0;"><a href="${escapeHtml(ctaHref)}" style="display:inline-block;background:#112F6D;color:#ffffff;text-decoration:none;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;padding:14px 18px;">${escapeHtml(ctaLabel)}</a></p>` : ""}
                 <p style="margin:30px 0 0;color:#30324F;font-size:16px;line-height:1.65;">${footer ? escapeHtml(footer) : "Thank you for standing with students and families."}</p>
@@ -83,7 +83,7 @@ export function buildBowlingFollowUpEmails(
   const publicEventUrl = eventUrl(siteUrl);
   const publicTeamUrl = teamUrl(siteUrl, registration);
 
-  const impactSubject = "What your Bowling for Backpacks gift helps make possible";
+  const impactSubject = `What your ${bowlingEventConfig.theme} gift helps make possible`;
   const impactText = `Hi ${firstName},
 
 Thank you again for being part of ${bowlingEventConfig.name}.
@@ -117,7 +117,7 @@ Grateful for you,
 City Center
 `;
 
-  const finalDetailsSubject = "A few Bowling for Backpacks details to keep handy";
+  const finalDetailsSubject = `A few ${bowlingEventConfig.theme} details to keep handy`;
   const finalDetailsText = `Hi ${firstName},
 
 We are looking forward to ${bowlingEventConfig.name}.
@@ -174,11 +174,11 @@ City Center
       id: "final-event-details",
       timing: "Send 3-5 days before the event",
       subject: finalDetailsSubject,
-      previewText: "Date, location, confirmation code, and team link for Bowling for Backpacks.",
+      previewText: `Date, location, confirmation code, and team link for ${bowlingEventConfig.name}.`,
       text: finalDetailsText,
       html: wrapEmailHtml({
         subject: finalDetailsSubject,
-        previewText: "Date, location, confirmation code, and team link for Bowling for Backpacks.",
+        previewText: `Date, location, confirmation code, and team link for ${bowlingEventConfig.name}.`,
         eyebrow: "Event details",
         headline: "A few details to keep handy.",
         body: `<p style="margin:0;">Hi ${escapeHtml(firstName)},</p><p>We are looking forward to ${escapeHtml(bowlingEventConfig.name)}.</p><p><strong>Date:</strong> ${escapeHtml(bowlingEventConfig.date)}<br /><strong>Location:</strong> ${escapeHtml(bowlingEventConfig.venue)}, ${escapeHtml(bowlingEventConfig.city)}<br /><strong>Confirmation code:</strong> ${escapeHtml(registration.id)}</p><p>If anything changes or you have a question, email ${escapeHtml(bowlingEventConfig.contactName)} at <a href="mailto:${escapeHtml(bowlingEventConfig.contactEmail)}" style="color:#112F6D;font-weight:800;">${escapeHtml(bowlingEventConfig.contactEmail)}</a>.</p>`,

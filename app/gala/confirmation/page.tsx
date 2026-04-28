@@ -14,11 +14,11 @@ type ConfirmationPageProps = {
 
 const paymentCopy: Record<PaymentPreference, string> = {
   card:
-    "Your registration has been saved. In this prototype, Stripe Checkout is not connected yet, so this page stands in for the secure checkout handoff.",
+    "Your registration has been received. If a payment step is still needed, City Center will share the right next step with your contact email.",
   invoice:
-    "Your invoice request has been saved. City Center staff can follow up with invoice details when the backend is connected.",
+    "Your invoice request has been received. City Center will send invoice details to your contact email.",
   check:
-    "Your check pledge has been saved. City Center staff can reconcile payment when the backend is connected.",
+    "Your check pledge has been received. City Center will share check instructions with your contact email.",
 };
 
 export default async function ConfirmationPage({ searchParams }: ConfirmationPageProps) {

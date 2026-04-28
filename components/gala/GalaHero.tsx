@@ -21,7 +21,6 @@ export function GalaHero() {
           className="object-cover"
         />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(13,27,61,0.92)_0%,rgba(13,27,61,0.76)_42%,rgba(13,27,61,0.28)_100%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_24%,rgba(93,203,163,0.24),transparent_30%)]" />
 
         <nav className="section-shell relative z-10 flex items-center justify-between py-5 font-heading text-sm font-semibold">
           <Link href="/" className="text-white transition hover:text-sftc-gold">
