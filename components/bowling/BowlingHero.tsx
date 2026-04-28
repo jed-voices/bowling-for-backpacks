@@ -112,8 +112,8 @@ export function BowlingHero() {
               aria-label="Christmas in July Bowling for Backpacks"
             >
               <span className="block whitespace-nowrap font-script text-5xl font-normal normal-case leading-[0.85] sm:text-7xl lg:text-[7.5rem]">
-                <span>Christmas in</span>
-                <span className="inline-block -ml-[0.34em]"> July</span>
+                <span>CHRISTMAS IN</span>
+                <span className="inline-block -ml-[0.34em]"> JULY</span>
               </span>
               <span className="mt-3 block font-heading text-4xl font-black uppercase leading-[0.98] sm:text-6xl lg:text-7xl">
                 Bowling for Backpacks
