@@ -23,7 +23,7 @@ export function GalaHero() {
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(13,27,61,0.92)_0%,rgba(13,27,61,0.76)_42%,rgba(13,27,61,0.28)_100%)]" />
 
         <nav className="section-shell relative z-10 flex items-center justify-between py-5 font-heading text-sm font-semibold">
-          <Link href="/" className="text-white transition hover:text-sftc-gold">
+          <Link href="/" className="uppercase text-white transition hover:text-sftc-gold">
             City Center
           </Link>
           <a href="#registration" className="button-secondary hidden sm:inline-flex">

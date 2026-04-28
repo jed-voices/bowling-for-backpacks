@@ -58,7 +58,7 @@ export default async function DevelopmentPage({
       <main className="min-h-screen bg-cc-light-blue font-body text-cc-dark-blue">
         <header className="section-shell py-5">
           <nav className="flex items-center justify-between gap-4 border-b border-cc-navy/10 pb-4 text-sm text-cc-navy/70">
-            <Link href="/" className="inline-flex items-center gap-2 transition hover:text-cc-dark-blue">
+            <Link href="/" className="inline-flex items-center gap-2 font-heading font-bold uppercase transition hover:text-cc-dark-blue">
               <Home aria-hidden="true" size={15} />
               City Center Events
             </Link>
@@ -173,7 +173,7 @@ export default async function DevelopmentPage({
     <main className="min-h-screen bg-cc-light-blue font-body text-cc-dark-blue">
       <header className="section-shell pt-5">
         <nav className="flex items-center justify-between gap-4 border-b border-cc-navy/10 pb-4 text-sm text-cc-navy/70">
-          <Link href="/" className="inline-flex items-center gap-2 transition hover:text-cc-dark-blue">
+          <Link href="/" className="inline-flex items-center gap-2 font-heading font-bold uppercase transition hover:text-cc-dark-blue">
             <Home aria-hidden="true" size={15} />
             City Center Events
           </Link>

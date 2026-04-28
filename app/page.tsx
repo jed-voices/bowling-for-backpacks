@@ -36,7 +36,7 @@ export default async function HomePage() {
 
         <div className="section-shell relative pt-5">
           <nav className="flex items-center justify-between gap-4 border-b border-white/10 pb-4 text-sm text-white/75">
-            <Link href="/" className="font-heading font-semibold text-white">
+            <Link href="/" className="font-heading font-semibold uppercase text-white">
               City Center Events
             </Link>
             <div className="flex items-center gap-4 sm:gap-5">

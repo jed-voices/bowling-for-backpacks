@@ -128,7 +128,7 @@ export default function BrandPreviewPage() {
       >
         <div className="section-shell py-4">
           <nav className="flex items-center justify-between gap-4 text-sm">
-            <Link href="/" className="font-heading font-bold text-white">
+            <Link href="/" className="font-heading font-bold uppercase text-white">
               City Center Events
             </Link>
             <div className="flex items-center gap-4 text-white/72 sm:gap-5">

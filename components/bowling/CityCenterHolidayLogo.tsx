@@ -17,7 +17,7 @@ export function CityCenterHolidayLogo({ className = "" }: CityCenterHolidayLogoP
           className="h-16 w-16 object-contain"
         />
       </span>
-      <span className="font-heading text-base font-black leading-none sm:text-lg">
+      <span className="font-heading text-base font-black uppercase leading-none sm:text-lg">
         City Center
       </span>
     </span>
