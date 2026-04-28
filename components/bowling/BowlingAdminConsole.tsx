@@ -35,15 +35,15 @@ const exportStatusLabels: Record<BowlingExportStatus, string> = {
 
 const exportLinks = [
   {
-    label: "Bloomerang Transactions",
+    label: "Donor Export",
     href: "/api/bowling/admin/exports/bloomerang-transactions",
   },
   {
-    label: "Operations CSV",
+    label: "Ops List",
     href: "/api/bowling/admin/exports/operations",
   },
   {
-    label: "Backend JSON",
+    label: "Raw Data",
     href: "/api/bowling/admin/exports/backend-json",
   },
 ];
@@ -136,13 +136,13 @@ export function BowlingAdminConsole({
         />
       </div>
 
-      <section className="rounded-sm border border-bfb-ink/10 bg-white p-5 shadow-sm">
+      <section className="ops-card p-5">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <h2 className="font-heading text-xl font-black text-bfb-ink">
+            <h2 className="font-heading text-xl font-bold text-cc-dark-blue">
               {dataSource === "live" ? "Live registrations" : "Registration preview"}
             </h2>
-            <p className="mt-2 text-sm leading-6 text-bfb-ink/60">
+            <p className="mt-2 text-sm leading-6 text-cc-dark-blue/65">
               {dataSource === "live"
                 ? "Supabase registrations are shown for planning, reconciliation, and export checks."
                 : "Preview registrations are shown for planning, reconciliation, and export checks."}
@@ -153,11 +153,11 @@ export function BowlingAdminConsole({
               <span className="sr-only">Search registrations</span>
               <Search
                 aria-hidden="true"
-                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-bfb-ink/35"
+                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-cc-dark-blue/35"
                 size={17}
               />
               <input
-                className="bfb-field w-full pl-10 sm:w-72"
+                className="ops-field w-full pl-10 sm:w-72"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search"
@@ -166,7 +166,7 @@ export function BowlingAdminConsole({
             <label>
               <span className="sr-only">Filter payment status</span>
               <select
-                className="bfb-field"
+                className="ops-field"
                 value={paymentFilter}
                 onChange={(event) => setPaymentFilter(event.target.value)}
               >
@@ -184,7 +184,7 @@ export function BowlingAdminConsole({
         <div className="mt-6 overflow-x-auto">
           <table className="w-full min-w-[1060px] border-collapse text-left text-sm">
             <thead>
-              <tr className="border-y border-bfb-ink/10 text-xs uppercase text-bfb-ink/50">
+              <tr className="border-y border-cc-navy/10 text-xs uppercase text-cc-dark-blue/55">
                 <th className="py-3 pr-4 font-heading">Buyer</th>
                 <th className="py-3 pr-4 font-heading">Type</th>
                 <th className="py-3 pr-4 font-heading">Session</th>
@@ -195,7 +195,7 @@ export function BowlingAdminConsole({
                 <th className="py-3 pr-4 font-heading">Total</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-bfb-ink/10">
+            <tbody className="divide-y divide-cc-navy/10">
               {registrations.map((registration) => {
                 const bowlerCount = registration.bowlers.filter(
                   (bowler) => bowler.firstName || bowler.lastName,
@@ -204,15 +204,15 @@ export function BowlingAdminConsole({
                 return (
                   <tr key={registration.id}>
                     <td className="py-4 pr-4 align-top">
-                      <p className="font-bold text-bfb-ink">
+                      <p className="font-bold text-cc-dark-blue">
                         {registration.buyerFirstName} {registration.buyerLastName}
                       </p>
-                      <p className="mt-1 text-bfb-ink/60">{registration.buyerEmail}</p>
-                      <p className="mt-1 text-bfb-ink/60">{registration.organization}</p>
+                      <p className="mt-1 text-cc-dark-blue/60">{registration.buyerEmail}</p>
+                      <p className="mt-1 text-cc-dark-blue/60">{registration.organization}</p>
                     </td>
                     <td className="py-4 pr-4 align-top">
-                      <p className="font-bold text-bfb-ink">{registration.packageName}</p>
-                      <p className="mt-1 text-bfb-ink/60">{registration.teamName || "No team"}</p>
+                      <p className="font-bold text-cc-dark-blue">{registration.packageName}</p>
+                      <p className="mt-1 text-cc-dark-blue/60">{registration.teamName || "No team"}</p>
                     </td>
                     <td className="py-4 pr-4 align-top">{registration.sessionName || "None"}</td>
                     <td className="py-4 pr-4 align-top">
@@ -242,17 +242,17 @@ export function BowlingAdminConsole({
         </div>
       </section>
 
-      <section className="rounded-sm border border-bfb-ink/10 bg-white p-5 shadow-sm">
+      <section className="ops-card p-5">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <h2 className="font-heading text-xl font-black text-bfb-ink">Export console</h2>
-            <p className="mt-2 text-sm leading-6 text-bfb-ink/60">
+            <h2 className="font-heading text-xl font-bold text-cc-dark-blue">Export console</h2>
+            <p className="mt-2 text-sm leading-6 text-cc-dark-blue/65">
               {dataSource === "live"
                 ? "Exports are generated from live Supabase registrations."
                 : "Preview exports use the same utility functions that will support live data later."}
             </p>
           </div>
-          <ShieldCheck aria-hidden="true" className="hidden text-bfb-green lg:block" size={30} />
+          <ShieldCheck aria-hidden="true" className="hidden text-cc-light-green lg:block" size={30} />
         </div>
         <div className="mt-6 grid gap-3 md:grid-cols-3">
           {exportLinks.map((link) => {
@@ -261,7 +261,7 @@ export function BowlingAdminConsole({
               : link.href;
 
             return (
-              <a key={link.href} href={href} className="bfb-secondary justify-between">
+              <a key={link.href} href={href} className="ops-secondary justify-between">
                 {link.label}
                 <Download aria-hidden="true" size={16} />
               </a>
@@ -275,9 +275,9 @@ export function BowlingAdminConsole({
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-sm border border-bfb-ink/10 bg-white p-5 shadow-sm">
-      <p className="text-sm font-bold uppercase text-bfb-ink/50">{label}</p>
-      <p className="mt-3 font-heading text-2xl font-black leading-tight text-bfb-ink">{value}</p>
+    <div className="ops-card p-5">
+      <p className="text-sm font-bold uppercase text-cc-dark-blue/55">{label}</p>
+      <p className="mt-3 font-heading text-2xl font-bold leading-tight text-cc-dark-blue">{value}</p>
     </div>
   );
 }
@@ -290,9 +290,9 @@ function StatusPill({
   tone: "blue" | "green" | "gold";
 }) {
   const classes = {
-    blue: "bg-bfb-blue/15 text-bfb-navy",
-    green: "bg-bfb-green/20 text-bfb-ink",
-    gold: "bg-bfb-light text-bfb-ink",
+    blue: "bg-cc-sky-blue/15 text-cc-navy",
+    green: "bg-cc-light-green/20 text-cc-navy",
+    gold: "bg-cc-light-blue/70 text-cc-navy",
   };
 
   return (

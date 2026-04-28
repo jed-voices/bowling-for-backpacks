@@ -33,7 +33,7 @@ export const sponsorships: GalaPackage[] = [
       "Premier logo placement on event website and screens",
       "Featured social recognition before and after the Gala",
       "Premium placement in printed program",
-      "Dedicated City Center stewardship follow-up after the event",
+      "Dedicated City Center thank-you after the event",
     ],
   },
   {

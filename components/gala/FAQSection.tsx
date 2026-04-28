@@ -12,17 +12,17 @@ const faqs = [
   {
     question: "Can City Center invoice my organization?",
     answer:
-      "Yes. Choose request invoice during registration and staff will follow up with the appropriate invoice details.",
+      "Yes. Choose request invoice during registration and City Center will send the appropriate invoice details.",
   },
   {
     question: "Can I pay by check?",
     answer:
-      "Yes. Choose pay later by check and the pledge will be saved for staff follow-up and reconciliation.",
+      "Yes. Choose pay later by check and City Center will share check instructions with your contact email.",
   },
   {
     question: "Are chance-to-win entries available now?",
     answer:
-      "The prototype supports entry tracking. Official rules, eligibility, drawing details, and tax language should be confirmed before purchase is enabled.",
+      "Chance-to-win details will be shared with official rules, eligibility, drawing information, and any required tax language before entries open.",
   },
 ];
 

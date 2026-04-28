@@ -207,10 +207,10 @@ export function RegistrationForm() {
       aria-labelledby="registration-heading"
     >
       <div className="section-shell">
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
+        <div className="grid min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
           <form
             onSubmit={handleSubmit}
-            className="rounded-sm border border-sftc-ink/10 bg-white p-5 shadow-soft sm:p-8"
+            className="min-w-0 rounded-sm border border-sftc-ink/10 bg-white p-5 shadow-soft sm:p-8"
           >
             <div className="max-w-3xl">
               <p className="eyebrow">Registration</p>
@@ -236,13 +236,13 @@ export function RegistrationForm() {
               </div>
             ) : null}
 
-            <fieldset className="mt-10">
+            <fieldset className="mt-10 min-w-0">
               <legend className="font-heading text-2xl font-semibold text-sftc-ink">
                 Sponsorships and tickets
               </legend>
               <FieldError message={errors.packageId} />
 
-              <div className="mt-5 space-y-6">
+              <div className="mt-5 min-w-0 space-y-6">
                 <PackagePicker
                   title="Sponsorships"
                   packages={sponsorships}
@@ -407,17 +407,18 @@ export function RegistrationForm() {
                   className="field-input"
                   value={form.admitInfo}
                   onChange={(event) => updateForm("admitInfo", event.target.value)}
-                  placeholder="Anything staff should know for check-in"
+                  placeholder="Anything City Center should know for check-in"
                 />
               </label>
-              <label className="md:col-span-2">
+              <label className="min-w-0 md:col-span-2">
                 <span className="field-label">Sponsor logo upload placeholder</span>
                 <div className="flex flex-col gap-3 rounded-sm border border-dashed border-sftc-ink/22 bg-sftc-ivory p-4 sm:flex-row sm:items-center">
                   <Upload aria-hidden="true" className="text-sftc-brass" size={22} />
-                  <div className="flex-1">
+                  <div className="min-w-0 flex-1">
                     <input
                       type="file"
                       accept="image/*"
+                      className="max-w-full text-sm"
                       onChange={(event) =>
                         updateForm("sponsorLogoName", event.target.files?.[0]?.name ?? "")
                       }
@@ -440,7 +441,7 @@ export function RegistrationForm() {
               />
             </div>
 
-            <fieldset className="mt-10 grid gap-5 md:grid-cols-2">
+            <fieldset className="mt-10 grid min-w-0 gap-5 md:grid-cols-2">
               <legend className="md:col-span-2 font-heading text-2xl font-semibold text-sftc-ink">
                 Giving and payment
               </legend>
@@ -469,7 +470,7 @@ export function RegistrationForm() {
                 />
                 <p className="field-help">
                   {formatCurrency(eventConfig.chanceEntryPrice)} per entry. Entries should be
-                  issued only after payment or staff approval.
+                  issued only after payment or City Center approval.
                 </p>
                 <FieldError message={errors.chanceEntryQuantity} />
               </label>
@@ -479,17 +480,17 @@ export function RegistrationForm() {
                   className="field-input min-h-28"
                   value={form.notes}
                   onChange={(event) => updateForm("notes", event.target.value)}
-                  placeholder="Accessibility notes, registration context, or staff follow-up"
+                  placeholder="Accessibility notes, guest needs, or anything City Center should know"
                 />
               </label>
             </fieldset>
 
-            <fieldset className="mt-10">
+            <fieldset className="mt-10 min-w-0">
               <legend className="font-heading text-2xl font-semibold text-sftc-ink">
                 Payment preference
               </legend>
               <FieldError message={errors.paymentPreference} />
-              <div className="mt-5 grid gap-3 md:grid-cols-3">
+              <div className="mt-5 grid min-w-0 gap-3 md:grid-cols-3">
                 {(Object.keys(paymentPreferenceLabels) as PaymentPreference[]).map((preference) => {
                   const Icon = paymentIcons[preference];
                   const isSelected = form.paymentPreference === preference;
@@ -518,10 +519,10 @@ export function RegistrationForm() {
                         </span>
                         <span className="mt-2 block text-sm leading-6 text-sftc-ink/60">
                           {preference === "card"
-                            ? "Start a secure checkout session when Stripe is connected."
+                            ? "Choose a secure card payment path."
                             : preference === "invoice"
-                              ? "Save the registration for staff invoice follow-up."
-                              : "Record a check pledge for staff reconciliation."}
+                              ? "City Center will send invoice details to your contact email."
+                              : "City Center will share check instructions with your contact email."}
                         </span>
                       </span>
                     </label>
@@ -585,18 +586,18 @@ type PackagePickerProps = {
 
 function PackagePicker({ title, packages, selectedId, onSelect }: PackagePickerProps) {
   return (
-    <div>
+    <div className="min-w-0">
       <h3 className="font-heading text-sm font-semibold uppercase text-sftc-ink/52">
         {title}
       </h3>
-      <div className="mt-3 divide-y divide-sftc-ink/10 overflow-hidden rounded-sm border border-sftc-ink/10">
+      <div className="mt-3 min-w-0 divide-y divide-sftc-ink/10 overflow-hidden rounded-sm border border-sftc-ink/10">
         {packages.map((item) => {
           const isSelected = selectedId === item.id;
 
           return (
             <label
               key={item.id}
-              className={`grid cursor-pointer gap-3 p-4 transition md:grid-cols-[auto_1fr_auto] md:items-center ${
+              className={`grid min-w-0 cursor-pointer gap-3 p-4 transition md:grid-cols-[auto_minmax(0,1fr)_auto] md:items-center ${
                 isSelected ? "bg-sftc-ivory" : "bg-white hover:bg-sftc-stone/65"
               }`}
             >
@@ -607,8 +608,8 @@ function PackagePicker({ title, packages, selectedId, onSelect }: PackagePickerP
                 checked={isSelected}
                 onChange={() => onSelect(item.id)}
               />
-              <span>
-                <span className="flex flex-wrap items-center gap-3 font-heading font-semibold text-sftc-ink">
+              <span className="min-w-0">
+                <span className="flex min-w-0 flex-wrap items-center gap-3 font-heading font-semibold text-sftc-ink">
                   {item.name}
                   {item.label ? (
                     <span className="rounded-sm bg-sftc-hope/18 px-2 py-1 text-xs font-semibold uppercase text-sftc-ink/70">
@@ -616,7 +617,7 @@ function PackagePicker({ title, packages, selectedId, onSelect }: PackagePickerP
                     </span>
                   ) : null}
                 </span>
-                <span className="mt-1 block text-sm leading-6 text-sftc-ink/60">
+                <span className="mt-1 block break-words text-sm leading-6 text-sftc-ink/60">
                   {item.seats} {item.seats === 1 ? "seat" : "seats"} / Package{" "}
                   {item.greaterGivingPackageNumber}
                 </span>

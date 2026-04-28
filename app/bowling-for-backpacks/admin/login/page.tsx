@@ -23,16 +23,16 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-bfb-cream">
-      <form action={login} className="bg-white p-8 shadow-soft rounded-sm w-full max-w-sm">
-        <h1 className="font-heading text-2xl font-black mb-4">Admin Access</h1>
+    <main className="flex min-h-screen items-center justify-center bg-cc-light-blue/35">
+      <form action={login} className="ops-card w-full max-w-sm p-8">
+        <h1 className="mb-4 font-heading text-2xl font-bold text-cc-dark-blue">Admin Access</h1>
         <input
           name="secret"
           type="password"
           placeholder="Enter admin secret"
-          className="w-full border p-3 mb-4"
+          className="ops-field mb-4"
         />
-        <button className="bfb-primary w-full">Enter</button>
+        <button className="ops-primary w-full">Enter</button>
       </form>
     </main>
   );

@@ -29,7 +29,7 @@ export default async function BowlingTeamPage({ params }: TeamPageProps) {
     <main className="min-h-screen bg-bfb-cream py-16">
       <div className="bfb-shell max-w-4xl">
         <Link href="/bowling-for-backpacks" className="bfb-secondary">
-          Back to Bowling for Backpacks
+          Back to Christmas in July
         </Link>
         <section className="mt-8 rounded-sm border border-bfb-ink/10 bg-white p-8 shadow-soft sm:p-10">
           <UsersRound aria-hidden="true" className="text-bfb-blue" size={42} />
@@ -40,7 +40,7 @@ export default async function BowlingTeamPage({ params }: TeamPageProps) {
           <p className="bfb-copy mt-6">
             Confirmation code {registrationId} has a dedicated captain link for bowler
             names and team updates. Keep this page handy as your group gets ready
-            for Bowling for Backpacks.
+            for {bowlingEventConfig.name}.
           </p>
           {registration ? (
             <div className="mt-6 grid gap-4 rounded-sm bg-bfb-light p-5 sm:grid-cols-2">

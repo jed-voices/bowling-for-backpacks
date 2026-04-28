@@ -23,16 +23,15 @@ export default async function GuestListPage({ params }: GuestListPageProps) {
           <ClipboardList aria-hidden="true" className="text-sftc-brass" size={42} />
           <p className="eyebrow mt-8">Guest list builder</p>
           <h1 className="mt-4 font-display text-5xl font-medium leading-tight text-sftc-ink">
-            Guest names can live here once Supabase is connected.
+            Your guest-list link is ready.
           </h1>
           <p className="body-copy mt-6">
-            Registration {registrationId} has a dedicated guest-list route in place.
-            The static prototype already builds guest fields inside the registration flow;
-            this page is prepared for the later saved-link experience.
+            Registration {registrationId} has a dedicated place for table hosts to
+            gather guest names as they are confirmed.
           </p>
           <div className="mt-8 rounded-sm bg-sftc-stone p-5 text-sm leading-6 text-sftc-ink/70">
-            Future behavior: fetch the registration, show included seats, save guest
-            rows, and mark guest-list completion for the admin dashboard.
+            Keep this link handy. City Center will use the guest information to
+            help welcome your table well on event night.
           </div>
         </section>
       </div>

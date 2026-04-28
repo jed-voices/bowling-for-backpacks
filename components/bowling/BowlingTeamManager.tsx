@@ -27,7 +27,7 @@ export function BowlingTeamManager({
   const [message, setMessage] = useState(
     canSave
       ? ""
-      : "Live saving will turn on when Supabase is configured and this registration exists.",
+      : "This team link is ready. If you need help updating names, contact City Center.",
   );
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -35,7 +35,7 @@ export function BowlingTeamManager({
 
     if (!canSave) {
       setSaveState("error");
-      setMessage("Supabase is required before team updates can be saved.");
+      setMessage("Team updates are not available for this link yet. City Center can help with any changes.");
       return;
     }
 

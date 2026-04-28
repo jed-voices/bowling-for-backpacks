@@ -6,13 +6,14 @@ import type {
 } from "./types";
 
 export const bowlingEventConfig = {
-  name: "Bowling for Backpacks",
-  subtitle: "A City Center Christmas in July Back-to-School Fundraiser",
+  name: "Christmas in July | Bowling for Backpacks",
+  subtitle: "A City Center Back 2 School Fundraiser",
   theme: "Christmas in July",
   date: "July 16, 2026",
   venue: "Andy B's",
   city: "Oklahoma City",
   cause: "Backpacks, school supplies, and back-to-school support for students and families",
+  fundraisingGoal: 50000,
   teamPrice: 750,
   lanesPerSession: 21,
   teamSize: 6,
@@ -21,9 +22,9 @@ export const bowlingEventConfig = {
   contactTitle: "Development Director",
   contactEmail: "kimberly@okcitycenter.org",
   fund: "City Center",
-  campaign: "2026 Bowling for Backpacks",
-  appeal: "Back-to-School Bash",
-  groups: "Bowling for Backpacks | Back-to-School",
+  campaign: "2026 Christmas in July | Bowling for Backpacks",
+  appeal: "Back 2 School Bash",
+  groups: "Christmas in July | Bowling for Backpacks | Back 2 School",
 };
 
 export const bowlingSessions: BowlingSession[] = [
@@ -72,47 +73,32 @@ export const bowlingTimeline = [
 
 export const bowlingSponsorships: BowlingSponsorship[] = [
   {
-    id: "presenting",
-    name: "Presenting Sponsor",
-    price: 10000,
-    description:
-      "A leadership sponsorship that helps carry the Christmas-in-July event and provide meaningful back-to-school support for students and families.",
-    benefits: [
-      "Premier recognition on event website",
-      "Featured recognition at the event",
-      "Logo placement on event materials",
-      "Social media recognition",
-      "Team registration included",
-    ],
-    includesTeam: true,
-  },
-  {
-    id: "corporate-session",
-    name: "Corporate Team Session Sponsor",
+    id: "event-sponsor",
+    name: "Event Sponsor",
     price: 5000,
     description:
-      "Sponsor the corporate bowling session and gather teams around a fun, purpose-filled Christmas-in-July event.",
+      "The primary sponsorship for Christmas in July. This level helps carry the event, includes a team lane, and gives supporters clear recognition tied to the full Back 2 School effort.",
     benefits: [
-      "Recognition connected to the Corporate Team Session",
-      "Logo on event website",
-      "Event signage recognition",
-      "Social media recognition",
+      "Primary event recognition",
+      "Logo on the event page and event materials",
+      "Recognition during the bowling sessions",
       "Team registration included",
+      "A dedicated City Center thank-you after the event",
     ],
     includesTeam: true,
+    featured: true,
   },
   {
-    id: "family-night",
-    name: "Community & Family Session Sponsor",
-    price: 5000,
+    id: "team-sponsor",
+    name: "Team Sponsor / Team Registration",
+    price: 750,
     description:
-      "Sponsor the community and family evening session and help create a joyful summer-holiday night of generosity.",
+      "Reserve a team lane for your company, church, family, or friend group and join the Christmas-in-July event in person.",
     benefits: [
-      "Recognition connected to the Community & Family Session",
-      "Logo on event website",
-      "Event signage recognition",
-      "Social media recognition",
-      "Team registration included",
+      "One team lane",
+      "Up to six bowlers",
+      "Choice of preferred session",
+      "Team captain can add bowler names later",
     ],
     includesTeam: true,
   },
@@ -128,26 +114,14 @@ export const bowlingSponsorships: BowlingSponsorship[] = [
       "Great option for families, small businesses, and community partners",
     ],
   },
-  {
-    id: "friend",
-    name: "Friend of City Center",
-    price: 1000,
-    description:
-      "A meaningful Christmas-in-July gift for supporters who want to help students and families without registering a full sponsorship.",
-    benefits: [
-      "Recognition as a Friend of City Center",
-      "Event website recognition",
-      "Supports back-to-school supplies and family outreach",
-    ],
-  },
 ];
 
 export const teamRegistration: BowlingOption = {
   id: "team",
-  name: "Team Registration",
+  name: "Team Sponsor / Team Registration",
   price: 750,
   description:
-    "Register a team for Bowling for Backpacks and bring Christmas-in-July energy to back-to-school support for students and families.",
+    "Register a team for Christmas in July | Bowling for Backpacks and bring Christmas-in-July energy to Back 2 School support for students and families.",
   includes: [
     "One team lane",
     "Bowling session access",
@@ -157,23 +131,23 @@ export const teamRegistration: BowlingOption = {
 };
 
 export const bowlingRegistrationOptions: BowlingOption[] = [
-  teamRegistration,
   {
     id: "sponsorship",
-    name: "Sponsor the Event",
+    name: "Event Sponsor",
     price: 5000,
     description:
-      "Sponsorships help cover the Christmas-in-July event and provide direct support for students and families preparing for the school year.",
+      "The primary sponsorship level for companies, families, or partners ready to lead the Christmas-in-July effort.",
     includes: [
-      "Event recognition",
-      "Sponsor logo placeholder",
-      "Staff follow-up",
-      "Optional team lane depending on level",
+      "Primary event recognition",
+      "Sponsor logo placement",
+      "Team registration included",
+      "City Center contact for next steps",
     ],
   },
+  teamRegistration,
   {
     id: "lane-sponsor",
-    name: "Sponsor a Lane",
+    name: "Lane Sponsor",
     price: 500,
     description:
       "Sponsor one lane and help turn a summer-holiday night of fun into practical relief for families.",
@@ -265,7 +239,7 @@ export const sampleBowlingRegistrations: BowlingRegistrationRecord[] = [
     id: "BFB-A1002",
     createdAt: "2026-04-24T16:30:00.000Z",
     registrationType: "sponsorship",
-    packageId: "corporate-session",
+    packageId: "event-sponsor",
     buyerFirstName: "Jamie",
     buyerLastName: "Nguyen",
     buyerEmail: "jamie@example.com",
@@ -280,7 +254,7 @@ export const sampleBowlingRegistrations: BowlingRegistrationRecord[] = [
     notes: "Needs invoice follow-up.",
     paymentPreference: "invoice",
     saveTeamLink: true,
-    packageName: "Corporate Team Session Sponsor",
+    packageName: "Event Sponsor",
     laneCount: 1,
     subtotal: 5000,
     donationTotal: 0,

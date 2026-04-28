@@ -43,7 +43,7 @@ export function buildBowlingConfirmationEmail(
   const eventUrl = `${siteUrl}/bowling-for-backpacks`;
   const teamUrl = `${siteUrl}${bowlingEventConfig.teamBaseUrl}/${registration.id}`;
   const subject = `You are in for ${bowlingEventConfig.name}`;
-  const previewText = "Your Bowling for Backpacks registration has been received by City Center.";
+  const previewText = `Your ${bowlingEventConfig.name} registration has been received by City Center.`;
   const nextStep = paymentNextStep(registration);
   const sessionLine = registration.sessionName
     ? `${registration.sessionName}${registration.sessionId ? "" : ""}`
@@ -93,7 +93,7 @@ ${eventUrl}
             <tr>
               <td style="padding:36px 32px 28px;">
                 <p style="margin:0 0 14px;color:#112F6D;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;">You are in</p>
-                <h1 style="margin:0;color:#11132F;font-size:34px;line-height:1.05;font-weight:900;">Thank you for helping students start the school year ready.</h1>
+                <h1 style="margin:0;color:#112F6D;font-size:34px;line-height:1.05;font-weight:900;">Thank you for helping students start the school year ready.</h1>
                 <p style="margin:20px 0 0;color:#30324F;font-size:17px;line-height:1.65;">Hi ${escapeHtml(firstName)}, your ${escapeHtml(bowlingEventConfig.name)} registration has been received by City Center.</p>
                 <p style="margin:14px 0 0;color:#30324F;font-size:17px;line-height:1.65;">Your support helps provide backpacks, school supplies, and practical back-to-school support for students and families.</p>
               </td>
@@ -112,13 +112,13 @@ ${eventUrl}
             </tr>
             <tr>
               <td style="padding:24px 32px 0;">
-                <h2 style="margin:0;color:#11132F;font-size:22px;line-height:1.2;font-weight:900;">What happens next</h2>
+                <h2 style="margin:0;color:#112F6D;font-size:22px;line-height:1.2;font-weight:900;">What happens next</h2>
                 <p style="margin:12px 0 0;color:#30324F;font-size:16px;line-height:1.65;">${escapeHtml(nextStep)}</p>
               </td>
             </tr>
             <tr>
               <td style="padding:24px 32px 0;">
-                <h2 style="margin:0;color:#11132F;font-size:22px;line-height:1.2;font-weight:900;">Need to add bowler names later?</h2>
+                <h2 style="margin:0;color:#112F6D;font-size:22px;line-height:1.2;font-weight:900;">Need to add bowler names later?</h2>
                 <p style="margin:12px 0 18px;color:#30324F;font-size:16px;line-height:1.65;">Use your team link when you are ready.</p>
                 <a href="${escapeHtml(teamUrl)}" style="display:inline-block;background:#112F6D;color:#ffffff;text-decoration:none;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;padding:14px 18px;">Update bowler names</a>
               </td>
