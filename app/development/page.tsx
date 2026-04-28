@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import {
   ArrowRight,
+  CheckCircle2,
+  CircleAlert,
   ClipboardList,
   Database,
   Download,
@@ -11,6 +13,7 @@ import {
   LockKeyhole,
   LogOut,
   ShieldCheck,
+  Wrench,
 } from "lucide-react";
 import {
   isDevelopmentAuthConfigured,
@@ -25,6 +28,7 @@ import {
   formatCurrency,
   getDevelopmentDashboard,
   type EventOperationsSummary,
+  type LaunchReadinessItem,
 } from "@/lib/events/dashboard";
 
 export const metadata: Metadata = {
@@ -224,6 +228,8 @@ export default async function DevelopmentPage({
           />
         </div>
 
+        <LaunchReadiness items={dashboard.readiness} />
+
         <div className="mt-8 grid gap-5 lg:grid-cols-2">
           {dashboard.events.map((event) => (
             <EventOperationsCard key={event.id} event={event} />
@@ -245,6 +251,96 @@ function Signal({ label, value }: { label: string; value: string }) {
       <p className="font-heading text-xs font-bold uppercase text-cc-navy/60">{label}</p>
       <p className="mt-2 font-heading text-2xl font-bold text-cc-dark-blue">{value}</p>
     </div>
+  );
+}
+
+function ReadinessPill({ status }: { status: LaunchReadinessItem["status"] }) {
+  const label =
+    status === "ready"
+      ? "Ready"
+      : status === "planned"
+        ? "Planned"
+        : "Needs setup";
+  const className =
+    status === "ready"
+      ? "border-cc-light-green/40 bg-cc-light-green/15 text-cc-navy"
+      : status === "planned"
+        ? "border-cc-sky-blue/25 bg-cc-light-blue/70 text-cc-navy"
+        : "border-amber-300/70 bg-amber-50 text-amber-900";
+
+  return (
+    <span className={`inline-flex min-h-8 items-center rounded-sm border px-3 py-1.5 font-heading text-xs font-bold uppercase ${className}`}>
+      {label}
+    </span>
+  );
+}
+
+function ReadinessIcon({ status }: { status: LaunchReadinessItem["status"] }) {
+  if (status === "ready") {
+    return <CheckCircle2 aria-hidden="true" className="text-cc-light-green" size={22} />;
+  }
+
+  if (status === "planned") {
+    return <Wrench aria-hidden="true" className="text-cc-sky-blue" size={22} />;
+  }
+
+  return <CircleAlert aria-hidden="true" className="text-amber-700" size={22} />;
+}
+
+function LaunchReadiness({ items }: { items: LaunchReadinessItem[] }) {
+  const readyCount = items.filter((item) => item.status === "ready").length;
+
+  return (
+    <section className="mt-8 border border-cc-navy/10 bg-white p-5 shadow-sm sm:p-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <p className="font-heading text-xs font-bold uppercase leading-none text-cc-sky-blue">
+            Production setup
+          </p>
+          <h2 className="mt-3 font-heading text-2xl font-bold uppercase text-cc-dark-blue">
+            Launch readiness
+          </h2>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-cc-dark-blue/65">
+            Shows which operational systems are active in this environment and
+            what still needs to be added before live registrations and payments
+            are fully dependable.
+          </p>
+        </div>
+        <div className="border border-cc-navy/10 bg-cc-light-blue/35 px-4 py-3 text-left sm:text-right">
+          <p className="font-heading text-xs font-bold uppercase text-cc-navy/60">
+            Ready
+          </p>
+          <p className="mt-1 font-heading text-2xl font-bold text-cc-dark-blue">
+            {readyCount}/{items.length}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-6 grid gap-3 lg:grid-cols-2">
+        {items.map((item) => (
+          <article
+            key={item.label}
+            className="grid gap-4 border border-cc-navy/10 p-4 sm:grid-cols-[auto_1fr] sm:items-start"
+          >
+            <ReadinessIcon status={item.status} />
+            <div>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <h3 className="font-heading text-base font-bold uppercase text-cc-dark-blue">
+                  {item.label}
+                </h3>
+                <ReadinessPill status={item.status} />
+              </div>
+              <p className="mt-3 text-sm leading-6 text-cc-dark-blue/70">
+                {item.detail}
+              </p>
+              <p className="mt-3 border-l-4 border-cc-light-green/70 pl-3 text-sm leading-6 text-cc-dark-blue/75">
+                {item.nextStep}
+              </p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }
 

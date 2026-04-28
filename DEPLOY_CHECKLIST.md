@@ -23,6 +23,12 @@ Optional preview keys:
 
 Do not use the local fallback development password in production. Use a unique production password.
 
+Current production state after the first launch:
+
+- `NEXT_PUBLIC_SITE_URL`, `SITE_URL`, Development login, `ADMIN_SECRET`, and admin preview keys are configured.
+- `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `STRIPE_SECRET_KEY`, and `STRIPE_WEBHOOK_SECRET` still need to be added before Bowling can accept dependable live registrations and payments.
+- The Development dashboard includes a Launch Readiness panel that shows the same status without exposing secret values.
+
 ## 2. Database Setup
 
 Run the Supabase migration before opening live Bowling registration:
@@ -46,6 +52,14 @@ Then set:
 - `STRIPE_WEBHOOK_SECRET`
 
 The Gala checkout route is intentionally deferred for the prototype phase.
+
+Recommended order:
+
+1. Add `STRIPE_SECRET_KEY`.
+2. Redeploy production so Checkout can create live sessions.
+3. Create the Bowling webhook endpoint in Stripe.
+4. Add `STRIPE_WEBHOOK_SECRET`.
+5. Redeploy production again so payment status updates are active.
 
 ## 4. Routes To Verify
 

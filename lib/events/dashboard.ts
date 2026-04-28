@@ -1,10 +1,14 @@
 import { sampleBowlingRegistrations, bowlingSessions } from "@/lib/bowling/config";
-import { listBowlingRegistrations } from "@/lib/bowling/database";
+import {
+  isBowlingDatabaseConfigured,
+  listBowlingRegistrations,
+} from "@/lib/bowling/database";
 import type { BowlingRegistrationRecord } from "@/lib/bowling/types";
 import { remainingLanesFromRegistrations } from "@/lib/bowling/validation";
 import { sampleRegistrations } from "@/lib/gala/config";
 import type { GalaRegistrationRecord } from "@/lib/gala/types";
 import { formatCurrency } from "@/lib/gala/validation";
+import { isDevelopmentAuthConfigured } from "./development-auth";
 import { cityCenterEvents } from "./directory";
 
 type Metric = {
@@ -43,12 +47,20 @@ export type EventOperationsSummary = {
   exports: ExportLink[];
 };
 
+export type LaunchReadinessItem = {
+  label: string;
+  status: "ready" | "needs_setup" | "planned";
+  detail: string;
+  nextStep: string;
+};
+
 export type DevelopmentDashboard = {
   totalEvents: number;
   totalRegistrations: number;
   totalValue: number;
   totalOpenPayments: number;
   totalExportQueue: number;
+  readiness: LaunchReadinessItem[];
   events: EventOperationsSummary[];
 };
 
@@ -99,6 +111,74 @@ const countExportQueue = (
 ) =>
   registrations.filter((registration) => registration.exportStatus !== "exported")
     .length;
+
+const hasConfiguredUrl = () =>
+  Boolean(process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL);
+
+const hasStripeSecret = () => Boolean(process.env.STRIPE_SECRET_KEY);
+
+const hasStripeWebhookSecret = () => Boolean(process.env.STRIPE_WEBHOOK_SECRET);
+
+const buildLaunchReadiness = (): LaunchReadinessItem[] => [
+  {
+    label: "Live domain",
+    status: hasConfiguredUrl() ? "ready" : "needs_setup",
+    detail: hasConfiguredUrl()
+      ? "Production confirmation links and checkout return URLs have a configured site URL."
+      : "Production links need a configured site URL.",
+    nextStep: hasConfiguredUrl()
+      ? "Keep NEXT_PUBLIC_SITE_URL and SITE_URL pointed to okcitycenterevents.org."
+      : "Add NEXT_PUBLIC_SITE_URL and SITE_URL in Vercel production.",
+  },
+  {
+    label: "Development login",
+    status: isDevelopmentAuthConfigured() ? "ready" : "needs_setup",
+    detail: isDevelopmentAuthConfigured()
+      ? "Development access credentials are configured for this environment."
+      : "Development access is not ready for this environment.",
+    nextStep: isDevelopmentAuthConfigured()
+      ? "Store the credentials in the City Center password manager."
+      : "Add DEVELOPMENT_ADMIN_USERNAME and DEVELOPMENT_ADMIN_PASSWORD in Vercel.",
+  },
+  {
+    label: "Bowling database",
+    status: isBowlingDatabaseConfigured() ? "ready" : "needs_setup",
+    detail: isBowlingDatabaseConfigured()
+      ? "Bowling registrations will persist to Supabase."
+      : "Bowling is still using preview fallback data when Supabase is absent.",
+    nextStep: isBowlingDatabaseConfigured()
+      ? "Submit one test registration and confirm it appears in Supabase."
+      : "Run the Supabase migration and add SUPABASE_URL plus SUPABASE_SERVICE_ROLE_KEY.",
+  },
+  {
+    label: "Bowling card checkout",
+    status: hasStripeSecret() ? "ready" : "needs_setup",
+    detail: hasStripeSecret()
+      ? "Stripe Checkout can create hosted card payment sessions."
+      : "Card payments return a local preview confirmation until Stripe is configured.",
+    nextStep: hasStripeSecret()
+      ? "Run a small test checkout and verify the confirmation page."
+      : "Add STRIPE_SECRET_KEY in Vercel production.",
+  },
+  {
+    label: "Stripe payment updates",
+    status: hasStripeSecret() && hasStripeWebhookSecret() ? "ready" : "needs_setup",
+    detail:
+      hasStripeSecret() && hasStripeWebhookSecret()
+        ? "Stripe webhooks can mark Bowling registrations paid after checkout."
+        : "Paid status will not update automatically until the webhook secret is present.",
+    nextStep:
+      hasStripeSecret() && hasStripeWebhookSecret()
+        ? "Watch the first live webhook event and confirm the admin dashboard updates."
+        : "Create the Bowling webhook endpoint in Stripe and add STRIPE_WEBHOOK_SECRET.",
+  },
+  {
+    label: "Gala backend",
+    status: "planned",
+    detail: "Gala registration, payment, and webhook routes are still in the prototype phase.",
+    nextStep: "Build the Gala database layer and Stripe Checkout flow after Bowling is live.",
+  },
+];
 
 const buildBowlingSummary = async (): Promise<EventOperationsSummary> => {
   const event = cityCenterEvents.find((item) => item.id === "bowling-for-backpacks");
@@ -313,6 +393,7 @@ export const getDevelopmentDashboard = async (): Promise<DevelopmentDashboard> =
       (sum, event) => sum + event.exportQueueCount,
       0,
     ),
+    readiness: buildLaunchReadiness(),
     events,
   };
 };
