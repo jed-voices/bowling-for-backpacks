@@ -5,14 +5,33 @@ export const DEVELOPMENT_AUTH_COOKIE = "cc_events_development";
 export const LOCAL_DEVELOPMENT_USERNAME = "development";
 export const LOCAL_DEVELOPMENT_PASSWORD = "citycenter@77";
 
+const getCurrentDevelopmentPassword = () =>
+  process.env.DEVELOPMENT_ADMIN_PASSWORD ||
+  process.env.DEVELOPMENT_ADMIN_SECRET ||
+  (process.env.NODE_ENV !== "production" ? LOCAL_DEVELOPMENT_PASSWORD : "");
+
+const getScheduledDevelopmentPassword = (currentPassword: string) => {
+  const nextPassword = process.env.DEVELOPMENT_ADMIN_NEXT_PASSWORD;
+  const switchAt = process.env.DEVELOPMENT_ADMIN_PASSWORD_SWITCH_AT;
+
+  if (!nextPassword || !switchAt) {
+    return currentPassword;
+  }
+
+  const switchTime = Date.parse(switchAt);
+
+  if (Number.isNaN(switchTime) || Date.now() < switchTime) {
+    return currentPassword;
+  }
+
+  return nextPassword;
+};
+
 export const getDevelopmentCredentials = () => {
   const username =
     process.env.DEVELOPMENT_ADMIN_USERNAME ||
     LOCAL_DEVELOPMENT_USERNAME;
-  const password =
-    process.env.DEVELOPMENT_ADMIN_PASSWORD ||
-    process.env.DEVELOPMENT_ADMIN_SECRET ||
-    (process.env.NODE_ENV !== "production" ? LOCAL_DEVELOPMENT_PASSWORD : "");
+  const password = getScheduledDevelopmentPassword(getCurrentDevelopmentPassword());
 
   return { username, password };
 };
@@ -33,6 +52,8 @@ export const isUsingLocalDevelopmentCredentials = () =>
   !process.env.DEVELOPMENT_ADMIN_USERNAME &&
   !process.env.DEVELOPMENT_ADMIN_PASSWORD &&
   !process.env.DEVELOPMENT_ADMIN_SECRET &&
+  !process.env.DEVELOPMENT_ADMIN_NEXT_PASSWORD &&
+  !process.env.DEVELOPMENT_ADMIN_PASSWORD_SWITCH_AT &&
   process.env.NODE_ENV !== "production";
 
 export const isDevelopmentAuthConfigured = () =>
