@@ -16,3 +16,4 @@ tsconfig.tsbuildinfo
 /playwright/.auth/
 /tests/visual-artifacts/
 .vercel
+supabase/.temp/
