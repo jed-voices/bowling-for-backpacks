@@ -28,6 +28,7 @@ export function BowlingCheckoutSummary({ form, registrations }: BowlingCheckoutS
   const subtotal = selectedPrice(form);
   const donationTotal = Math.max(0, form.optionalGift || 0);
   const total = subtotal + donationTotal;
+  const isGiftOnly = form.registrationType === "gift";
   const PaymentIcon = paymentIcons[form.paymentPreference as BowlingPaymentPreference];
   const sessionRemaining = form.sessionId
     ? registrations
@@ -39,10 +40,12 @@ export function BowlingCheckoutSummary({ form, registrations }: BowlingCheckoutS
     <aside className="sticky top-6 rounded-sm border border-bfb-ink/10 bg-white p-5 shadow-soft">
       <h3 className="font-heading text-xl font-black text-bfb-ink">Fast summary</h3>
       <div className="mt-5 space-y-4 text-sm">
-        <div className="flex justify-between gap-4">
-          <span className="text-bfb-ink/60">{selectedName(form)}</span>
-          <span className="font-bold text-bfb-ink">{formatCurrency(subtotal)}</span>
-        </div>
+        {!isGiftOnly ? (
+          <div className="flex justify-between gap-4">
+            <span className="text-bfb-ink/60">{selectedName(form)}</span>
+            <span className="font-bold text-bfb-ink">{formatCurrency(subtotal)}</span>
+          </div>
+        ) : null}
         {form.sessionId ? (
           <div className="flex justify-between gap-4">
             <span className="inline-flex items-center gap-2 text-bfb-ink/60">
@@ -53,7 +56,7 @@ export function BowlingCheckoutSummary({ form, registrations }: BowlingCheckoutS
           </div>
         ) : null}
         <div className="flex justify-between gap-4">
-          <span className="text-bfb-ink/60">Additional gift</span>
+          <span className="text-bfb-ink/60">{isGiftOnly ? "Gift amount" : "Additional gift"}</span>
           <span className="font-bold text-bfb-ink">{formatCurrency(donationTotal)}</span>
         </div>
       </div>
@@ -68,8 +71,8 @@ export function BowlingCheckoutSummary({ form, registrations }: BowlingCheckoutS
           <span>{paymentPreferenceLabels[form.paymentPreference]}</span>
         </p>
         <p className="mt-4 rounded-sm bg-bfb-green/15 p-3 text-xs font-semibold leading-5 text-bfb-ink/70">
-          Your registration total and selected payment preference will be sent with
-          your event details for {bowlingEventConfig.contactName}, City Center&apos;s{" "}
+          {isGiftOnly ? "Your gift amount" : "Your registration total"} and selected payment
+          preference will be sent to {bowlingEventConfig.contactName}, City Center&apos;s{" "}
           {bowlingEventConfig.contactTitle}, to confirm.
         </p>
         <p className="mt-3 text-xs font-semibold leading-5 text-bfb-ink/55">

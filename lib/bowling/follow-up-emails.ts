@@ -1,5 +1,6 @@
 import { bowlingEventConfig } from "./config";
 import type { BowlingRegistrationRecord } from "./types";
+import { needsSession } from "./validation";
 
 export type BowlingFollowUpEmail = {
   id: string;
@@ -82,6 +83,16 @@ export function buildBowlingFollowUpEmails(
   const firstName = supporterName(registration);
   const publicEventUrl = eventUrl(siteUrl);
   const publicTeamUrl = teamUrl(siteUrl, registration);
+  const canManageTeam = needsSession(registration.registrationType) && registration.saveTeamLink;
+  const teamUpdateText = canManageTeam
+    ? `If you registered a team and still need to add bowler names, you can use this link:
+${publicTeamUrl}
+`
+    : "";
+  const finalTeamLine = canManageTeam ? `Team link: ${publicTeamUrl}\n` : "";
+  const finalDetailsPreview = canManageTeam
+    ? `Date, location, confirmation code, and team link for ${bowlingEventConfig.name}.`
+    : `Date, location, and confirmation code for ${bowlingEventConfig.name}.`;
 
   const impactSubject = `What your ${bowlingEventConfig.theme} gift helps make possible`;
   const impactText = `Hi ${firstName},
@@ -92,8 +103,7 @@ A registration can look like a lane, a sponsorship, or a gift. But for a student
 
 That is what your support helps make possible.
 
-If you registered a team and still need to add bowler names, you can use this link:
-${publicTeamUrl}
+${teamUpdateText}
 
 Thank you for helping City Center stand with students and families.
 
@@ -127,7 +137,7 @@ Here are a few details to keep handy:
 Date: ${bowlingEventConfig.date}
 Location: ${bowlingEventConfig.venue}, ${bowlingEventConfig.city}
 Confirmation code: ${registration.id}
-Team link: ${publicTeamUrl}
+${finalTeamLine}
 
 If anything changes or you have a question, email ${bowlingEventConfig.contactName} at ${bowlingEventConfig.contactEmail}.
 
@@ -149,8 +159,8 @@ City Center
         eyebrow: "Your impact",
         headline: "A backpack is more than a backpack.",
         body: `<p style="margin:0;">Hi ${escapeHtml(firstName)},</p><p>A registration can look like a lane, a sponsorship, or a gift. But for a student, it can look like walking into the school year with a backpack, supplies, and the quiet confidence that someone was thinking about them before the first bell rang.</p><p>That is what your support helps make possible.</p>`,
-        ctaLabel: "Update bowler names",
-        ctaHref: publicTeamUrl,
+        ctaLabel: canManageTeam ? "Update bowler names" : undefined,
+        ctaHref: canManageTeam ? publicTeamUrl : undefined,
       }),
     },
     {
@@ -174,16 +184,16 @@ City Center
       id: "final-event-details",
       timing: "Send 3-5 days before the event",
       subject: finalDetailsSubject,
-      previewText: `Date, location, confirmation code, and team link for ${bowlingEventConfig.name}.`,
+      previewText: finalDetailsPreview,
       text: finalDetailsText,
       html: wrapEmailHtml({
         subject: finalDetailsSubject,
-        previewText: `Date, location, confirmation code, and team link for ${bowlingEventConfig.name}.`,
+        previewText: finalDetailsPreview,
         eyebrow: "Event details",
         headline: "A few details to keep handy.",
         body: `<p style="margin:0;">Hi ${escapeHtml(firstName)},</p><p>We are looking forward to ${escapeHtml(bowlingEventConfig.name)}.</p><p><strong>Date:</strong> ${escapeHtml(bowlingEventConfig.date)}<br /><strong>Location:</strong> ${escapeHtml(bowlingEventConfig.venue)}, ${escapeHtml(bowlingEventConfig.city)}<br /><strong>Confirmation code:</strong> ${escapeHtml(registration.id)}</p><p>If anything changes or you have a question, email ${escapeHtml(bowlingEventConfig.contactName)} at <a href="mailto:${escapeHtml(bowlingEventConfig.contactEmail)}" style="color:#112F6D;font-weight:800;">${escapeHtml(bowlingEventConfig.contactEmail)}</a>.</p>`,
-        ctaLabel: "Update bowler names",
-        ctaHref: publicTeamUrl,
+        ctaLabel: canManageTeam ? "Update bowler names" : undefined,
+        ctaHref: canManageTeam ? publicTeamUrl : undefined,
       }),
     },
   ];

@@ -16,6 +16,8 @@ export type BowlingValidationResult =
   | { ok: true; record: BowlingRegistrationRecord }
   | { ok: false; errors: Record<string, string> };
 
+export const minimumGiftAmount = 5;
+
 export const blankBowler = (): Bowler => ({
   firstName: "",
   lastName: "",
@@ -122,6 +124,7 @@ export const validateBowlingRegistrationInput = (
   const errors: Record<string, string> = {};
   const requiresSession = needsSession(input.registrationType);
   const session = input.sessionId ? getSessionById(input.sessionId) : undefined;
+  const donationTotal = Math.max(0, Number(input.optionalGift) || 0);
 
   if (!input.buyerFirstName.trim()) {
     errors.buyerFirstName = "First name is required.";
@@ -155,8 +158,16 @@ export const validateBowlingRegistrationInput = (
     errors.packageId = "Choose the lane sponsor option.";
   }
 
-  if (input.optionalGift < 0) {
+  if (Number(input.optionalGift) < 0) {
     errors.optionalGift = "Additional gift cannot be negative.";
+  }
+
+  if (input.registrationType === "gift" && donationTotal < minimumGiftAmount) {
+    errors.optionalGift = `Gift amount must be at least ${formatCurrency(minimumGiftAmount)}.`;
+  }
+
+  if (input.registrationType !== "gift" && donationTotal > 0 && donationTotal < minimumGiftAmount) {
+    errors.optionalGift = `Additional gift must be at least ${formatCurrency(minimumGiftAmount)} or left blank.`;
   }
 
   if (!["card", "invoice", "check"].includes(input.paymentPreference)) {
@@ -168,8 +179,15 @@ export const validateBowlingRegistrationInput = (
   }
 
   const subtotal = selectedPrice(input);
-  const donationTotal = Math.max(0, Number(input.optionalGift) || 0);
   const laneCount = requiresSession ? 1 : 0;
+  const normalizedPackageId =
+    input.registrationType === "team"
+      ? teamRegistration.id
+      : input.registrationType === "gift"
+        ? "gift"
+        : input.registrationType === "lane-sponsor"
+          ? "lane-sponsor"
+          : input.packageId;
 
   return {
     ok: true,
@@ -177,17 +195,24 @@ export const validateBowlingRegistrationInput = (
       ...input,
       id,
       createdAt: new Date().toISOString(),
+      packageId: normalizedPackageId,
       packageName: selectedName(input),
-      sessionName: session?.name ?? "",
+      sessionId: requiresSession ? input.sessionId : "",
+      sessionName: requiresSession ? session?.name ?? "" : "",
+      teamName: requiresSession ? input.teamName : "",
+      sponsorLogoName:
+        input.registrationType === "sponsorship" || input.registrationType === "lane-sponsor"
+          ? input.sponsorLogoName ?? ""
+          : "",
       laneCount,
       subtotal,
+      optionalGift: donationTotal,
       donationTotal,
       grandTotal: subtotal + donationTotal,
       paymentStatus: getPaymentStatus(input.paymentPreference),
       exportStatus: "not_exported",
-      bowlers: input.registrationType === "team" || input.registrationType === "sponsorship"
-        ? buildBowlerList(input.bowlers)
-        : [],
+      saveTeamLink: requiresSession ? input.saveTeamLink : false,
+      bowlers: requiresSession ? buildBowlerList(input.bowlers) : [],
     },
   };
 };

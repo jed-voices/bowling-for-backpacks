@@ -32,6 +32,7 @@ import type {
 import {
   buildBowlerList,
   formatCurrency,
+  minimumGiftAmount,
   needsSession,
   remainingLanes,
   remainingLanesFromRegistrations,
@@ -82,6 +83,7 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
     () => getSponsorshipById(form.packageId),
     [form.packageId],
   );
+  const isGiftOnly = form.registrationType === "gift";
 
   const updateForm = <Key extends keyof BowlingRegistrationInput>(
     key: Key,
@@ -176,7 +178,7 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
       }
 
       router.push(
-        `/bowling-for-backpacks/confirmation?registrationId=${payload.registration.id}&payment=${form.paymentPreference}`,
+        `/bowling-for-backpacks/confirmation?registrationId=${payload.registration.id}&payment=${form.paymentPreference}&type=${form.registrationType}`,
       );
     } catch (error) {
       setSubmitState("error");
@@ -459,7 +461,11 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
 
             <div className="mt-9 grid gap-5 md:grid-cols-2">
               <label>
-                <span className="field-label">Add a gift for backpacks and supplies</span>
+                <span className="field-label">
+                  {isGiftOnly
+                    ? "Gift amount for backpacks and supplies"
+                    : "Add a gift for backpacks and supplies"}
+                </span>
                 <div className="relative">
                   <Gift
                     aria-hidden="true"
@@ -469,12 +475,15 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
                   <input
                     className="bfb-field pl-10"
                     type="number"
-                    min={0}
-                    step={25}
+                    min={isGiftOnly ? minimumGiftAmount : 0}
+                    step={1}
                     value={form.optionalGift}
                     onChange={(event) => updateForm("optionalGift", Number(event.target.value) || 0)}
                   />
                 </div>
+                <p className="mt-2 text-xs font-semibold leading-5 text-bfb-ink/55">
+                  Gifts start at {formatCurrency(minimumGiftAmount)}.
+                </p>
                 <FieldError message={errors.optionalGift} />
               </label>
             </div>
@@ -542,7 +551,11 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
               type="submit"
               disabled={submitState === "submitting"}
             >
-              {submitState === "submitting" ? "Securing your spot..." : paymentCtaLabels[form.paymentPreference]}
+              {submitState === "submitting"
+                ? isGiftOnly
+                  ? "Processing your gift..."
+                  : "Securing your spot..."
+                : paymentCtaLabels[form.paymentPreference]}
               {form.paymentPreference === "card" ? (
                 <CreditCard aria-hidden="true" size={17} />
               ) : (

@@ -35,12 +35,16 @@ const getBaseUrl = (request: Request) => {
 export async function POST(request: Request) {
   const payload = (await request.json().catch(() => ({}))) as BowlingCheckoutPayload;
   const registrationId = payload.registrationId ?? "BFB-PENDING";
+  const fallbackRegistrationType =
+    payload.registrationInput?.registrationType ?? payload.registration?.registrationType;
   const stripe = getStripe();
 
   if (!stripe) {
     return NextResponse.json({
       mode: "stripe-placeholder",
-      url: `/bowling-for-backpacks/confirmation?registrationId=${registrationId}&payment=card&checkout=preview`,
+      url: `/bowling-for-backpacks/confirmation?registrationId=${registrationId}&payment=card&checkout=preview${
+        fallbackRegistrationType ? `&type=${fallbackRegistrationType}` : ""
+      }`,
       message:
         "Stripe is not configured. Returning a local confirmation URL for prototype testing.",
     });
@@ -92,7 +96,7 @@ export async function POST(request: Request) {
     payment_intent_data: {
       metadata,
     },
-    success_url: `${baseUrl}/bowling-for-backpacks/confirmation?registrationId=${registration.id}&payment=card&session_id={CHECKOUT_SESSION_ID}`,
+    success_url: `${baseUrl}/bowling-for-backpacks/confirmation?registrationId=${registration.id}&payment=card&type=${registration.registrationType}&session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${baseUrl}/bowling-for-backpacks#registration`,
   });
 
