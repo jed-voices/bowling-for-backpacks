@@ -236,4 +236,58 @@ img {
   .bfb-field {
     @apply min-h-12 w-full rounded-sm border border-bfb-ink/15 bg-white px-3 py-2 text-base text-bfb-ink shadow-sm transition placeholder:text-bfb-ink/35 focus:border-bfb-blue focus:outline-none focus:ring-2 focus:ring-bfb-green/35;
   }
+
+  .bfb-thermometer-fill {
+    animation:
+      bfb-thermometer-rise 1.35s cubic-bezier(0.2, 0.72, 0.22, 1) both,
+      bfb-thermometer-glow 4.8s ease-in-out 1.4s infinite;
+    transform-origin: bottom;
+  }
+
+  .bfb-thermometer-bulb-fill {
+    animation: bfb-thermometer-bulb 4.8s ease-in-out 1.4s infinite;
+  }
+}
+
+@keyframes bfb-thermometer-rise {
+  from {
+    opacity: 0.72;
+    transform: scaleY(0.08);
+  }
+
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+@keyframes bfb-thermometer-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0 rgba(228, 63, 53, 0));
+  }
+
+  50% {
+    filter: drop-shadow(0 0 8px rgba(228, 63, 53, 0.35));
+  }
+}
+
+@keyframes bfb-thermometer-bulb {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 18px rgba(228, 63, 53, 0.28);
+  }
+
+  50% {
+    transform: scale(1.025);
+    box-shadow: 0 0 24px rgba(228, 63, 53, 0.38);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bfb-thermometer-fill,
+  .bfb-thermometer-bulb-fill {
+    animation: none;
+  }
 }

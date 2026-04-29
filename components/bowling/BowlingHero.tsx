@@ -7,7 +7,6 @@ import {
   MapPin,
   Snowflake,
   Sun,
-  Target,
 } from "lucide-react";
 import {
   bowlingEventConfig,
@@ -196,22 +195,47 @@ function HeroThermometer({ registrations }: BowlingHeroProps) {
     0,
     bowlingEventConfig.fundraisingGoal - sponsorshipRaised,
   );
+  const tickMarks = [
+    { label: formatCurrency(bowlingEventConfig.fundraisingGoal), top: "0%" },
+    { label: formatCurrency(bowlingEventConfig.fundraisingGoal / 2), top: "50%" },
+    { label: "$0", top: "100%" },
+  ];
 
   return (
     <aside
       className="mt-7 max-w-[650px] rounded-sm border border-white/15 bg-white/10 p-4 text-white shadow-soft backdrop-blur sm:p-5"
       aria-label={`${progress}% of the Christmas in July sponsorship goal funded`}
     >
-      <div className="grid grid-cols-[auto_1fr] items-center gap-3 sm:gap-4">
-        <div className="relative flex h-24 w-12 items-end justify-center sm:h-28 sm:w-16">
-          <div className="absolute bottom-5 h-20 w-6 overflow-hidden rounded-full border-2 border-white/30 bg-white/15 shadow-inner sm:bottom-6 sm:h-24 sm:w-7">
-            <span
-              className="absolute bottom-0 left-0 right-0 bg-bfb-green transition-all"
-              style={{ height: `${thermometerFill}%` }}
-            />
+      <div className="grid grid-cols-[auto_1fr] items-center gap-4 sm:gap-5">
+        <div className="relative h-36 w-20 shrink-0 sm:h-40 sm:w-36">
+          <div className="absolute bottom-7 left-1/2 h-[6.5rem] w-10 -translate-x-1/2 rounded-full border border-white/45 bg-white/20 p-1 shadow-inner sm:h-[7.5rem] sm:w-11">
+            <div className="relative h-full overflow-hidden rounded-full bg-white/35">
+              <span
+                className="bfb-thermometer-fill absolute bottom-0 left-0 right-0 rounded-full bg-[linear-gradient(180deg,#ff6b5f_0%,#e43f35_56%,#b72424_100%)]"
+                style={{ height: `${thermometerFill}%` }}
+              />
+              <span className="pointer-events-none absolute inset-y-2 left-2 w-2 rounded-full bg-white/50 blur-[1px]" />
+            </div>
           </div>
-          <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full border-2 border-white/30 bg-bfb-green text-bfb-ink shadow-sm sm:h-14 sm:w-14">
-            <Target aria-hidden="true" size={22} />
+
+          <div className="absolute bottom-0 left-1/2 flex h-16 w-16 -translate-x-1/2 items-center justify-center rounded-full border border-white/45 bg-white/20 p-1.5 shadow-sm">
+            <div className="bfb-thermometer-bulb-fill h-full w-full rounded-full bg-[radial-gradient(circle_at_34%_30%,#ffd2cd_0%,#ff6b5f_24%,#e43f35_60%,#a91f1f_100%)] shadow-[0_0_18px_rgba(228,63,53,0.28)]" />
+            <span className="pointer-events-none absolute left-5 top-4 h-3 w-3 rounded-full bg-white/55 blur-[1px]" />
+          </div>
+
+          <div className="absolute bottom-8 left-[calc(50%+1.45rem)] top-2 hidden w-16 sm:block">
+            {tickMarks.map((tick) => (
+              <span
+                key={tick.label}
+                className="absolute left-0 flex items-center gap-2"
+                style={{ top: tick.top }}
+              >
+                <span className="h-px w-4 bg-white/45" />
+                <span className="-translate-y-1/2 font-heading text-[0.62rem] font-black uppercase text-white/58">
+                  {tick.label}
+                </span>
+              </span>
+            ))}
           </div>
         </div>
 
