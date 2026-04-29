@@ -44,7 +44,7 @@ export default async function BowlingForBackpacksPage() {
 
   return (
     <main>
-      <BowlingHero />
+      <BowlingHero registrations={liveRegistrations ?? undefined} />
       <BowlingEventDetails />
       <BowlingWhyItMatters />
       <BowlingImpactSection />

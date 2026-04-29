@@ -7,10 +7,20 @@ import {
   MapPin,
   Snowflake,
   Sun,
+  Target,
 } from "lucide-react";
-import { bowlingEventConfig } from "@/lib/bowling/config";
+import {
+  bowlingEventConfig,
+  sampleBowlingRegistrations,
+} from "@/lib/bowling/config";
 import { bowlingCopy } from "@/lib/bowling/copy";
 import { bowlingPhotos } from "@/lib/bowling/photos";
+import {
+  committedBowlingRegistrations,
+  eventParticipationRegistrations,
+} from "@/lib/bowling/records";
+import type { BowlingRegistrationRecord } from "@/lib/bowling/types";
+import { formatCurrency } from "@/lib/bowling/validation";
 
 const utilityLinks = [
   {
@@ -97,7 +107,11 @@ const heroHighlights = [
   "School Supplies",
 ];
 
-export function BowlingHero() {
+type BowlingHeroProps = {
+  registrations?: BowlingRegistrationRecord[];
+};
+
+export function BowlingHero({ registrations }: BowlingHeroProps) {
   return (
     <header className="bg-bfb-navy text-bfb-ink">
       <CityCenterSiteHeader />
@@ -124,6 +138,8 @@ export function BowlingHero() {
             <p className="mt-6 max-w-[650px] text-base font-medium leading-7 text-white/90 sm:text-xl sm:leading-8">
               {bowlingCopy.hero.body}
             </p>
+
+            <HeroThermometer registrations={registrations} />
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <a
@@ -161,6 +177,75 @@ export function BowlingHero() {
         </div>
       </section>
     </header>
+  );
+}
+
+function HeroThermometer({ registrations }: BowlingHeroProps) {
+  const records = committedBowlingRegistrations(registrations ?? sampleBowlingRegistrations);
+  const eventRecords = eventParticipationRegistrations(records);
+  const sponsorshipRaised = eventRecords.reduce(
+    (sum, registration) => sum + registration.grandTotal,
+    0,
+  );
+  const progress = Math.min(
+    100,
+    Math.round((sponsorshipRaised / bowlingEventConfig.fundraisingGoal) * 100),
+  );
+  const thermometerFill = progress > 0 ? Math.max(5, progress) : 0;
+  const remainingToGoal = Math.max(
+    0,
+    bowlingEventConfig.fundraisingGoal - sponsorshipRaised,
+  );
+
+  return (
+    <aside
+      className="mt-7 max-w-[650px] rounded-sm border border-white/15 bg-white/10 p-4 text-white shadow-soft backdrop-blur sm:p-5"
+      aria-label={`${progress}% of the Christmas in July sponsorship goal funded`}
+    >
+      <div className="grid grid-cols-[auto_1fr] items-center gap-3 sm:gap-4">
+        <div className="relative flex h-24 w-12 items-end justify-center sm:h-28 sm:w-16">
+          <div className="absolute bottom-5 h-20 w-6 overflow-hidden rounded-full border-2 border-white/30 bg-white/15 shadow-inner sm:bottom-6 sm:h-24 sm:w-7">
+            <span
+              className="absolute bottom-0 left-0 right-0 bg-bfb-green transition-all"
+              style={{ height: `${thermometerFill}%` }}
+            />
+          </div>
+          <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full border-2 border-white/30 bg-bfb-green text-bfb-ink shadow-sm sm:h-14 sm:w-14">
+            <Target aria-hidden="true" size={22} />
+          </div>
+        </div>
+
+        <div>
+          <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <p className="font-heading text-xs font-black uppercase tracking-[0.08em] text-bfb-green">
+              Help reach the goal
+            </p>
+            <p className="font-heading text-xs font-black uppercase text-white/80">
+              {formatCurrency(bowlingEventConfig.fundraisingGoal)} goal
+            </p>
+          </div>
+          <p className="mt-2 whitespace-nowrap font-heading text-[1.65rem] font-black uppercase leading-none text-white sm:text-4xl">
+            {formatCurrency(sponsorshipRaised)} raised
+          </p>
+          <p className="mt-2 text-sm font-semibold leading-6 text-white/80">
+            Event sponsorships, team registrations, and lane sponsors move this
+            meter toward backpacks and school-year support.
+          </p>
+          <div className="mt-4">
+            <div className="flex justify-between gap-4 text-xs font-bold uppercase text-white/70">
+              <span>{progress}% funded</span>
+              <span>{formatCurrency(remainingToGoal)} to go</span>
+            </div>
+            <div className="mt-2 h-3 overflow-hidden rounded-full bg-white/20">
+              <span
+                className="block h-full rounded-full bg-bfb-green"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
   );
 }
 
