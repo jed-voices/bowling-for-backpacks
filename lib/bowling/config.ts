@@ -13,7 +13,7 @@ export const bowlingEventConfig = {
   venue: "Andy B's",
   city: "Oklahoma City",
   cause: "Backpacks, school supplies, and back-to-school support for students and families",
-  fundraisingGoal: 50000,
+  fundraisingGoal: 75000,
   teamPrice: 750,
   lanesPerSession: 21,
   teamSize: 6,

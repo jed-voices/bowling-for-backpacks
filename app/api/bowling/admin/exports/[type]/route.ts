@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { sampleBowlingRegistrations } from "@/lib/bowling/config";
 import { listBowlingRegistrations } from "@/lib/bowling/database";
 import { bowlingExports } from "@/lib/bowling/export-bloomerang";
+import { committedBowlingRegistrations } from "@/lib/bowling/records";
 import { isDevelopmentAuthenticated } from "@/lib/events/development-auth";
 
 type ExportRouteProps = {
@@ -39,7 +40,7 @@ export async function GET(request: Request, { params }: ExportRouteProps) {
 
   const { type } = await params;
   const liveRegistrations = await listBowlingRegistrations();
-  const registrations = liveRegistrations ?? sampleBowlingRegistrations;
+  const registrations = committedBowlingRegistrations(liveRegistrations ?? sampleBowlingRegistrations);
   const source = liveRegistrations ? "supabase" : "static-prototype";
 
   switch (type) {

@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/bowling/stripe";
-import { updateBowlingRegistrationPayment } from "@/lib/bowling/database";
+import {
+  deletePendingBowlingRegistration,
+  updateBowlingRegistrationPayment,
+} from "@/lib/bowling/database";
 
 export const runtime = "nodejs";
 
@@ -62,20 +65,13 @@ export async function POST(request: Request) {
         paymentStatus: session.payment_status,
       });
     }
-    case "checkout.session.async_payment_failed": {
+    case "checkout.session.async_payment_failed":
+    case "checkout.session.expired": {
       const session = event.data.object;
       const registrationId = session.client_reference_id;
-      const paymentIntentId =
-        typeof session.payment_intent === "string"
-          ? session.payment_intent
-          : session.payment_intent?.id;
 
       if (registrationId) {
-        await updateBowlingRegistrationPayment(registrationId, {
-          paymentStatus: "pending",
-          stripeCheckoutSessionId: session.id,
-          stripePaymentIntentId: paymentIntentId,
-        });
+        await deletePendingBowlingRegistration(registrationId);
       }
 
       return NextResponse.json({
@@ -83,6 +79,7 @@ export async function POST(request: Request) {
         eventType: event.type,
         registrationId,
         paymentStatus: session.payment_status,
+        removedPendingRegistration: Boolean(registrationId),
       });
     }
     default:

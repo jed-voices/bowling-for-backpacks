@@ -9,6 +9,11 @@ import type {
   BowlingRegistrationRecord,
 } from "@/lib/bowling/types";
 import {
+  committedBowlingRegistrations,
+  giftOnlyRegistrations,
+  isCommittedBowlingRegistration,
+} from "@/lib/bowling/records";
+import {
   formatCurrency,
   remainingLanes,
   remainingLanesFromRegistrations,
@@ -55,6 +60,10 @@ export function BowlingAdminConsole({
 }: BowlingAdminConsoleProps) {
   const [query, setQuery] = useState("");
   const [paymentFilter, setPaymentFilter] = useState("all");
+  const committedSourceRegistrations = useMemo(
+    () => committedBowlingRegistrations(sourceRegistrations),
+    [sourceRegistrations],
+  );
 
   const registrations = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -82,44 +91,56 @@ export function BowlingAdminConsole({
     });
   }, [paymentFilter, query, sourceRegistrations]);
 
-  const teamRegistrations = registrations.filter(
+  const committedRegistrations = useMemo(
+    () => registrations.filter(isCommittedBowlingRegistration),
+    [registrations],
+  );
+
+  const teamRegistrations = committedRegistrations.filter(
     (registration) =>
       registration.registrationType === "team" || registration.registrationType === "sponsorship",
   );
-  const totalTeamRevenue = registrations
+  const totalTeamRevenue = committedRegistrations
     .filter((registration) => registration.registrationType === "team")
     .reduce((sum, registration) => sum + registration.subtotal, 0);
-  const sponsorshipRevenue = registrations
+  const sponsorshipRevenue = committedRegistrations
     .filter(
       (registration) =>
         registration.registrationType === "sponsorship" ||
         registration.registrationType === "lane-sponsor",
     )
     .reduce((sum, registration) => sum + registration.subtotal, 0);
-  const totalGifts = registrations.reduce(
+  const giftOnlyTotal = giftOnlyRegistrations(committedRegistrations).reduce(
     (sum, registration) => sum + registration.donationTotal,
     0,
   );
-  const grandTotal = registrations.reduce(
+  const totalGifts = committedRegistrations.reduce(
+    (sum, registration) => sum + registration.donationTotal,
+    0,
+  );
+  const grandTotal = committedRegistrations.reduce(
     (sum, registration) => sum + registration.grandTotal,
     0,
   );
-  const followUp = registrations.filter(
+  const followUp = committedRegistrations.filter(
     (registration) =>
       registration.paymentStatus === "invoice_requested" ||
       registration.paymentStatus === "check_pledged" ||
-      (registration.registrationType !== "team" && !registration.sponsorLogoName),
+      ((registration.registrationType === "sponsorship" ||
+        registration.registrationType === "lane-sponsor") &&
+        !registration.sponsorLogoName),
   ).length;
 
   return (
     <div className="space-y-8">
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <Metric label="Total registrations" value={registrations.length.toString()} />
+        <Metric label="Committed records" value={committedRegistrations.length.toString()} />
         <Metric label="Teams registered" value={teamRegistrations.length.toString()} />
         <Metric label="Sponsorship revenue" value={formatCurrency(sponsorshipRevenue)} />
         <Metric label="Grand total" value={formatCurrency(grandTotal)} />
         <Metric label="Team revenue" value={formatCurrency(totalTeamRevenue)} />
         <Metric label="Total gifts" value={formatCurrency(totalGifts)} />
+        <Metric label="Gift-only pool" value={formatCurrency(giftOnlyTotal)} />
         <Metric label="Records needing follow-up" value={followUp.toString()} />
         <Metric
           label="Lanes remaining"
@@ -127,7 +148,7 @@ export function BowlingAdminConsole({
             .map((session) => {
               const remaining =
                 dataSource === "live"
-                  ? remainingLanesFromRegistrations(session.id, sourceRegistrations)
+                  ? remainingLanesFromRegistrations(session.id, committedSourceRegistrations)
                   : remainingLanes(session.id);
 
               return `${session.name}: ${remaining}`;
@@ -232,7 +253,9 @@ export function BowlingAdminConsole({
                       </StatusPill>
                     </td>
                     <td className="py-4 pr-4 align-top font-bold">
-                      {formatCurrency(registration.grandTotal)}
+                      {isCommittedBowlingRegistration(registration)
+                        ? formatCurrency(registration.grandTotal)
+                        : "Not counted"}
                     </td>
                   </tr>
                 );

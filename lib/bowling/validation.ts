@@ -5,6 +5,7 @@ import {
   getSponsorshipById,
   teamRegistration,
 } from "./config";
+import { isCommittedBowlingRegistration } from "./records";
 import type {
   Bowler,
   BowlingPaymentStatus,
@@ -57,7 +58,12 @@ export const remainingLanesFromRegistrations = (
   }
 
   const heldLanes = registrations
-    .filter((registration) => registration.sessionId === sessionId && needsSession(registration.registrationType))
+    .filter(
+      (registration) =>
+        registration.sessionId === sessionId &&
+        needsSession(registration.registrationType) &&
+        isCommittedBowlingRegistration(registration),
+    )
     .reduce((sum, registration) => sum + Math.max(1, registration.laneCount), 0);
 
   return Math.max(0, session.laneCapacity - heldLanes);

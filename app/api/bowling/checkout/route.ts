@@ -87,6 +87,10 @@ export async function POST(request: Request) {
 
   const baseUrl = getBaseUrl(request);
   const metadata = buildBowlingStripeMetadata(registration);
+  const cancelUrl = new URL("/api/bowling/checkout/cancel", baseUrl);
+  cancelUrl.searchParams.set("registrationId", registration.id);
+  cancelUrl.searchParams.set("type", registration.registrationType);
+
   const checkoutSession = await stripe.checkout.sessions.create({
     mode: "payment",
     client_reference_id: registration.id,
@@ -97,7 +101,7 @@ export async function POST(request: Request) {
       metadata,
     },
     success_url: `${baseUrl}/bowling-for-backpacks/confirmation?registrationId=${registration.id}&payment=card&type=${registration.registrationType}&session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${baseUrl}/bowling-for-backpacks#registration`,
+    cancel_url: cancelUrl.toString(),
   });
 
   if (!checkoutSession.url) {

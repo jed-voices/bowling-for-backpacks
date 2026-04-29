@@ -30,7 +30,7 @@ export default async function HomePage() {
           fill
           priority
           sizes="100vw"
-          className="object-cover opacity-30"
+          className="pointer-events-none object-cover opacity-30"
         />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(18,18,48,0.94),rgba(33,52,104,0.74),rgba(22,34,46,0.46))]" />
 

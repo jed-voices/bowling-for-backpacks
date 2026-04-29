@@ -261,6 +261,28 @@ export const updateBowlingRegistrationPayment = async (registrationId: string, u
   return { configured: true as const };
 };
 
+export const deletePendingBowlingRegistration = async (registrationId: string) => {
+  const supabase = getSupabaseAdmin();
+
+  if (!supabase) {
+    return { configured: false as const, deleted: false };
+  }
+
+  const { data, error } = await supabase
+    .from("bowling_registrations")
+    .delete()
+    .eq("id", registrationId)
+    .eq("payment_preference", "card")
+    .eq("payment_status", "pending")
+    .select("id");
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return { configured: true as const, deleted: Boolean(data?.length) };
+};
+
 export const updateBowlingRegistrationExportStatus = async (
   registrationId: string,
   exportStatus: BowlingRegistrationRecord["exportStatus"],

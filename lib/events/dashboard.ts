@@ -3,6 +3,7 @@ import {
   isBowlingDatabaseConfigured,
   listBowlingRegistrations,
 } from "@/lib/bowling/database";
+import { committedBowlingRegistrations } from "@/lib/bowling/records";
 import type { BowlingRegistrationRecord } from "@/lib/bowling/types";
 import { remainingLanesFromRegistrations } from "@/lib/bowling/validation";
 import type { GalaRegistrationRecord } from "@/lib/gala/types";
@@ -63,7 +64,7 @@ export type DevelopmentDashboard = {
   events: EventOperationsSummary[];
 };
 
-const openPaymentStatuses = ["pending", "invoice_requested", "check_pledged"];
+const openPaymentStatuses = ["invoice_requested", "check_pledged"];
 
 const countOpenBowlingPayments = (registrations: BowlingRegistrationRecord[]) =>
   registrations.filter((registration) =>
@@ -182,7 +183,7 @@ const buildLaunchReadiness = (): LaunchReadinessItem[] => [
 const buildBowlingSummary = async (): Promise<EventOperationsSummary> => {
   const event = cityCenterEvents.find((item) => item.id === "bowling-for-backpacks");
   const liveRegistrations = await listBowlingRegistrations();
-  const registrations = liveRegistrations ?? [];
+  const registrations = committedBowlingRegistrations(liveRegistrations ?? []);
   const dataSource = liveRegistrations ? "live" : "preview";
   const totalValue = registrations.reduce(
     (sum, registration) => sum + registration.grandTotal,

@@ -111,10 +111,10 @@ export function BowlingHero() {
               className="max-w-4xl font-heading font-black uppercase text-white"
               aria-label="Christmas in July Bowling for Backpacks"
             >
-              <span className="block text-4xl leading-[1] sm:text-6xl lg:text-[5.25rem]">
+              <span className="block whitespace-nowrap text-[clamp(1.75rem,8.2vw,5.25rem)] leading-[1]">
                 Christmas in July
               </span>
-              <span className="mt-3 block text-3xl leading-[1.02] text-bfb-green sm:text-5xl lg:text-6xl">
+              <span className="mt-3 block whitespace-nowrap text-[clamp(1.35rem,6.4vw,3.75rem)] leading-[1.02] text-bfb-green">
                 Bowling for Backpacks
               </span>
             </h1>
@@ -332,7 +332,7 @@ function HeroScene() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
           <div className="rounded-sm bg-bfb-navy p-5 text-white shadow-soft">
             <Snowflake aria-hidden="true" size={34} />
-            <p className="mt-4 font-heading text-sm font-black uppercase leading-tight">
+            <p className="mt-4 whitespace-nowrap font-heading text-sm font-black uppercase leading-tight">
               Christmas in July.
             </p>
           </div>
@@ -343,7 +343,7 @@ function HeroScene() {
         </div>
 
         <div className="rounded-sm border-l-4 border-bfb-green bg-bfb-cream p-5 text-bfb-ink shadow-soft sm:p-6">
-          <p className="flex items-center gap-2 font-heading text-sm font-black uppercase text-bfb-navy">
+          <p className="flex items-center gap-2 whitespace-nowrap font-heading text-sm font-black uppercase text-bfb-navy">
             <Backpack aria-hidden="true" size={15} />
             Holiday joy, school-year hope
           </p>
@@ -351,7 +351,7 @@ function HeroScene() {
             {heroHighlights.map((item) => (
               <span
                 key={item}
-                className="rounded-sm border border-bfb-ink/10 bg-white px-3 py-2 font-heading text-xs font-bold uppercase text-bfb-navy"
+                className="whitespace-nowrap rounded-sm border border-bfb-ink/10 bg-white px-3 py-2 font-heading text-xs font-bold uppercase text-bfb-navy"
               >
                 {item}
               </span>
