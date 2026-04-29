@@ -190,7 +190,7 @@ function HeroThermometer({ registrations }: BowlingHeroProps) {
     100,
     Math.round((sponsorshipRaised / bowlingEventConfig.fundraisingGoal) * 100),
   );
-  const thermometerFill = progress > 0 ? Math.max(5, progress) : 0;
+  const thermometerFill = Math.max(6, progress);
   const remainingToGoal = Math.max(
     0,
     bowlingEventConfig.fundraisingGoal - sponsorshipRaised,
