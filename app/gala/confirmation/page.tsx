@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CheckCircle2, ClipboardList, CreditCard, FileText } from "lucide-react";
+import { EventGatewayBackLink } from "@/components/events/EventGatewayBackLink";
 import { eventConfig, paymentPreferenceLabels } from "@/lib/gala/config";
 import type { PaymentPreference } from "@/lib/gala/types";
 
@@ -33,9 +34,7 @@ export default async function ConfirmationPage({ searchParams }: ConfirmationPag
   return (
     <main className="min-h-screen bg-sftc-ivory py-16">
       <div className="section-shell max-w-4xl">
-        <Link href="/gala" className="button-quiet">
-          Back to Gala
-        </Link>
+        <EventGatewayBackLink tone="gala" />
 
         <section className="mt-8 rounded-sm border border-sftc-ink/10 bg-white p-8 shadow-soft sm:p-10">
           <CheckCircle2 aria-hidden="true" className="text-sftc-hope" size={42} />

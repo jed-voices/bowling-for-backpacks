@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { UsersRound } from "lucide-react";
 import { BowlingTeamManager } from "@/components/bowling/BowlingTeamManager";
+import { EventGatewayBackLink } from "@/components/events/EventGatewayBackLink";
 import { bowlingEventConfig } from "@/lib/bowling/config";
 import {
   getBowlingRegistration,
@@ -28,9 +28,7 @@ export default async function BowlingTeamPage({ params }: TeamPageProps) {
   return (
     <main className="min-h-screen bg-bfb-cream py-16">
       <div className="bfb-shell max-w-4xl">
-        <Link href="/bowling-for-backpacks" className="bfb-secondary">
-          Back to Christmas in July
-        </Link>
+        <EventGatewayBackLink tone="bowling" />
         <section className="mt-8 rounded-sm border border-bfb-ink/10 bg-white p-8 shadow-soft sm:p-10">
           <UsersRound aria-hidden="true" className="text-bfb-blue" size={42} />
           <p className="bfb-eyebrow mt-8">Team builder</p>

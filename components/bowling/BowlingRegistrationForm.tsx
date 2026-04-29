@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { BowlerListBuilder } from "./BowlerListBuilder";
 import { BowlingCheckoutSummary } from "./BowlingCheckoutSummary";
+import { EventGatewayBackLink } from "@/components/events/EventGatewayBackLink";
 import {
   bowlingRegistrationOptions,
   bowlingSessions,
@@ -202,16 +203,19 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
             onSubmit={handleSubmit}
             className="rounded-sm border border-bfb-ink/10 bg-white p-5 shadow-soft sm:p-8"
           >
-            <div className="max-w-3xl">
-              <p className="bfb-eyebrow">Reserve your spot</p>
-              <h2 id="bowling-registration" className="bfb-heading mt-4">
-                Choose your lane, sponsorship, or gift.
-              </h2>
-              <p className="bfb-copy mt-5">
-                This takes about two minutes. Choose how you want to participate,
-                add the basic contact details, and City Center will follow up on anything
-                that needs a human touch.
-              </p>
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+              <div className="max-w-3xl">
+                <p className="bfb-eyebrow">Reserve your spot</p>
+                <h2 id="bowling-registration" className="bfb-heading mt-4">
+                  Choose your lane, sponsorship, or gift.
+                </h2>
+                <p className="bfb-copy mt-5">
+                  This takes about two minutes. Choose how you want to participate,
+                  add the basic contact details, and City Center will follow up on anything
+                  that needs a human touch.
+                </p>
+              </div>
+              <EventGatewayBackLink tone="bowling" className="shrink-0 self-start whitespace-nowrap" />
             </div>
 
             {submitMessage ? (

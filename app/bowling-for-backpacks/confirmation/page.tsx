@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Backpack, CheckCircle2, ClipboardList, CreditCard, Mail } from "lucide-react";
+import { EventGatewayBackLink } from "@/components/events/EventGatewayBackLink";
 import { bowlingEventConfig, paymentPreferenceLabels } from "@/lib/bowling/config";
 import { getBowlingRegistration } from "@/lib/bowling/database";
 import type { BowlingPaymentPreference, BowlingRegistrationType } from "@/lib/bowling/types";
@@ -75,9 +76,7 @@ export default async function BowlingConfirmationPage({ searchParams }: Confirma
   return (
     <main className="min-h-screen bg-bfb-cream py-16">
       <div className="bfb-shell max-w-4xl">
-        <Link href="/bowling-for-backpacks" className="bfb-secondary">
-          Back to event page
-        </Link>
+        <EventGatewayBackLink tone="bowling" />
 
         <section className="mt-8 rounded-sm border border-bfb-ink/10 bg-white p-8 shadow-soft sm:p-10">
           <CheckCircle2 aria-hidden="true" className="text-bfb-green" size={42} />

@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { CheckoutSummary } from "./CheckoutSummary";
 import { GuestListBuilder } from "./GuestListBuilder";
+import { EventGatewayBackLink } from "@/components/events/EventGatewayBackLink";
 import {
   eventConfig,
   galaPackages,
@@ -212,15 +213,18 @@ export function RegistrationForm() {
             onSubmit={handleSubmit}
             className="min-w-0 rounded-sm border border-sftc-ink/10 bg-white p-5 shadow-soft sm:p-8"
           >
-            <div className="max-w-3xl">
-              <p className="eyebrow">Registration</p>
-              <h2 id="registration-heading" className="section-heading mt-4">
-                Reserve your place at Stories From the Center.
-              </h2>
-              <p className="body-copy mt-5">
-                Choose a sponsorship or ticket option, add guest details, and select the
-                payment path that works best for you or your organization.
-              </p>
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+              <div className="max-w-3xl">
+                <p className="eyebrow">Registration</p>
+                <h2 id="registration-heading" className="section-heading mt-4">
+                  Reserve your place at Stories From the Center.
+                </h2>
+                <p className="body-copy mt-5">
+                  Choose a sponsorship or ticket option, add guest details, and select the
+                  payment path that works best for you or your organization.
+                </p>
+              </div>
+              <EventGatewayBackLink tone="gala" className="shrink-0 self-start whitespace-nowrap" />
             </div>
 
             {submitMessage ? (
