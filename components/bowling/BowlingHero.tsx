@@ -74,7 +74,7 @@ const contactDetails = [
 ];
 
 const primaryNavItems = [
-  { label: "Home", href: "https://okcitycenter.org/" },
+  { label: "City Center Home", href: "https://okcitycenter.org/" },
   {
     label: "About",
     href: "https://okcitycenter.org/about/",

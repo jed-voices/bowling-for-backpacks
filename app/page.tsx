@@ -17,6 +17,15 @@ export const metadata: Metadata = {
     "The City Center events gateway for supporters, families, sponsors, and development access.",
 };
 
+const gatewayNavItems = [
+  { label: "CITY CENTER HOME", href: "https://okcitycenter.org/" },
+  { label: "SUPPORTER EVENTS", href: "/supporters" },
+  { label: "CHRISTMAS IN JULY", href: "/bowling-for-backpacks" },
+  { label: "GALA", href: "/gala" },
+  { label: "DONATE", href: "https://okcitycenter.org/donate/" },
+  { label: "CONTACT", href: "https://okcitycenter.org/contact/" },
+] as const;
+
 export default async function HomePage() {
   const featuredEvent = cityCenterEvents[0];
   const hasDevelopmentAccess = await isDevelopmentAuthenticated();
@@ -34,23 +43,46 @@ export default async function HomePage() {
         />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(18,18,48,0.94),rgba(33,52,104,0.74),rgba(22,34,46,0.46))]" />
 
-        <div className="section-shell relative pt-5">
-          <nav className="flex items-center justify-between gap-4 border-b border-white/10 pb-4 text-sm text-white/75">
-            <Link href="/" className="font-heading font-semibold uppercase text-white">
-              City Center Events
+        <nav className="relative z-20 bg-bfb-green text-bfb-navy shadow-sm">
+          <div className="section-shell flex flex-col gap-3 py-3 lg:flex-row lg:items-center lg:justify-between">
+            <Link
+              href="/"
+              className="flex w-fit items-center gap-3 font-heading text-sm font-black uppercase leading-none text-bfb-navy transition hover:text-bfb-ink"
+            >
+              <Image
+                src="/bowling/cij-cc-logo.svg"
+                alt=""
+                width={54}
+                height={54}
+                priority
+                unoptimized
+                className="h-14 w-14 object-contain"
+              />
+              <span>CITY CENTER EVENTS</span>
             </Link>
-            <div className="flex items-center gap-4 sm:gap-5">
-              <Link href="/supporters" className="transition hover:text-white">
-                Supporters
-              </Link>
-              <Link href="/development" className="transition hover:text-white">
-                {hasDevelopmentAccess ? "Dashboard" : "Development"}
+
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 lg:justify-end lg:gap-x-6">
+              {gatewayNavItems.map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="flex min-h-9 items-center border-b-2 border-transparent font-heading text-xs font-black uppercase text-bfb-navy transition hover:border-bfb-navy focus-visible:border-bfb-navy sm:text-sm"
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <Link
+                href="/development"
+                className="flex min-h-9 items-center gap-1.5 border-b-2 border-transparent font-heading text-xs font-black uppercase text-bfb-navy transition hover:border-bfb-navy focus-visible:border-bfb-navy sm:text-sm"
+              >
+                <LockKeyhole aria-hidden="true" size={14} />
+                {hasDevelopmentAccess ? "DASHBOARD" : "DEVELOPMENT"}
               </Link>
             </div>
-          </nav>
-        </div>
+          </div>
+        </nav>
 
-        <div className="section-shell relative grid min-h-[calc(100svh-70px)] items-center gap-8 py-10 sm:gap-10 sm:py-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(360px,0.56fr)] lg:py-20">
+        <div className="section-shell relative grid min-h-[calc(100svh-92px)] items-center gap-8 py-10 sm:gap-10 sm:py-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(360px,0.56fr)] lg:py-20">
           <div>
             <p className="font-heading text-xs font-semibold uppercase text-sftc-hope">
               OKCityCenterEvents.org
