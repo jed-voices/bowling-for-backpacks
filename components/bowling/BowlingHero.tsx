@@ -108,14 +108,13 @@ export function BowlingHero() {
         <div className="bfb-shell relative grid gap-10 py-12 sm:py-16 lg:min-h-[760px] lg:grid-cols-[minmax(0,0.96fr)_minmax(420px,0.74fr)] lg:items-center lg:gap-16 lg:py-20">
           <div className="max-w-[720px]">
             <h1
-              className="max-w-4xl text-white"
+              className="max-w-4xl font-heading font-black uppercase text-white"
               aria-label="Christmas in July Bowling for Backpacks"
             >
-              <span className="block whitespace-nowrap font-script text-5xl font-normal normal-case leading-[0.85] sm:text-7xl lg:text-[7.5rem]">
-                <span>CHRISTMAS IN</span>
-                <span className="inline-block -ml-[0.34em]"> JULY</span>
+              <span className="block text-4xl leading-[1] sm:text-6xl lg:text-[5.25rem]">
+                Christmas in July
               </span>
-              <span className="mt-3 block font-heading text-4xl font-black uppercase leading-[0.98] sm:text-6xl lg:text-7xl">
+              <span className="mt-3 block text-3xl leading-[1.02] text-bfb-green sm:text-5xl lg:text-6xl">
                 Bowling for Backpacks
               </span>
             </h1>
