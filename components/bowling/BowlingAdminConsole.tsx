@@ -15,6 +15,7 @@ import {
 } from "@/lib/bowling/records";
 import {
   formatCurrency,
+  getsTeamManagementLink,
   remainingLanes,
   remainingLanesFromRegistrations,
 } from "@/lib/bowling/validation";
@@ -143,7 +144,7 @@ export function BowlingAdminConsole({
         <Metric label="Gift-only pool" value={formatCurrency(giftOnlyTotal)} />
         <Metric label="Records needing follow-up" value={followUp.toString()} />
         <Metric
-          label="Lanes remaining"
+          label="Team spots remaining"
           value={bowlingSessions
             .map((session) => {
               const remaining =
@@ -245,7 +246,11 @@ export function BowlingAdminConsole({
                       {registration.sponsorLogoName ? "Received" : "Missing"}
                     </td>
                     <td className="py-4 pr-4 align-top">
-                      {registration.laneCount > 0 ? `${bowlerCount}/6` : "N/A"}
+                      {getsTeamManagementLink(registration.registrationType)
+                        ? `${bowlerCount}/6`
+                        : registration.registrationType === "sponsorship"
+                          ? "Staff follow-up"
+                          : "N/A"}
                     </td>
                     <td className="py-4 pr-4 align-top">
                       <StatusPill tone={registration.exportStatus === "needs_review" ? "gold" : "green"}>

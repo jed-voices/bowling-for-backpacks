@@ -220,8 +220,9 @@ export function RegistrationForm() {
                   Reserve your place at Stories From the Center.
                 </h2>
                 <p className="body-copy mt-5">
-                  Choose a sponsorship or ticket option, add guest details, and select the
-                  payment path that works best for you or your organization.
+                  Choose a sponsorship, table, or ticket option, add the guest
+                  details you have now, and select the payment path that works
+                  best for you or your organization.
                 </p>
               </div>
               <EventGatewayBackLink tone="gala" className="shrink-0 self-start whitespace-nowrap" />

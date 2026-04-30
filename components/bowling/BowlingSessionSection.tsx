@@ -20,14 +20,15 @@ export function BowlingSessionSection({ registrations }: BowlingSessionSectionPr
             Choose the session that fits your group.
           </h2>
           <p className="bfb-copy mt-5">
-            Two bowling sessions bookend a dedicated business networking hour. Each
-            bowling session has 21 lanes.
+            Two bowling sessions bookend a dedicated business networking hour.
+            Each bowling session has 21 team spots, and team captains can
+            finish bowler names later.
           </p>
         </div>
 
-        <div className="mt-10 grid gap-3 lg:grid-cols-3">
+        <div className="mt-10 grid gap-4 lg:grid-cols-3">
           {bowlingTimeline.map((item) => (
-            <article key={item.title} className="rounded-sm bg-white p-5 shadow-sm">
+            <article key={item.title} className="rounded-sm border border-bfb-ink/10 bg-white p-5 shadow-sm">
               <p className="font-heading text-sm font-black uppercase text-bfb-navy">
                 {item.time}
               </p>
@@ -43,11 +44,11 @@ export function BowlingSessionSection({ registrations }: BowlingSessionSectionPr
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           {bowlingSessions.map((session) => {
-            const remaining = registrations
+            const remainingTeamSpots = registrations
               ? remainingLanesFromRegistrations(session.id, registrations)
               : remainingLanes(session.id);
-            const filled = session.laneCapacity - remaining;
-            const percent = Math.round((filled / session.laneCapacity) * 100);
+            const heldTeamSpots = session.laneCapacity - remainingTeamSpots;
+            const percent = Math.round((heldTeamSpots / session.laneCapacity) * 100);
 
             return (
               <article key={session.id} className="rounded-sm bg-white p-6 shadow-sm">
@@ -63,13 +64,13 @@ export function BowlingSessionSection({ registrations }: BowlingSessionSectionPr
                   </div>
                   <span
                     className={`rounded-sm px-3 py-2 text-sm font-black ${
-                      remaining > 0
+                      remainingTeamSpots > 0
                         ? "bg-bfb-green/20 text-bfb-ink"
                         : "bg-bfb-light text-bfb-ink"
                     }`}
                   >
-                    {remaining > 0
-                      ? `${remaining} lanes remaining`
+                    {remainingTeamSpots > 0
+                      ? `${remainingTeamSpots} team spots remaining`
                       : "This session is currently full"}
                   </span>
                 </div>
@@ -78,8 +79,8 @@ export function BowlingSessionSection({ registrations }: BowlingSessionSectionPr
                 </p>
                 <div className="mt-6">
                   <div className="flex justify-between text-sm font-bold text-bfb-ink/60">
-                    <span>21 lanes available</span>
-                    <span>{filled}/{session.laneCapacity} lanes held</span>
+                    <span>21 team spots available</span>
+                    <span>{heldTeamSpots}/{session.laneCapacity} team spots held</span>
                   </div>
                   <div className="mt-3 h-3 overflow-hidden rounded-full bg-bfb-light">
                     <span
@@ -90,10 +91,14 @@ export function BowlingSessionSection({ registrations }: BowlingSessionSectionPr
                 </div>
                 <p className="mt-5 flex gap-2 text-sm leading-6 text-bfb-ink/70">
                   <UsersRound aria-hidden="true" className="mt-1 shrink-0 text-bfb-blue" size={16} />
-                  {remaining > 0
+                  {remainingTeamSpots > 0
                     ? "Register a team now and add bowler names later."
                     : "Join the waitlist or choose another session."}
                 </p>
+                <a href="#registration" className="bfb-secondary mt-5 w-full justify-between">
+                  Reserve This Session
+                  <Clock aria-hidden="true" size={16} />
+                </a>
               </article>
             );
           })}

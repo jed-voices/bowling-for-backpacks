@@ -17,13 +17,13 @@ import { listBowlingRegistrations } from "@/lib/bowling/database";
 
 export const metadata: Metadata = {
   title:
-    "Christmas in July | Bowling for Backpacks | Bringing Christmas to Students for Back to School",
+    "Christmas in July: Bowling for Backpacks | City Center Back 2 School Fundraiser",
   description:
-    "Register a team, sponsor a lane, or make a gift for Christmas in July | Bowling for Backpacks, City Center's fundraiser bringing Christmas to students for back to school.",
+    "Register a team, become a sponsor, sponsor a lane, or make a gift for Christmas in July: Bowling for Backpacks, City Center's fundraiser bringing Christmas to students for Back 2 School.",
   keywords: [
-    "Christmas in July | Bowling for Backpacks",
+    "Christmas in July: Bowling for Backpacks",
     "Bowling for Backpacks",
-    "bringing Christmas to students for back to school",
+    "bringing Christmas to students for Back 2 School",
     "Christmas in July Oklahoma City",
     "Christmas in July fundraiser OKC",
     "City Center Oklahoma City",
@@ -49,7 +49,7 @@ export default async function BowlingForBackpacksPage() {
       <BowlingWhyItMatters />
       <BowlingImpactSection />
       <BowlingRegistrationOptions />
-      <BowlingSponsorshipGrid />
+      <BowlingSponsorshipGrid registrations={liveRegistrations ?? undefined} />
       <BowlingMomentumSection registrations={liveRegistrations ?? undefined} />
       <BowlingSessionSection registrations={liveRegistrations ?? undefined} />
       <BowlingSupportProvides />

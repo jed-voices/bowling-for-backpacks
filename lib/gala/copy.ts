@@ -1,23 +1,23 @@
 export const galaCopy = {
   announcement:
-    "Fall 2026 / City & State / Oklahoma City / Sponsorships and seats now available",
+    "Fall 2026 / Oklahoma City / Sponsorships, tables, and tickets available",
   hero: {
     eyebrow: "City Center Annual Gala / Fall 2026 / Oklahoma City",
-    headline: "An evening for the work that happens after the lights come up.",
+    headline: "Stories From the Center",
     body:
-      "Stories From the Center gathers friends, sponsors, and neighbors for an elegant evening of dinner, auction, and generosity in support of City Center's work of relief and restoration in Oklahoma City.",
+      "City Center's annual Gala gathers friends, sponsors, and neighbors for an elegant evening of dinner, auction, and generosity in support of relief, restoration, and trusted relationships in Oklahoma City.",
     detailLine:
-      "Dinner / Live Auction / Silent Auction / Chance to Win / Stories From the Center",
+      "Dinner / Auction / Stories / Giving / Relief and Restoration",
   },
   eventDetails:
-    "Guests will receive additional event details, arrival instructions, and auction access information after registration.",
+    "Guests will receive arrival instructions, auction access information, and any final timing updates after registration.",
   whyItMatters: {
     eyebrow: "Why This Night Matters",
     headline: "Relief of needs. Restoration of lives.",
     paragraphs: [
       "City Center is leading change through compassionate action in the heart of OKC. Every week, youth and families come to a trusted place for practical support, steady relationships, and the hope that their past does not define their future.",
       "City Center exists in that space with meals, mentoring, basic needs, community connection, and a safe place where people are known by name.",
-      "The Gala gathers the people who help make that work possible. It is one evening, but its impact reaches far beyond the room.",
+      "The Gala gathers the people who help make that work possible. It is one evening designed to strengthen the year-round work that happens long after guests leave the room.",
     ],
     quote:
       "Relationships lead to restoration. The Gala helps keep those relationships present, consistent, and ready when families need them most.",
@@ -99,9 +99,9 @@ export const galaCopy = {
   },
   sponsorships: {
     eyebrow: "Sponsorships",
-    headline: "Host a table. Bring people into the story. Help carry the work forward.",
+    headline: "Gather a table. Bring people into the story. Help carry the work forward.",
     body:
-      "Sponsorship is one of the most meaningful ways to support the Gala. It gives you a place to gather clients, friends, family, or colleagues around a night that matters, while directly supporting City Center's work with youth and families.\n\nEvery sponsorship helps provide the steady resources needed for meals, mentoring, basic needs, community connection, and trusted relationships in under-resourced neighborhoods.",
+      "Sponsorship gives you a clear way to gather clients, friends, family, or colleagues around a night that matters. It also provides steady support for City Center's work with youth and families.\n\nEach table and sponsorship level helps provide the resources needed for meals, mentoring, basic needs, community connection, and trusted relationships in under-resourced neighborhoods.",
   },
   auction: {
     eyebrow: "Auction",

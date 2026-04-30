@@ -17,7 +17,7 @@ import { WhyItMatters } from "@/components/gala/WhyItMatters";
 export const metadata: Metadata = {
   title: "Stories From the Center | City Center Annual Gala 2026 in Oklahoma City",
   description:
-    "Join City Center for Stories From the Center, our annual Gala in Oklahoma City. Reserve tickets, sponsor a table, preview the auction, and help carry the work of relief and restoration into another year.",
+    "Join City Center for Stories From the Center, the annual Gala in Oklahoma City. Reserve tickets, sponsor a table, preview auction opportunities, and help carry the work of relief and restoration into another year.",
 };
 
 export default function GalaPage() {

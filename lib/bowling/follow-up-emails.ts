@@ -1,6 +1,6 @@
 import { bowlingEventConfig } from "./config";
 import type { BowlingRegistrationRecord } from "./types";
-import { needsSession } from "./validation";
+import { getsTeamManagementLink } from "./validation";
 
 export type BowlingFollowUpEmail = {
   id: string;
@@ -83,7 +83,8 @@ export function buildBowlingFollowUpEmails(
   const firstName = supporterName(registration);
   const publicEventUrl = eventUrl(siteUrl);
   const publicTeamUrl = teamUrl(siteUrl, registration);
-  const canManageTeam = needsSession(registration.registrationType) && registration.saveTeamLink;
+  const canManageTeam =
+    getsTeamManagementLink(registration.registrationType) && registration.saveTeamLink;
   const teamUpdateText = canManageTeam
     ? `If you registered a team and still need to add bowler names, you can use this link:
 ${publicTeamUrl}

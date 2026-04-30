@@ -207,7 +207,7 @@ const buildBowlingSummary = async (): Promise<EventOperationsSummary> => {
 
   return {
     id: event?.id ?? "bowling-for-backpacks",
-    name: event?.name ?? "Christmas in July | Bowling for Backpacks",
+    name: event?.name ?? "Christmas in July: Bowling for Backpacks",
     label: event?.label ?? "Christmas in July",
     href: event?.href ?? "/bowling-for-backpacks",
     adminHref: event?.adminHref ?? "/admin/bowling-for-backpacks",

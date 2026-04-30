@@ -1,6 +1,6 @@
 import { bowlingEventConfig, paymentPreferenceLabels } from "./config";
 import type { BowlingRegistrationRecord } from "./types";
-import { needsSession } from "./validation";
+import { getsTeamManagementLink } from "./validation";
 
 export type BowlingConfirmationEmail = {
   subject: string;
@@ -50,7 +50,8 @@ export function buildBowlingConfirmationEmail(
   const eventUrl = `${siteUrl}/bowling-for-backpacks`;
   const teamUrl = `${siteUrl}${bowlingEventConfig.teamBaseUrl}/${registration.id}`;
   const isGiftOnly = registration.registrationType === "gift";
-  const canManageTeam = needsSession(registration.registrationType) && registration.saveTeamLink;
+  const canManageTeam =
+    getsTeamManagementLink(registration.registrationType) && registration.saveTeamLink;
   const subject = isGiftOnly
     ? `Thank you for your gift to ${bowlingEventConfig.name}`
     : `You are in for ${bowlingEventConfig.name}`;
@@ -84,7 +85,7 @@ Use this team link: ${teamUrl}
 
 ${isGiftOnly ? `Thank you for your gift to ${bowlingEventConfig.name}.` : `You are in for ${bowlingEventConfig.name}.`}
 
-Thank you for helping students start the school year ready. ${isGiftOnly ? "Your gift" : "Your registration"} has been received by City Center, and your support will help provide backpacks, school supplies, and practical back-to-school support for students and families.
+Thank you for helping students start the school year ready. ${isGiftOnly ? "Your gift" : "Your registration"} has been received by City Center, and your support will help provide backpacks, school supplies, and practical Back 2 School support for students and families.
 
 ${summaryTitle}:
 - ${referenceLabel}: ${registration.id}
@@ -124,7 +125,7 @@ ${eventUrl}
                 <p style="margin:0 0 14px;color:#112F6D;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;">${escapeHtml(isGiftOnly ? "Gift received" : "You are in")}</p>
                 <h1 style="margin:0;color:#112F6D;font-size:34px;line-height:1.05;font-weight:900;">Thank you for helping students start the school year ready.</h1>
                 <p style="margin:20px 0 0;color:#30324F;font-size:17px;line-height:1.65;">Hi ${escapeHtml(firstName)}, ${escapeHtml(isGiftOnly ? `your gift for ${bowlingEventConfig.name}` : `your ${bowlingEventConfig.name} registration`)} has been received by City Center.</p>
-                <p style="margin:14px 0 0;color:#30324F;font-size:17px;line-height:1.65;">Your support helps provide backpacks, school supplies, and practical back-to-school support for students and families.</p>
+                <p style="margin:14px 0 0;color:#30324F;font-size:17px;line-height:1.65;">Your support helps provide backpacks, school supplies, and practical Back 2 School support for students and families.</p>
               </td>
             </tr>
             <tr>

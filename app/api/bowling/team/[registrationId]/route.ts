@@ -5,7 +5,7 @@ import {
   isBowlingDatabaseConfigured,
   updateBowlingTeamDetails,
 } from "@/lib/bowling/database";
-import { buildBowlerList, needsSession } from "@/lib/bowling/validation";
+import { buildBowlerList, getsTeamManagementLink } from "@/lib/bowling/validation";
 
 export const runtime = "nodejs";
 
@@ -32,6 +32,13 @@ export async function GET(_request: Request, { params }: TeamRouteProps) {
 
   if (!registration) {
     return NextResponse.json({ error: "Team registration not found." }, { status: 404 });
+  }
+
+  if (!getsTeamManagementLink(registration.registrationType)) {
+    return NextResponse.json(
+      { error: "This registration does not include a public bowling team link." },
+      { status: 400 },
+    );
   }
 
   return NextResponse.json({
@@ -61,9 +68,9 @@ export async function PUT(request: Request, { params }: TeamRouteProps) {
     return NextResponse.json({ error: "Team registration not found." }, { status: 404 });
   }
 
-  if (!needsSession(registration.registrationType)) {
+  if (!getsTeamManagementLink(registration.registrationType)) {
     return NextResponse.json(
-      { error: "This registration does not include a bowling team." },
+      { error: "This registration does not include a public bowling team link." },
       { status: 400 },
     );
   }

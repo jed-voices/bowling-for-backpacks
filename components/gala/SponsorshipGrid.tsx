@@ -21,11 +21,11 @@ export function SponsorshipGrid() {
           </div>
         </div>
 
-        <div className="mt-12 grid gap-4 lg:grid-cols-5">
+        <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
           {sponsorships.map((tier) => (
             <article
               key={tier.id}
-              className="flex flex-col rounded-sm border border-sftc-ink/10 bg-white p-5 shadow-sm"
+              className="flex min-h-full flex-col rounded-sm border border-sftc-ink/10 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-sftc-brass/45 hover:shadow-md"
             >
               <p className="font-heading text-xs font-semibold uppercase text-sftc-brass">
                 {tier.label}
@@ -40,7 +40,7 @@ export function SponsorshipGrid() {
                 {tier.seats} seats
               </p>
               <p className="mt-5 text-sm leading-6 text-sftc-ink/70">{tier.description}</p>
-              <ul className="mt-6 space-y-3">
+              <ul className="mt-6 space-y-3 pb-6">
                 {tier.benefits?.slice(0, 4).map((benefit) => (
                   <li key={benefit} className="flex gap-2 text-sm leading-5 text-sftc-ink/70">
                     <Check aria-hidden="true" className="mt-0.5 shrink-0 text-sftc-hope" size={16} />
@@ -49,7 +49,7 @@ export function SponsorshipGrid() {
                 ))}
               </ul>
               <a href="#registration" className="button-quiet mt-auto justify-between">
-                Select
+                Reserve This Level
                 <ArrowRight aria-hidden="true" size={16} />
               </a>
             </article>

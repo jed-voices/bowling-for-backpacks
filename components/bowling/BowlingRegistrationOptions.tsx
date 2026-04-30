@@ -10,6 +10,13 @@ const icons = {
   gift: Gift,
 };
 
+const optionCtaLabels = {
+  sponsorship: "Become a Sponsor",
+  team: "Register a Team",
+  "lane-sponsor": "Sponsor a Lane",
+  gift: "Support Back 2 School",
+} as const;
+
 export function BowlingRegistrationOptions() {
   return (
     <section className="bg-bfb-light py-16 sm:py-20" aria-labelledby="bowling-options">
@@ -19,14 +26,18 @@ export function BowlingRegistrationOptions() {
           <h2 id="bowling-options" className="bfb-heading mt-4">
             {bowlingCopy.registration.headline}
           </h2>
+          <p className="bfb-copy mt-5">
+            Whether you are bringing a team, sponsoring the event, sponsoring a
+            lane, or simply giving, the next step starts in the same short form.
+          </p>
         </div>
 
-        <div className="mt-10 grid gap-4 lg:grid-cols-4">
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {bowlingRegistrationOptions.map((option) => {
             const Icon = icons[option.id];
 
             return (
-              <article key={option.id} className="flex flex-col rounded-sm border border-bfb-ink/10 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-bfb-blue/35 hover:shadow-md">
+              <article key={option.id} className="flex min-h-full flex-col rounded-sm border border-bfb-ink/10 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-bfb-blue/35 hover:shadow-md">
                 <Icon aria-hidden="true" className="text-bfb-blue" size={28} />
                 <h3 className="mt-6 font-heading text-2xl font-black leading-tight text-bfb-ink">
                   {option.name}
@@ -38,7 +49,7 @@ export function BowlingRegistrationOptions() {
                   {option.description}
                 </p>
                 <a href="#registration" className="bfb-secondary mt-auto justify-between">
-                  Choose
+                  {optionCtaLabels[option.id]}
                   <ArrowRight aria-hidden="true" size={16} />
                 </a>
               </article>

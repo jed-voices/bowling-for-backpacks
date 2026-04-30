@@ -6,17 +6,17 @@ export const bowlingPhotos = {
   },
   mission: {
     src: "/bowling/back-to-school-25-540.jpg",
-    alt: "Students with backpacks gathered at a City Center back-to-school community event",
+    alt: "Students with backpacks gathered at a City Center Back 2 School community event",
     source: "Back 2 School 2025 / Images / Back to School 25-540.jpg",
   },
   experience: {
     src: "/bowling/back-to-school-25-520.jpg",
-    alt: "Students smiling together during a City Center back-to-school community event",
+    alt: "Students smiling together during a City Center Back 2 School community event",
     source: "Back 2 School 2025 / Images / Back to School 25-520.jpg",
   },
   support: {
     src: "/bowling/back-to-school-25-460.jpg",
-    alt: "Families and students walking together with backpacks at a back-to-school event",
+    alt: "Families and students walking together with backpacks at a Back 2 School event",
     source: "Back 2 School 2025 / Images / Back to School 25-460.jpg",
   },
 } as const;
