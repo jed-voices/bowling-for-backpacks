@@ -19,11 +19,17 @@ const cents = (amount: number) => Math.round(amount * 100);
 const compactMetadataValue = (value: string | number | undefined) =>
   String(value ?? "").slice(0, 500);
 
-type StripeClient = NonNullable<ReturnType<typeof getStripe>>;
-type CheckoutCreateParams = NonNullable<
-  Parameters<StripeClient["checkout"]["sessions"]["create"]>[0]
->;
-type CheckoutLineItem = NonNullable<CheckoutCreateParams["line_items"]>[number];
+type CheckoutLineItem = {
+  quantity: number;
+  price_data: {
+    currency: "usd";
+    unit_amount: number;
+    product_data: {
+      name: string;
+      description: string;
+    };
+  };
+};
 
 export const buildBowlingCheckoutLineItems = (
   registration: BowlingRegistrationRecord,

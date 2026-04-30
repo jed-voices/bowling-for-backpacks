@@ -26,7 +26,7 @@ export function BowlingRegistrationOptions() {
             const Icon = icons[option.id];
 
             return (
-              <article key={option.id} className="flex flex-col rounded-sm bg-white p-6 shadow-sm">
+              <article key={option.id} className="flex flex-col rounded-sm border border-bfb-ink/10 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-bfb-blue/35 hover:shadow-md">
                 <Icon aria-hidden="true" className="text-bfb-blue" size={28} />
                 <h3 className="mt-6 font-heading text-2xl font-black leading-tight text-bfb-ink">
                   {option.name}

@@ -1,12 +1,14 @@
 import Image from "next/image";
-import Link from "next/link";
 import { ArrowRight, CalendarDays, HeartHandshake } from "lucide-react";
+import { EventPageNav } from "@/components/events/EventPageNav";
 import { galaCopy } from "@/lib/gala/copy";
 import { galaPhotos } from "@/lib/gala/photos";
 
 export function GalaHero() {
   return (
     <header className="bg-sftc-evening text-white">
+      <EventPageNav tone="gala" ctaHref="#registration" ctaLabel="Reserve" />
+
       <div className="border-b border-white/15 bg-sftc-ink px-5 py-3 text-center font-heading text-xs font-semibold uppercase text-white/80 sm:text-sm">
         {galaCopy.announcement}
       </div>
@@ -21,16 +23,6 @@ export function GalaHero() {
           className="object-cover"
         />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(13,27,61,0.92)_0%,rgba(13,27,61,0.76)_42%,rgba(13,27,61,0.28)_100%)]" />
-
-        <nav className="section-shell relative z-10 flex items-center justify-between py-5 font-heading text-sm font-semibold">
-          <Link href="/" className="uppercase text-white transition hover:text-sftc-gold">
-            City Center
-          </Link>
-          <a href="#registration" className="button-secondary hidden sm:inline-flex">
-            Reserve Your Place
-            <ArrowRight aria-hidden="true" size={16} />
-          </a>
-        </nav>
 
         <div className="section-shell relative z-10 grid min-h-[72svh] items-center py-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(420px,0.62fr)] lg:gap-10">
           <div className="max-w-3xl">

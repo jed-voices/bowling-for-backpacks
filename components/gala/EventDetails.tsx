@@ -32,12 +32,12 @@ export function EventDetails() {
         <h2 id="event-details" className="sr-only">
           Event details
         </h2>
-        <div className="grid gap-px overflow-hidden rounded-sm bg-sftc-ink/12 md:grid-cols-4">
+        <div className="grid gap-px overflow-hidden rounded-sm border border-sftc-ink/10 bg-sftc-ink/10 shadow-sm md:grid-cols-4">
           {details.map((detail) => {
             const Icon = detail.icon;
 
             return (
-              <div key={detail.label} className="bg-white/80 p-6">
+              <div key={detail.label} className="bg-white/85 p-6 transition hover:bg-white">
                 <Icon aria-hidden="true" className="text-sftc-brass" size={22} />
                 <p className="mt-5 font-heading text-xs font-semibold uppercase text-sftc-ink/52">
                   {detail.label}

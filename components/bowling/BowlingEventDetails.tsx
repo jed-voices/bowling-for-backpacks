@@ -36,12 +36,12 @@ export function BowlingEventDetails() {
         <h2 id="bowling-details" className="sr-only">
           Event details
         </h2>
-        <div className="grid gap-px overflow-hidden rounded-sm bg-bfb-ink/10 md:grid-cols-5">
+        <div className="grid gap-px overflow-hidden rounded-sm border border-bfb-ink/10 bg-bfb-ink/10 shadow-sm md:grid-cols-5">
           {details.map((detail) => {
             const Icon = detail.icon;
 
             return (
-              <article key={detail.label} className="bg-bfb-cream p-5">
+              <article key={detail.label} className="bg-bfb-cream p-5 transition hover:bg-white">
                 <Icon aria-hidden="true" className="text-bfb-blue" size={23} />
                 <p className="mt-5 font-heading text-xs font-bold uppercase text-bfb-ink/50">
                   {detail.label}

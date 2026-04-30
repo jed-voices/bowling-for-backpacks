@@ -82,7 +82,40 @@ Recommended order:
 - Bowling admin exports download.
 - Mark Paid and Mark Exported update records.
 
-## 6. Visual QA
+## 6. Registration + Checkout Test Matrix
+
+Run these in preview after Supabase and Stripe environment variables are set:
+
+| Path | Expected result |
+| --- | --- |
+| Team registration + card | Creates a team registration, opens Stripe Checkout, returns to confirmation, and marks paid after webhook. |
+| Team registration + invoice | Creates a registration, skips Stripe, shows invoice follow-up language, and appears in admin follow-up. |
+| Team registration + check | Creates a registration, skips Stripe, shows check pledge language, and appears in admin follow-up. |
+| Lane sponsor + card | Creates a lane sponsor record, includes recognition name, and can be exported. |
+| Event sponsorship + card | Creates the selected sponsorship, includes organization/recognition details, and can be exported. |
+| Gift-only + card | Creates an additional gift transaction without requiring team or bowler details. |
+| Full-session attempt | Shows waitlist/full-session language instead of overselling lanes. |
+
+Confirmation pages should clearly show:
+
+- The short registration code.
+- The payment preference and status.
+- The next step for invoice or check follow-up.
+- The team management link when a team registration was created.
+- Kimberly Winston as the point of contact: `kimberly@okcitycenter.org`.
+
+## 7. Admin + Export Workflow
+
+Before launch, confirm staff can:
+
+- Search registrations by name, organization, email, registration code, or payment status.
+- See team count, session capacity, lanes remaining, invoice requests, check pledges, and sponsor logo status.
+- Mark invoice/check records paid when payment arrives.
+- Mark records exported after Bloomerang or operations download.
+- Download Bloomerang Transactions CSV and operations CSV.
+- Identify records needing follow-up without opening the database.
+
+## 8. Visual QA
 
 Run:
 
@@ -99,7 +132,7 @@ Confirm:
 - Development and admin/export screens use the new operational palette.
 - Sponsor and registration CTAs are easy to find.
 
-## 7. Launch
+## 9. Launch
 
 - Commit the current branch.
 - Push to GitHub.
@@ -108,7 +141,7 @@ Confirm:
 - Promote the validated preview to production.
 - Connect `okcitycenterevents.org`.
 
-## 8. First-Day Watch
+## 10. First-Day Watch
 
 - Send the link to a small trusted group.
 - Test one full registration path.
