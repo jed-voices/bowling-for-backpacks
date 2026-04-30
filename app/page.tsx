@@ -5,10 +5,10 @@ import {
   ArrowRight,
   CalendarDays,
   Gift,
+  Home,
   LockKeyhole,
   UsersRound,
 } from "lucide-react";
-import { isDevelopmentAuthenticated } from "@/lib/events/development-auth";
 import { cityCenterEvents, upcomingInitiatives } from "@/lib/events/directory";
 
 export const metadata: Metadata = {
@@ -17,18 +17,8 @@ export const metadata: Metadata = {
     "The City Center events gateway for supporters, families, sponsors, and development access.",
 };
 
-const gatewayNavItems = [
-  { label: "CITY CENTER HOME", href: "https://okcitycenter.org/" },
-  { label: "SUPPORTER EVENTS", href: "/supporters" },
-  { label: "CHRISTMAS IN JULY", href: "/bowling-for-backpacks" },
-  { label: "GALA", href: "/gala" },
-  { label: "DONATE", href: "https://okcitycenter.org/donate/" },
-  { label: "CONTACT", href: "https://okcitycenter.org/contact/" },
-] as const;
-
-export default async function HomePage() {
+export default function HomePage() {
   const featuredEvent = cityCenterEvents[0];
-  const hasDevelopmentAccess = await isDevelopmentAuthenticated();
 
   return (
     <main className="min-h-screen bg-cc-light-blue/45 font-body text-cc-dark-blue">
@@ -43,46 +33,35 @@ export default async function HomePage() {
         />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(18,18,48,0.94),rgba(33,52,104,0.74),rgba(22,34,46,0.46))]" />
 
-        <nav className="relative z-20 bg-bfb-green text-bfb-navy shadow-sm">
-          <div className="section-shell flex flex-col gap-3 py-3 lg:flex-row lg:items-center lg:justify-between">
-            <Link
-              href="/"
-              className="flex w-fit items-center gap-3 font-heading text-sm font-black uppercase leading-none text-bfb-navy transition hover:text-bfb-ink"
-            >
-              <Image
-                src="/bowling/cij-cc-logo.svg"
-                alt=""
-                width={54}
-                height={54}
-                priority
-                unoptimized
-                className="h-14 w-14 object-contain"
-              />
-              <span>CITY CENTER EVENTS</span>
+        <div className="section-shell relative pt-5">
+          <nav className="flex flex-col gap-4 border-b border-white/10 pb-4 text-sm font-semibold uppercase tracking-[0.04em] text-white/75 sm:flex-row sm:items-center sm:justify-between">
+            <Link href="/" className="font-heading font-semibold text-white transition hover:text-sftc-hope">
+              CITY CENTER EVENTS
             </Link>
-
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 lg:justify-end lg:gap-x-6">
-              {gatewayNavItems.map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className="flex min-h-9 items-center border-b-2 border-transparent font-heading text-xs font-black uppercase text-bfb-navy transition hover:border-bfb-navy focus-visible:border-bfb-navy sm:text-sm"
-                >
-                  {item.label}
-                </Link>
-              ))}
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 sm:gap-x-5">
+              <Link
+                href="https://okcitycenter.org/"
+                className="inline-flex items-center gap-1.5 transition hover:text-white"
+              >
+                <Home aria-hidden="true" size={14} />
+                CITY CENTER HOME
+              </Link>
+              <Link href="/supporters" className="inline-flex items-center gap-1.5 transition hover:text-white">
+                <UsersRound aria-hidden="true" size={14} />
+                SUPPORTERS
+              </Link>
               <Link
                 href="/development"
-                className="flex min-h-9 items-center gap-1.5 border-b-2 border-transparent font-heading text-xs font-black uppercase text-bfb-navy transition hover:border-bfb-navy focus-visible:border-bfb-navy sm:text-sm"
+                className="inline-flex items-center gap-1.5 transition hover:text-white"
               >
                 <LockKeyhole aria-hidden="true" size={14} />
-                {hasDevelopmentAccess ? "DASHBOARD" : "DEVELOPMENT"}
+                DASHBOARD
               </Link>
             </div>
-          </div>
-        </nav>
+          </nav>
+        </div>
 
-        <div className="section-shell relative grid min-h-[calc(100svh-92px)] items-center gap-8 py-10 sm:gap-10 sm:py-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(360px,0.56fr)] lg:py-20">
+        <div className="section-shell relative grid min-h-[calc(100svh-70px)] items-center gap-8 py-10 sm:gap-10 sm:py-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(360px,0.56fr)] lg:py-20">
           <div>
             <p className="font-heading text-xs font-semibold uppercase text-sftc-hope">
               OKCityCenterEvents.org

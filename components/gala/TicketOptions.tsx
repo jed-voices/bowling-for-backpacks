@@ -19,7 +19,7 @@ export function TicketOptions() {
 
         <div className="mt-10 grid gap-4 md:grid-cols-3">
           {ticketOptions.map((ticket) => (
-            <article key={ticket.id} className="rounded-sm border border-sftc-ink/10 bg-sftc-ivory p-6">
+            <article key={ticket.id} className="rounded-sm border border-sftc-ink/10 bg-sftc-ivory p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-sftc-brass/45 hover:bg-white hover:shadow-md">
               <h3 className="font-heading text-xl font-semibold text-sftc-ink">{ticket.name}</h3>
               <p className="mt-4 text-3xl font-semibold text-sftc-ink">
                 {formatCurrency(ticket.price)}
