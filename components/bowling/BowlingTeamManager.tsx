@@ -27,7 +27,7 @@ export function BowlingTeamManager({
   const [message, setMessage] = useState(
     canSave
       ? ""
-      : "This team link is ready. If you need help updating names, contact City Center.",
+      : "Public team updates are only available for team registrations. If you need help updating details, contact City Center.",
   );
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -35,7 +35,7 @@ export function BowlingTeamManager({
 
     if (!canSave) {
       setSaveState("error");
-      setMessage("Team updates are not available for this link yet. City Center can help with any changes.");
+      setMessage("Team updates are not available for this registration. City Center can help with any changes.");
       return;
     }
 

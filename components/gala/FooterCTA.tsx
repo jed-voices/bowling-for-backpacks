@@ -15,7 +15,7 @@ export function FooterCTA() {
           </p>
         </div>
         <a href="#registration" className="button-primary">
-          Add a Gift
+          Make a Gift
           <Heart aria-hidden="true" size={17} />
         </a>
       </section>

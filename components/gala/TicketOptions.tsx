@@ -17,9 +17,9 @@ export function TicketOptions() {
           </p>
         </div>
 
-        <div className="mt-10 grid gap-4 md:grid-cols-3">
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {ticketOptions.map((ticket) => (
-            <article key={ticket.id} className="rounded-sm border border-sftc-ink/10 bg-sftc-ivory p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-sftc-brass/45 hover:bg-white hover:shadow-md">
+            <article key={ticket.id} className="flex min-h-full flex-col rounded-sm border border-sftc-ink/10 bg-sftc-ivory p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-sftc-brass/45 hover:bg-white hover:shadow-md">
               <h3 className="font-heading text-xl font-semibold text-sftc-ink">{ticket.name}</h3>
               <p className="mt-4 text-3xl font-semibold text-sftc-ink">
                 {formatCurrency(ticket.price)}
@@ -27,11 +27,11 @@ export function TicketOptions() {
               <p className="mt-1 text-sm font-semibold text-sftc-ink/60">
                 {ticket.seats} {ticket.seats === 1 ? "seat" : "seats"}
               </p>
-              <p className="mt-5 min-h-28 text-base leading-7 text-sftc-ink/70">
+              <p className="mt-5 pb-6 text-base leading-7 text-sftc-ink/70">
                 {ticket.description}
               </p>
-              <a href="#registration" className="button-quiet mt-6">
-                Choose Tickets
+              <a href="#registration" className="button-quiet mt-auto justify-between">
+                Reserve Tickets
                 <ArrowRight aria-hidden="true" size={16} />
               </a>
             </article>

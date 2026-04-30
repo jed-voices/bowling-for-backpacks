@@ -4,7 +4,7 @@ const faqs = [
   {
     question: "What is the event theme?",
     answer:
-      "Christmas in July. Think summer energy, light holiday touches, and a joyful night that keeps the focus on back-to-school support for students and families.",
+      "Christmas in July. Think summer energy, light holiday touches, and a joyful night that keeps the focus on Back 2 School support for students and families.",
   },
   {
     question: "How many people can bowl on a team?",

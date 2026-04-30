@@ -8,7 +8,7 @@ export function BowlingFooterCTA() {
         <div>
           <p className="bfb-eyebrow text-white">Can&apos;t bowl?</p>
           <h2 className="mt-4 font-heading text-3xl font-black leading-tight sm:text-5xl">
-            Give a Christmas-in-July gift anyway.
+            Give a Christmas in July gift anyway.
           </h2>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-white/75">
             Help provide backpacks, school supplies, and practical support for

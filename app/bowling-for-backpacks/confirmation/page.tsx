@@ -5,7 +5,7 @@ import { EventGatewayBackLink } from "@/components/events/EventGatewayBackLink";
 import { bowlingEventConfig, paymentPreferenceLabels } from "@/lib/bowling/config";
 import { getBowlingRegistration } from "@/lib/bowling/database";
 import type { BowlingPaymentPreference, BowlingRegistrationType } from "@/lib/bowling/types";
-import { needsSession } from "@/lib/bowling/validation";
+import { getsTeamManagementLink } from "@/lib/bowling/validation";
 
 export const metadata: Metadata = {
   title: "Bowling Registration Received",
@@ -47,8 +47,8 @@ export default async function BowlingConfirmationPage({ searchParams }: Confirma
   const registrationType = registration?.registrationType ?? queryRegistrationType ?? "team";
   const isGiftOnly = registrationType === "gift";
   const canManageTeam = registration
-    ? needsSession(registration.registrationType) && registration.saveTeamLink
-    : Boolean(queryRegistrationType && needsSession(queryRegistrationType));
+    ? getsTeamManagementLink(registration.registrationType) && registration.saveTeamLink
+    : Boolean(queryRegistrationType && getsTeamManagementLink(queryRegistrationType));
   const registrationPaymentCopy: Record<BowlingPaymentPreference, string> = {
     card: "Your registration is saved and your card payment path is complete or underway. If anything needs attention, City Center will follow up directly.",
     invoice: `Your invoice request is saved. ${bowlingEventConfig.contactName}, City Center's ${bowlingEventConfig.contactTitle}, will follow up with invoice details and any final event notes.`,

@@ -72,6 +72,10 @@ export const remainingLanesFromRegistrations = (
 export const needsSession = (registrationType: BowlingRegistrationInput["registrationType"]) =>
   registrationType === "team" || registrationType === "sponsorship";
 
+export const getsTeamManagementLink = (
+  registrationType: BowlingRegistrationInput["registrationType"],
+) => registrationType === "team";
+
 export const selectedPrice = (input: BowlingRegistrationInput) => {
   if (input.registrationType === "team") {
     return teamRegistration.price;
@@ -129,6 +133,7 @@ export const validateBowlingRegistrationInput = (
 ): BowlingValidationResult => {
   const errors: Record<string, string> = {};
   const requiresSession = needsSession(input.registrationType);
+  const supportsTeamManagement = getsTeamManagementLink(input.registrationType);
   const session = input.sessionId ? getSessionById(input.sessionId) : undefined;
   const donationTotal = Math.max(0, Number(input.optionalGift) || 0);
 
@@ -205,7 +210,7 @@ export const validateBowlingRegistrationInput = (
       packageName: selectedName(input),
       sessionId: requiresSession ? input.sessionId : "",
       sessionName: requiresSession ? session?.name ?? "" : "",
-      teamName: requiresSession ? input.teamName : "",
+      teamName: supportsTeamManagement ? input.teamName : "",
       sponsorLogoName:
         input.registrationType === "sponsorship" || input.registrationType === "lane-sponsor"
           ? input.sponsorLogoName ?? ""
@@ -217,8 +222,8 @@ export const validateBowlingRegistrationInput = (
       grandTotal: subtotal + donationTotal,
       paymentStatus: getPaymentStatus(input.paymentPreference),
       exportStatus: "not_exported",
-      saveTeamLink: requiresSession ? input.saveTeamLink : false,
-      bowlers: requiresSession ? buildBowlerList(input.bowlers) : [],
+      saveTeamLink: supportsTeamManagement ? input.saveTeamLink : false,
+      bowlers: supportsTeamManagement ? buildBowlerList(input.bowlers) : [],
     },
   };
 };

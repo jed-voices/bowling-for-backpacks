@@ -4,15 +4,17 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: {
     default:
-      "Christmas in July | Bowling for Backpacks | Bringing Christmas to Students for Back to School",
+      "OK City Center Events | Event Registration and Sponsorships",
     template: "%s | City Center",
   },
   description:
-    "Register a team, sponsor a lane, or make a gift for Christmas in July | Bowling for Backpacks, City Center's fundraiser bringing Christmas to students for back to school.",
+    "Find City Center event opportunities, register, sponsor, give, and support the work of relief and restoration in Oklahoma City.",
   keywords: [
-    "Christmas in July | Bowling for Backpacks",
+    "OK City Center Events",
+    "City Center events",
+    "Christmas in July: Bowling for Backpacks",
     "Bowling for Backpacks",
-    "bringing Christmas to students for back to school",
+    "bringing Christmas to students for Back 2 School",
     "Christmas in July Oklahoma City",
     "Christmas in July fundraiser OKC",
     "City Center Oklahoma City",

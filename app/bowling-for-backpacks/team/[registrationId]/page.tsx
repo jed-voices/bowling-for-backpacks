@@ -7,7 +7,7 @@ import {
   getBowlingRegistration,
   isBowlingDatabaseConfigured,
 } from "@/lib/bowling/database";
-import { buildBowlerList, needsSession } from "@/lib/bowling/validation";
+import { buildBowlerList, getsTeamManagementLink } from "@/lib/bowling/validation";
 
 export const metadata: Metadata = {
   title: "Bowling Team",
@@ -21,7 +21,7 @@ export default async function BowlingTeamPage({ params }: TeamPageProps) {
   const { registrationId } = await params;
   const isDatabaseConfigured = isBowlingDatabaseConfigured();
   const registration = isDatabaseConfigured ? await getBowlingRegistration(registrationId) : null;
-  const canSave = Boolean(registration && needsSession(registration.registrationType));
+  const canSave = Boolean(registration && getsTeamManagementLink(registration.registrationType));
   const initialTeamName = registration?.teamName ?? "";
   const initialBowlers = buildBowlerList(registration?.bowlers ?? []);
 
@@ -33,12 +33,12 @@ export default async function BowlingTeamPage({ params }: TeamPageProps) {
           <UsersRound aria-hidden="true" className="text-bfb-blue" size={42} />
           <p className="bfb-eyebrow mt-8">Team builder</p>
           <h1 className="mt-4 font-heading text-4xl font-black leading-tight text-bfb-ink sm:text-5xl">
-            Your team link is ready.
+            {canSave ? "Your team link is ready." : "Team updates need City Center help."}
           </h1>
           <p className="bfb-copy mt-6">
-            Confirmation code {registrationId} has a dedicated captain link for bowler
-            names and team updates. Keep this page handy as your group gets ready
-            for {bowlingEventConfig.name}.
+            {canSave
+              ? `Confirmation code ${registrationId} has a dedicated captain link for bowler names and team updates. Keep this page handy as your group gets ready for ${bowlingEventConfig.name}.`
+              : `Confirmation code ${registrationId} is not a public team-management registration. Event sponsors, lane sponsors, and gift donors can contact City Center for any needed updates.`}
           </p>
           {registration ? (
             <div className="mt-6 grid gap-4 rounded-sm bg-bfb-light p-5 sm:grid-cols-2">
@@ -56,12 +56,20 @@ export default async function BowlingTeamPage({ params }: TeamPageProps) {
               </div>
             </div>
           ) : null}
-          <BowlingTeamManager
-            registrationId={registrationId}
-            initialTeamName={initialTeamName}
-            initialBowlers={initialBowlers}
-            canSave={canSave}
-          />
+          {canSave ? (
+            <BowlingTeamManager
+              registrationId={registrationId}
+              initialTeamName={initialTeamName}
+              initialBowlers={initialBowlers}
+              canSave={canSave}
+            />
+          ) : (
+            <div className="mt-8 rounded-sm border border-bfb-ink/10 bg-bfb-cream p-5 text-base leading-7 text-bfb-ink/70 sm:p-6">
+              Public bowler updates are only available for Team Sponsor / Team
+              Registration records. City Center can still help with sponsor,
+              lane, or gift updates directly.
+            </div>
+          )}
           <p className="mt-4 text-base leading-7 text-bfb-ink/70">
             Need help? Contact {bowlingEventConfig.contactName}, City Center&apos;s{" "}
             {bowlingEventConfig.contactTitle}, at{" "}

@@ -6,13 +6,13 @@ import type {
 } from "./types";
 
 export const bowlingEventConfig = {
-  name: "Christmas in July | Bowling for Backpacks",
+  name: "Christmas in July: Bowling for Backpacks",
   subtitle: "A City Center Back 2 School Fundraiser",
   theme: "Christmas in July",
   date: "July 16, 2026",
   venue: "Andy B's",
   city: "Oklahoma City",
-  cause: "Backpacks, school supplies, and back-to-school support for students and families",
+  cause: "Backpacks, school supplies, and practical Back 2 School support for students and families",
   fundraisingGoal: 75000,
   teamPrice: 750,
   lanesPerSession: 21,
@@ -22,9 +22,9 @@ export const bowlingEventConfig = {
   contactTitle: "Development Director",
   contactEmail: "kimberly@okcitycenter.org",
   fund: "City Center",
-  campaign: "2026 Christmas in July | Bowling for Backpacks",
+  campaign: "2026 Christmas in July: Bowling for Backpacks",
   appeal: "Back 2 School Bash",
-  groups: "Christmas in July | Bowling for Backpacks | Back 2 School",
+  groups: "Christmas in July: Bowling for Backpacks | Back 2 School",
 };
 
 export const bowlingSessions: BowlingSession[] = [
@@ -77,7 +77,7 @@ export const bowlingSponsorships: BowlingSponsorship[] = [
     name: "Event Sponsor",
     price: 5000,
     description:
-      "The primary sponsorship for Christmas in July. This level helps carry the event, includes a team lane, and gives supporters clear recognition tied to the full Back 2 School effort.",
+      "The primary sponsorship for Christmas in July. This level helps carry the event, includes a team spot, and gives supporters clear recognition tied to the full Back 2 School effort.",
     benefits: [
       "Primary event recognition",
       "Logo on the event page and event materials",
@@ -93,9 +93,9 @@ export const bowlingSponsorships: BowlingSponsorship[] = [
     name: "Team Sponsor / Team Registration",
     price: 750,
     description:
-      "Reserve a team lane for your company, church, family, or friend group and join the Christmas-in-July event in person.",
+      "Reserve a team spot for your company, church, family, or friend group and join Christmas in July in person.",
     benefits: [
-      "One team lane",
+      "One team spot",
       "Up to six bowlers",
       "Choice of preferred session",
       "Team captain can add bowler names later",
@@ -121,9 +121,9 @@ export const teamRegistration: BowlingOption = {
   name: "Team Sponsor / Team Registration",
   price: 750,
   description:
-    "Register a team for Christmas in July | Bowling for Backpacks and bring Christmas-in-July energy to Back 2 School support for students and families.",
+    "Register a team for Christmas in July: Bowling for Backpacks and bring joyful energy to Back 2 School support for students and families.",
   includes: [
-    "One team lane",
+    "One team spot",
     "Bowling session access",
     "Team captain registration",
     "Bowler names can be added later",
@@ -136,7 +136,7 @@ export const bowlingRegistrationOptions: BowlingOption[] = [
     name: "Event Sponsor",
     price: 5000,
     description:
-      "The primary sponsorship level for companies, families, or partners ready to lead the Christmas-in-July effort.",
+      "The primary sponsorship level for companies, families, or partners ready to lead the Christmas in July effort.",
     includes: [
       "Primary event recognition",
       "Sponsor logo placement",
@@ -162,7 +162,7 @@ export const bowlingRegistrationOptions: BowlingOption[] = [
     name: "Make a Gift",
     price: 0,
     description:
-      "Can't bowl? You can still make a Christmas-in-July gift that helps provide backpacks and school supplies for students in Oklahoma City.",
+      "Can't bowl? You can still make a Christmas in July gift that helps provide backpacks and school supplies for students in Oklahoma City.",
     includes: [
       "Direct support for backpacks and supplies",
       "Simple donor checkout",

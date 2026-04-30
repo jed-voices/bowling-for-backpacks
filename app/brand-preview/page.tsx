@@ -296,7 +296,7 @@ export default function BrandPreviewPage() {
               Public event card
             </p>
             <h2 className="mt-4 font-heading text-3xl font-bold leading-tight sm:text-4xl" style={{ color: colors.cityBlue }}>
-              Christmas in July | Bowling for Backpacks
+              Christmas in July: Bowling for Backpacks
             </h2>
             <p className="mt-4 max-w-2xl text-base leading-7" style={{ color: colors.charcoalNavy }}>
               A City Center event helping students and families begin the
@@ -468,7 +468,7 @@ function BrandLookPanel({ look }: { look: typeof previousLook }) {
           {look.name}
         </p>
         <h2 className="mt-4 font-heading text-xl font-bold leading-tight sm:text-2xl lg:text-3xl" style={{ color: look.headline }}>
-          Christmas in July | Bowling for Backpacks
+          Christmas in July: Bowling for Backpacks
         </h2>
         <p className="mt-3 text-sm leading-6" style={{ color: look.body }}>
           {look.note}

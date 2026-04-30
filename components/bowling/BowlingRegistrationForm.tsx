@@ -33,6 +33,7 @@ import type {
 import {
   buildBowlerList,
   formatCurrency,
+  getsTeamManagementLink,
   minimumGiftAmount,
   needsSession,
   remainingLanes,
@@ -85,6 +86,15 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
     [form.packageId],
   );
   const isGiftOnly = form.registrationType === "gift";
+  const hasSessionSelection = needsSession(form.registrationType);
+  const hasTeamManagement = getsTeamManagementLink(form.registrationType);
+  const notesPlaceholder = hasTeamManagement
+    ? "Team requests, accessibility notes, invoice notes, or questions"
+    : form.registrationType === "sponsorship"
+      ? "Recognition name, logo notes, included team questions, invoice notes, or questions"
+      : form.registrationType === "lane-sponsor"
+        ? "Lane recognition name, logo notes, invoice notes, or questions"
+        : "Gift notes, dedication details, or questions";
 
   const updateForm = <Key extends keyof BowlingRegistrationInput>(
     key: Key,
@@ -114,8 +124,9 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
         registrationType,
         packageId: nextPackageId,
         sessionId: needsSession(registrationType) ? current.sessionId || "corporate-session" : "",
-        bowlers: needsSession(registrationType) ? buildBowlerList(current.bowlers) : [],
-        saveTeamLink: needsSession(registrationType),
+        teamName: getsTeamManagementLink(registrationType) ? current.teamName : "",
+        bowlers: getsTeamManagementLink(registrationType) ? buildBowlerList(current.bowlers) : [],
+        saveTeamLink: getsTeamManagementLink(registrationType),
       };
     });
   };
@@ -191,6 +202,35 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
     }
   };
 
+  const giftAmountField = (
+    <label>
+      <span className="field-label">
+        {isGiftOnly
+          ? "Gift amount for backpacks and supplies"
+          : "Add a gift for backpacks and supplies"}
+      </span>
+      <div className="relative">
+        <Gift
+          aria-hidden="true"
+          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-bfb-ink/35"
+          size={17}
+        />
+        <input
+          className="bfb-field pl-10"
+          type="number"
+          min={isGiftOnly ? minimumGiftAmount : 0}
+          step={1}
+          value={form.optionalGift}
+          onChange={(event) => updateForm("optionalGift", Number(event.target.value) || 0)}
+        />
+      </div>
+      <p className="mt-2 text-xs font-semibold leading-5 text-bfb-ink/55">
+        Gifts start at {formatCurrency(minimumGiftAmount)}.
+      </p>
+      <FieldError message={errors.optionalGift} />
+    </label>
+  );
+
   return (
     <section
       id="registration"
@@ -207,12 +247,12 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
               <div className="max-w-3xl">
                 <p className="bfb-eyebrow">Reserve your spot</p>
                 <h2 id="bowling-registration" className="bfb-heading mt-4">
-                  Choose your lane, sponsorship, or gift.
+                  Register, sponsor, or support Back 2 School.
                 </h2>
                 <p className="bfb-copy mt-5">
-                  This takes about two minutes. Choose how you want to participate,
-                  add the basic contact details, and City Center will follow up on anything
-                  that needs a human touch.
+                  This takes about two minutes. Choose how you want to
+                  participate, add the basic contact details, and City Center
+                  will follow up on anything that needs a human touch.
                 </p>
               </div>
               <EventGatewayBackLink tone="bowling" className="shrink-0 self-start whitespace-nowrap" />
@@ -306,13 +346,15 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
               </fieldset>
             ) : null}
 
-            {needsSession(form.registrationType) ? (
+            {hasSessionSelection ? (
               <fieldset className="mt-8">
                 <legend className="font-heading text-xl font-black text-bfb-ink">
                   Pick your preferred session
                 </legend>
                 <p className="mt-2 text-sm leading-6 text-bfb-ink/65">
-                  Each team reserves one lane. If you do not know every bowler yet, that is okay.
+                  {hasTeamManagement
+                    ? "Each team registration reserves one team spot in a session. If you do not know every bowler yet, that is okay."
+                    : "Event sponsorship includes one team spot. Choose a preferred session now, and City Center will confirm team details with you directly."}
                 </p>
                 <FieldError message={errors.sessionId} />
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
@@ -343,7 +385,7 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
                         </span>
                         <span className="mt-2 block text-sm leading-6 text-bfb-ink/65">
                           {session.time}. {remaining > 0
-                            ? `${remaining} of ${session.laneCapacity} lanes still available.`
+                            ? `${remaining} of ${session.laneCapacity} team spots still available.`
                             : "This session is currently full. Choose another session and our team can help with options."}
                         </span>
                       </label>
@@ -351,6 +393,12 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
                   })}
                 </div>
               </fieldset>
+            ) : null}
+
+            {isGiftOnly ? (
+              <div className="mt-8 grid gap-5 md:grid-cols-2">
+                {giftAmountField}
+              </div>
             ) : null}
 
             <div className="mt-8 grid gap-5 md:grid-cols-2">
@@ -413,7 +461,7 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
                   />
                 </div>
               </label>
-              {needsSession(form.registrationType) ? (
+              {hasTeamManagement ? (
                 <label>
                   <span className="field-label">Team name</span>
                   <input
@@ -425,7 +473,7 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
                 </label>
               ) : null}
               {form.registrationType === "sponsorship" || form.registrationType === "lane-sponsor" ? (
-                <label className={needsSession(form.registrationType) ? "" : "md:col-span-2"}>
+                <label className={hasSessionSelection ? "" : "md:col-span-2"}>
                   <span className="field-label">Sponsor logo or website</span>
                   <div className="rounded-sm border border-bfb-ink/10 bg-bfb-cream p-4">
                     <div className="relative">
@@ -449,12 +497,12 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
                   className="bfb-field min-h-24"
                   value={form.notes}
                   onChange={(event) => updateForm("notes", event.target.value)}
-                  placeholder="Team requests, invoice notes, sponsor details, or questions"
+                  placeholder={notesPlaceholder}
                 />
               </label>
             </div>
 
-            {needsSession(form.registrationType) ? (
+            {hasTeamManagement ? (
               <div className="mt-9">
                 <BowlerListBuilder
                   bowlers={form.bowlers}
@@ -463,34 +511,11 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
               </div>
             ) : null}
 
-            <div className="mt-9 grid gap-5 md:grid-cols-2">
-              <label>
-                <span className="field-label">
-                  {isGiftOnly
-                    ? "Gift amount for backpacks and supplies"
-                    : "Add a gift for backpacks and supplies"}
-                </span>
-                <div className="relative">
-                  <Gift
-                    aria-hidden="true"
-                    className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-bfb-ink/35"
-                    size={17}
-                  />
-                  <input
-                    className="bfb-field pl-10"
-                    type="number"
-                    min={isGiftOnly ? minimumGiftAmount : 0}
-                    step={1}
-                    value={form.optionalGift}
-                    onChange={(event) => updateForm("optionalGift", Number(event.target.value) || 0)}
-                  />
-                </div>
-                <p className="mt-2 text-xs font-semibold leading-5 text-bfb-ink/55">
-                  Gifts start at {formatCurrency(minimumGiftAmount)}.
-                </p>
-                <FieldError message={errors.optionalGift} />
-              </label>
-            </div>
+            {!isGiftOnly ? (
+              <div className="mt-9 grid gap-5 md:grid-cols-2">
+                {giftAmountField}
+              </div>
+            ) : null}
 
             <fieldset className="mt-9">
               <legend className="font-heading text-xl font-black text-bfb-ink">
@@ -530,7 +555,7 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
               </div>
             </fieldset>
 
-            {needsSession(form.registrationType) ? (
+            {hasTeamManagement ? (
               <label className="mt-7 flex gap-3 rounded-sm bg-bfb-green/15 p-4">
                 <input
                   className="mt-1"

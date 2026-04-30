@@ -29,6 +29,15 @@ export function BowlingCheckoutSummary({ form, registrations }: BowlingCheckoutS
   const donationTotal = Math.max(0, form.optionalGift || 0);
   const total = subtotal + donationTotal;
   const isGiftOnly = form.registrationType === "gift";
+  const needsGiftAmount = isGiftOnly && donationTotal <= 0;
+  const summaryNote =
+    form.registrationType === "team"
+      ? "Your team registration creates the captain link for bowler names after checkout or pledge submission."
+      : form.registrationType === "sponsorship"
+        ? "City Center will follow up on recognition, logo details, and the included team spot."
+        : form.registrationType === "lane-sponsor"
+          ? "Your lane sponsorship is saved for City Center follow-up on recognition details."
+          : `Your gift amount and selected payment preference will be sent to ${bowlingEventConfig.contactName}, City Center's ${bowlingEventConfig.contactTitle}, to confirm.`;
   const PaymentIcon = paymentIcons[form.paymentPreference as BowlingPaymentPreference];
   const sessionRemaining = form.sessionId
     ? registrations
@@ -37,7 +46,7 @@ export function BowlingCheckoutSummary({ form, registrations }: BowlingCheckoutS
     : null;
 
   return (
-    <aside className="sticky top-6 rounded-sm border border-bfb-ink/10 bg-white p-5 shadow-soft">
+    <aside className="rounded-sm border border-bfb-ink/10 bg-white p-5 shadow-soft lg:sticky lg:top-6">
       <h3 className="font-heading text-xl font-black text-bfb-ink">Fast summary</h3>
       <div className="mt-5 space-y-4 text-sm">
         {!isGiftOnly ? (
@@ -50,9 +59,9 @@ export function BowlingCheckoutSummary({ form, registrations }: BowlingCheckoutS
           <div className="flex justify-between gap-4">
             <span className="inline-flex items-center gap-2 text-bfb-ink/60">
               <MapPinned aria-hidden="true" size={15} />
-              Session capacity
+              Session availability
             </span>
-            <span className="font-bold text-bfb-ink">{sessionRemaining} lanes left</span>
+            <span className="font-bold text-bfb-ink">{sessionRemaining} team spots left</span>
           </div>
         ) : null}
         <div className="flex justify-between gap-4">
@@ -71,9 +80,9 @@ export function BowlingCheckoutSummary({ form, registrations }: BowlingCheckoutS
           <span>{paymentPreferenceLabels[form.paymentPreference]}</span>
         </p>
         <p className="mt-4 rounded-sm bg-bfb-green/15 p-3 text-xs font-semibold leading-5 text-bfb-ink/70">
-          {isGiftOnly ? "Your gift amount" : "Your registration total"} and selected payment
-          preference will be sent to {bowlingEventConfig.contactName}, City Center&apos;s{" "}
-          {bowlingEventConfig.contactTitle}, to confirm.
+          {needsGiftAmount
+            ? "Enter a gift amount below before finishing checkout."
+            : summaryNote}
         </p>
         <p className="mt-3 text-xs font-semibold leading-5 text-bfb-ink/55">
           Questions? Email{" "}

@@ -13,7 +13,7 @@ export function GalaHero() {
         {galaCopy.announcement}
       </div>
 
-      <section className="relative min-h-[86svh] overflow-hidden">
+      <section className="relative min-h-[72svh] overflow-hidden">
         <Image
           src={galaPhotos.hero.src}
           alt={galaPhotos.hero.alt}
@@ -24,7 +24,7 @@ export function GalaHero() {
         />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(13,27,61,0.92)_0%,rgba(13,27,61,0.76)_42%,rgba(13,27,61,0.28)_100%)]" />
 
-        <div className="section-shell relative z-10 grid min-h-[72svh] items-center py-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(420px,0.62fr)] lg:gap-10">
+        <div className="section-shell relative z-10 grid min-h-[62svh] items-center py-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(420px,0.62fr)] lg:gap-10">
           <div className="max-w-3xl">
             <p className="eyebrow text-sftc-gold">{galaCopy.hero.eyebrow}</p>
             <h1 className="mt-6 max-w-4xl font-display text-5xl font-medium leading-[1.02] text-white sm:text-6xl lg:text-7xl">
@@ -39,7 +39,7 @@ export function GalaHero() {
                 <ArrowRight aria-hidden="true" size={17} />
               </a>
               <a href="#sponsorships" className="button-secondary">
-                View Sponsorships
+                View Sponsorship Options
               </a>
             </div>
             <div className="mt-8 flex max-w-2xl flex-col gap-3 border-l-2 border-sftc-hope pl-4 text-sm text-white/80 sm:flex-row sm:items-center sm:gap-6">

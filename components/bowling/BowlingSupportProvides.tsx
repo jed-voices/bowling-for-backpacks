@@ -27,7 +27,7 @@ export function BowlingSupportProvides() {
             Practical generosity for a strong start.
           </h2>
           <p className="mt-5 text-lg leading-8 text-white/75">
-            A Christmas-in-July night can become relief for families, dignity for
+            A Christmas in July night can become relief for families, dignity for
             students, and another doorway into relationship.
           </p>
           <div className="relative mt-8 aspect-[4/3] overflow-hidden rounded-sm bg-bfb-ink shadow-soft">

@@ -19,6 +19,7 @@ import {
   committedBowlingRegistrations,
   eventParticipationRegistrations,
 } from "@/lib/bowling/records";
+import { buildBowlingSponsorshipProgress } from "@/lib/bowling/sponsorship-progress";
 import type { BowlingRegistrationRecord } from "@/lib/bowling/types";
 import { formatCurrency } from "@/lib/bowling/validation";
 
@@ -45,13 +46,13 @@ export function BowlingHero({ registrations }: BowlingHeroProps) {
         <div className="bfb-shell relative grid gap-10 py-12 sm:py-16 lg:min-h-[760px] lg:grid-cols-[minmax(0,0.96fr)_minmax(420px,0.74fr)] lg:items-center lg:gap-16 lg:py-20">
           <div className="max-w-[720px]">
             <h1
-              className="max-w-4xl font-heading font-black uppercase text-white"
-              aria-label="Christmas in July Bowling for Backpacks"
+              className="max-w-full font-heading font-black uppercase text-white"
+              aria-label="Christmas in July: Bowling for Backpacks"
             >
               <span className="block whitespace-nowrap text-[clamp(1.75rem,8.2vw,5.25rem)] leading-[1]">
                 Christmas in July
               </span>
-              <span className="mt-3 block whitespace-nowrap text-[clamp(1.35rem,6.4vw,3.75rem)] leading-[1.02] text-bfb-green">
+              <span className="mt-3 block whitespace-nowrap text-[clamp(1.15rem,5.8vw,3.75rem)] leading-[1.02] text-bfb-green">
                 Bowling for Backpacks
               </span>
             </h1>
@@ -63,6 +64,7 @@ export function BowlingHero({ registrations }: BowlingHeroProps) {
             </p>
 
             <HeroThermometer registrations={registrations} />
+            <HeroSponsorshipProgress registrations={registrations} />
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <a
@@ -76,7 +78,8 @@ export function BowlingHero({ registrations }: BowlingHeroProps) {
                 href="#sponsorships"
                 className="inline-flex min-h-12 items-center justify-center gap-2 rounded-sm border border-white/30 bg-white/10 px-5 py-3 font-heading text-sm font-bold uppercase text-white transition hover:border-bfb-green hover:bg-white/20 focus-visible:outline-bfb-green"
               >
-                Event Sponsor - $5,000
+                Become a Sponsor
+                <ArrowRight aria-hidden="true" size={17} />
               </a>
             </div>
 
@@ -135,7 +138,7 @@ function HeroThermometer({ registrations }: BowlingHeroProps) {
           <div className="absolute bottom-7 left-1/2 h-[6.5rem] w-10 -translate-x-1/2 rounded-full border border-white/45 bg-white/20 p-1 shadow-inner sm:h-[7.5rem] sm:w-11">
             <div className="relative h-full overflow-hidden rounded-full bg-white/35">
               <span
-                className="bfb-thermometer-fill absolute bottom-0 left-0 right-0 rounded-full bg-[linear-gradient(180deg,#ff6b5f_0%,#e43f35_56%,#b72424_100%)]"
+                className="bfb-thermometer-fill absolute bottom-0 left-0 right-0 rounded-full bg-[linear-gradient(180deg,#5DCBA3_0%,#3F9FEC_58%,#112F6D_100%)]"
                 style={{ height: `${thermometerFill}%` }}
               />
               <span className="pointer-events-none absolute inset-y-2 left-2 w-2 rounded-full bg-white/50 blur-[1px]" />
@@ -143,7 +146,7 @@ function HeroThermometer({ registrations }: BowlingHeroProps) {
           </div>
 
           <div className="absolute bottom-0 left-1/2 flex h-16 w-16 -translate-x-1/2 items-center justify-center rounded-full border border-white/45 bg-white/20 p-1.5 shadow-sm">
-            <div className="bfb-thermometer-bulb-fill h-full w-full rounded-full bg-[radial-gradient(circle_at_34%_30%,#ffd2cd_0%,#ff6b5f_24%,#e43f35_60%,#a91f1f_100%)] shadow-[0_0_18px_rgba(228,63,53,0.28)]" />
+            <div className="bfb-thermometer-bulb-fill h-full w-full rounded-full bg-[radial-gradient(circle_at_34%_30%,#d9fff1_0%,#5DCBA3_30%,#3F9FEC_64%,#112F6D_100%)] shadow-[0_0_18px_rgba(93,203,163,0.28)]" />
             <span className="pointer-events-none absolute left-5 top-4 h-3 w-3 rounded-full bg-white/55 blur-[1px]" />
           </div>
 
@@ -194,6 +197,59 @@ function HeroThermometer({ registrations }: BowlingHeroProps) {
         </div>
       </div>
     </aside>
+  );
+}
+
+function HeroSponsorshipProgress({ registrations }: BowlingHeroProps) {
+  const progressItems = Object.values(
+    buildBowlingSponsorshipProgress(registrations),
+  );
+
+  return (
+    <div className="mt-4 max-w-[650px] rounded-sm border border-white/15 bg-white/[0.08] p-4 text-white shadow-soft backdrop-blur sm:p-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="font-heading text-xs font-black uppercase text-bfb-green">
+            Sponsorship path
+          </p>
+          <h2 className="mt-2 font-heading text-xl font-black uppercase leading-tight text-white sm:text-2xl">
+            Choose how to move the goal.
+          </h2>
+        </div>
+        <a
+          href="#sponsorships"
+          className="inline-flex items-center gap-2 font-heading text-xs font-black uppercase text-white underline decoration-bfb-green decoration-2 underline-offset-4 transition hover:text-bfb-green"
+        >
+          View options
+          <ArrowRight aria-hidden="true" size={14} />
+        </a>
+      </div>
+
+      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+        {progressItems.map((item) => (
+          <div
+            key={item.id}
+            className="bfb-sponsor-pulse rounded-sm border border-white/12 bg-white/[0.08] p-3"
+          >
+            <p className="font-heading text-[0.68rem] font-black uppercase text-bfb-green">
+              {item.label}
+            </p>
+            <p className="mt-2 font-heading text-base font-black uppercase leading-tight text-white">
+              {item.remainingLabel}
+            </p>
+            <p className="mt-2 text-xs font-semibold leading-5 text-white/62">
+              {item.progressLabel}
+            </p>
+            <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/18">
+              <span
+                className="block h-full rounded-full bg-bfb-green"
+                style={{ width: `${item.progress}%` }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
