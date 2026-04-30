@@ -17,11 +17,12 @@ import { BowlingCheckoutSummary } from "./BowlingCheckoutSummary";
 import { EventGatewayBackLink } from "@/components/events/EventGatewayBackLink";
 import {
   bowlingRegistrationOptions,
+  getDefaultBowlingSponsorshipId,
   bowlingSessions,
-  bowlingSponsorships,
   getSponsorshipById,
   paymentCtaLabels,
   paymentPreferenceLabels,
+  registerableBowlingSponsorships,
   teamRegistration,
 } from "@/lib/bowling/config";
 import type {
@@ -88,6 +89,7 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
   const isGiftOnly = form.registrationType === "gift";
   const hasSessionSelection = needsSession(form.registrationType);
   const hasTeamManagement = getsTeamManagementLink(form.registrationType);
+  const selectedSponsorLanes = selectedSponsor?.lanes ?? 1;
   const notesPlaceholder = hasTeamManagement
     ? "Team requests, accessibility notes, invoice notes, or questions"
     : form.registrationType === "sponsorship"
@@ -116,7 +118,7 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
           : registrationType === "lane-sponsor"
             ? "lane-sponsor"
             : registrationType === "sponsorship"
-              ? "event-sponsor"
+              ? getDefaultBowlingSponsorshipId()
               : "gift";
 
       return {
@@ -299,7 +301,11 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
                         {option.name}
                       </span>
                       <span className="mt-2 block text-sm font-bold text-bfb-navy">
-                        {option.price > 0 ? formatCurrency(option.price) : "Any amount"}
+                        {option.id === "sponsorship"
+                          ? `Starting at ${formatCurrency(option.price)}`
+                          : option.price > 0
+                            ? formatCurrency(option.price)
+                            : "Any amount"}
                       </span>
                     </label>
                   );
@@ -311,8 +317,7 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
               <fieldset className="mt-8">
                 <legend className="field-label">Choose a sponsorship level</legend>
                 <div className="grid gap-3 md:grid-cols-2">
-                  {bowlingSponsorships
-                    .filter((sponsor) => sponsor.id === "event-sponsor")
+                  {registerableBowlingSponsorships
                     .map((sponsor) => (
                       <label
                         key={sponsor.id}
@@ -334,6 +339,9 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
                         <span className="mt-2 block text-sm font-bold text-bfb-navy">
                           {formatCurrency(sponsor.price)}
                         </span>
+                        <span className="mt-2 block text-xs font-semibold leading-5 text-bfb-ink/60">
+                          {sponsor.lanes} {sponsor.lanes === 1 ? "lane" : "lanes"} included.
+                        </span>
                       </label>
                     ))}
                 </div>
@@ -354,7 +362,7 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
                 <p className="mt-2 text-sm leading-6 text-bfb-ink/65">
                   {hasTeamManagement
                     ? "Each team registration reserves one team spot in a session. If you do not know every bowler yet, that is okay."
-                    : "Event sponsorship includes one team spot. Choose a preferred session now, and City Center will confirm team details with you directly."}
+                    : `${selectedSponsor?.name ?? "This sponsorship"} includes ${selectedSponsorLanes} ${selectedSponsorLanes === 1 ? "lane" : "lanes"}. Choose a preferred session now, and City Center will confirm details with you directly.`}
                 </p>
                 <FieldError message={errors.sessionId} />
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
@@ -363,6 +371,8 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
                       ? remainingLanesFromRegistrations(session.id, registrations)
                       : remainingLanes(session.id);
                     const isSelected = form.sessionId === session.id;
+                    const requiredLanes = hasTeamManagement ? 1 : selectedSponsorLanes;
+                    const hasEnoughLanes = remaining >= requiredLanes;
 
                     return (
                       <label
@@ -378,14 +388,16 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
                           name="sessionId"
                           checked={isSelected}
                           onChange={() => updateForm("sessionId", session.id)}
-                          disabled={remaining <= 0}
+                          disabled={!hasEnoughLanes}
                         />
                         <span className="ml-2 font-heading font-black text-bfb-ink">
                           {session.name}
                         </span>
                         <span className="mt-2 block text-sm leading-6 text-bfb-ink/65">
                           {session.time}. {remaining > 0
-                            ? `${remaining} of ${session.laneCapacity} team spots still available.`
+                            ? hasEnoughLanes
+                              ? `${remaining} of ${session.laneCapacity} team spots still available.`
+                              : `${remaining} team spots remain, but this level needs ${requiredLanes}.`
                             : "This session is currently full. Choose another session and our team can help with options."}
                         </span>
                       </label>

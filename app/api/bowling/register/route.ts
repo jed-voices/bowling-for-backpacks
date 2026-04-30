@@ -36,10 +36,18 @@ export async function POST(request: Request) {
     if (
       liveRegistrations &&
       needsSession(input.registrationType) &&
-      remainingLanesFromRegistrations(input.sessionId, liveRegistrations) <= 0
+      remainingLanesFromRegistrations(input.sessionId, liveRegistrations) <
+        Math.max(1, validation.record.laneCount)
     ) {
       return NextResponse.json(
-        { errors: { sessionId: "This session is full. Choose another session or join the waitlist." } },
+        {
+          errors: {
+            sessionId:
+              validation.record.laneCount > 1
+                ? `This session does not have ${validation.record.laneCount} lanes available. Choose another session or contact City Center.`
+                : "This session is full. Choose another session or join the waitlist.",
+          },
+        },
         { status: 400 },
       );
     }

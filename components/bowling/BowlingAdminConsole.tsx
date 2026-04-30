@@ -2,7 +2,9 @@
 
 import { useMemo, useState } from "react";
 import { Download, Search, ShieldCheck } from "lucide-react";
-import { bowlingSessions } from "@/lib/bowling/config";
+import { bowlingSessions, bowlingSponsorships } from "@/lib/bowling/config";
+import { getSponsorNameNotificationNeeds } from "@/lib/bowling/sponsorship-notifications";
+import { buildBowlingSponsorshipSummary } from "@/lib/bowling/sponsorship-progress";
 import type {
   BowlingExportStatus,
   BowlingPaymentStatus,
@@ -65,6 +67,11 @@ export function BowlingAdminConsole({
     () => committedBowlingRegistrations(sourceRegistrations),
     [sourceRegistrations],
   );
+  const sponsorshipSummary = useMemo(
+    () => buildBowlingSponsorshipSummary(sourceRegistrations),
+    [sourceRegistrations],
+  );
+  const sponsorNameNeeds = useMemo(() => getSponsorNameNotificationNeeds(), []);
 
   const registrations = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -137,6 +144,9 @@ export function BowlingAdminConsole({
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <Metric label="Committed records" value={committedRegistrations.length.toString()} />
         <Metric label="Teams registered" value={teamRegistrations.length.toString()} />
+        <Metric label="Confirmed sponsor total" value={formatCurrency(sponsorshipSummary.totalRaised)} />
+        <Metric label="Sponsored lanes" value={sponsorshipSummary.sponsoredLanes.toString()} />
+        <Metric label="Secured sponsorships" value={sponsorshipSummary.securedSponsorships.toString()} />
         <Metric label="Sponsorship revenue" value={formatCurrency(sponsorshipRevenue)} />
         <Metric label="Grand total" value={formatCurrency(grandTotal)} />
         <Metric label="Team revenue" value={formatCurrency(totalTeamRevenue)} />
@@ -157,6 +167,96 @@ export function BowlingAdminConsole({
             .join(" / ")}
         />
       </div>
+
+      <section className="ops-card p-5">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <h2 className="font-heading text-xl font-bold text-cc-dark-blue">
+              Sponsorship status
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-cc-dark-blue/65">
+              Public sponsor cards use these configured sponsorship levels plus
+              committed live registrations for totals and lane counts.
+            </p>
+          </div>
+          <StatusPill tone={sponsorNameNeeds.length > 0 ? "gold" : "green"}>
+            {sponsorNameNeeds.length > 0
+              ? `${sponsorNameNeeds.length} sponsor name needed`
+              : "Sponsor names current"}
+          </StatusPill>
+        </div>
+
+        <div className="mt-6 overflow-x-auto">
+          <table className="w-full min-w-[1040px] border-collapse text-left text-sm">
+            <thead>
+              <tr className="border-y border-cc-navy/10 text-xs uppercase text-cc-dark-blue/55">
+                <th className="py-3 pr-4 font-heading">Level</th>
+                <th className="py-3 pr-4 font-heading">Status</th>
+                <th className="py-3 pr-4 font-heading">Amount</th>
+                <th className="py-3 pr-4 font-heading">Lane count</th>
+                <th className="py-3 pr-4 font-heading">Sponsor name</th>
+                <th className="py-3 pr-4 font-heading">Notification</th>
+                <th className="py-3 pr-4 font-heading">Public display</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-cc-navy/10">
+              {bowlingSponsorships.map((sponsorship) => {
+                const progressItem = sponsorshipSummary.itemMap[sponsorship.id];
+                const needsName = sponsorNameNeeds.some(
+                  (item) => item.id === sponsorship.id,
+                );
+
+                return (
+                  <tr key={sponsorship.id}>
+                    <td className="py-4 pr-4 align-top">
+                      <p className="font-bold text-cc-dark-blue">{sponsorship.name}</p>
+                      <p className="mt-1 text-cc-dark-blue/60">{progressItem.detail}</p>
+                    </td>
+                    <td className="py-4 pr-4 align-top">
+                      <StatusPill tone={progressItem.isSponsored ? "green" : "blue"}>
+                        {progressItem.isSponsored ? "Sponsored" : "Available"}
+                      </StatusPill>
+                    </td>
+                    <td className="py-4 pr-4 align-top font-bold text-cc-dark-blue">
+                      {formatCurrency(sponsorship.price)}
+                    </td>
+                    <td className="py-4 pr-4 align-top">{sponsorship.lanes}</td>
+                    <td className="py-4 pr-4 align-top">
+                      {sponsorship.sponsorName?.trim() ? (
+                        sponsorship.sponsorName
+                      ) : needsName ? (
+                        <span className="font-bold text-cc-navy">Name needed</span>
+                      ) : (
+                        "Not assigned"
+                      )}
+                    </td>
+                    <td className="py-4 pr-4 align-top">
+                      {sponsorship.notificationRequired ? (
+                        <StatusPill tone={sponsorship.notificationSent ? "green" : "gold"}>
+                          {sponsorship.notificationSent ? "Sent" : "Pending setup"}
+                        </StatusPill>
+                      ) : (
+                        "Not required"
+                      )}
+                    </td>
+                    <td className="py-4 pr-4 align-top">
+                      {sponsorship.publicDisplay === false ? "Hidden" : "Shown"}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        {sponsorNameNeeds.length > 0 ? (
+          <p className="mt-4 rounded-sm border border-cc-light-green/35 bg-cc-light-green/10 p-4 text-sm leading-6 text-cc-dark-blue/70">
+            Email notification copy is prepared for Kimberly Winston. Sending is
+            intentionally paused until a real email provider and persistent
+            notification-sent field are connected.
+          </p>
+        ) : null}
+      </section>
 
       <section className="ops-card p-5">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">

@@ -1,5 +1,9 @@
 import { CreditCard, FileText, Landmark, MapPinned } from "lucide-react";
-import { bowlingEventConfig, paymentPreferenceLabels } from "@/lib/bowling/config";
+import {
+  bowlingEventConfig,
+  getSponsorshipById,
+  paymentPreferenceLabels,
+} from "@/lib/bowling/config";
 import type {
   BowlingPaymentPreference,
   BowlingRegistrationInput,
@@ -30,11 +34,13 @@ export function BowlingCheckoutSummary({ form, registrations }: BowlingCheckoutS
   const total = subtotal + donationTotal;
   const isGiftOnly = form.registrationType === "gift";
   const needsGiftAmount = isGiftOnly && donationTotal <= 0;
+  const selectedSponsor = getSponsorshipById(form.packageId);
+  const selectedSponsorLanes = selectedSponsor?.lanes ?? 1;
   const summaryNote =
     form.registrationType === "team"
       ? "Your team registration creates the captain link for bowler names after checkout or pledge submission."
       : form.registrationType === "sponsorship"
-        ? "City Center will follow up on recognition, logo details, and the included team spot."
+        ? `City Center will follow up on recognition, logo details, and the included ${selectedSponsorLanes === 1 ? "lane" : `${selectedSponsorLanes} lanes`}.`
         : form.registrationType === "lane-sponsor"
           ? "Your lane sponsorship is saved for City Center follow-up on recognition details."
           : `Your gift amount and selected payment preference will be sent to ${bowlingEventConfig.contactName}, City Center's ${bowlingEventConfig.contactTitle}, to confirm.`;

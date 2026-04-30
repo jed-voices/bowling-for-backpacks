@@ -43,7 +43,11 @@ export function BowlingRegistrationOptions() {
                   {option.name}
                 </h3>
                 <p className="mt-3 font-heading text-xl font-black text-bfb-navy">
-                  {option.price > 0 ? formatCurrency(option.price) : "Any amount"}
+                  {option.id === "sponsorship"
+                    ? `Starting at ${formatCurrency(option.price)}`
+                    : option.price > 0
+                      ? formatCurrency(option.price)
+                      : "Any amount"}
                 </p>
                 <p className="mt-4 text-base leading-7 text-bfb-ink/70 lg:min-h-28">
                   {option.description}

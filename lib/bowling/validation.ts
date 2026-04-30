@@ -3,6 +3,7 @@ import {
   getRegistrationOptionById,
   getSessionById,
   getSponsorshipById,
+  isRegisterableBowlingSponsorship,
   teamRegistration,
 } from "./config";
 import { isCommittedBowlingRegistration } from "./records";
@@ -136,6 +137,13 @@ export const validateBowlingRegistrationInput = (
   const supportsTeamManagement = getsTeamManagementLink(input.registrationType);
   const session = input.sessionId ? getSessionById(input.sessionId) : undefined;
   const donationTotal = Math.max(0, Number(input.optionalGift) || 0);
+  const selectedSponsorship = getSponsorshipById(input.packageId);
+  const requestedLaneCount =
+    input.registrationType === "team"
+      ? 1
+      : input.registrationType === "sponsorship"
+        ? selectedSponsorship?.lanes ?? 1
+        : 0;
 
   if (!input.buyerFirstName.trim()) {
     errors.buyerFirstName = "First name is required.";
@@ -157,12 +165,23 @@ export const validateBowlingRegistrationInput = (
     errors.sessionId = "Choose a bowling session.";
   }
 
-  if (requiresSession && session && remainingLanes(session.id) <= 0) {
-    errors.sessionId = "This session is full. Choose another session or join the waitlist.";
+  if (requiresSession && session && remainingLanes(session.id) < requestedLaneCount) {
+    errors.sessionId =
+      requestedLaneCount > 1
+        ? `This session does not have ${requestedLaneCount} lanes available. Choose another session or contact City Center.`
+        : "This session is full. Choose another session or join the waitlist.";
   }
 
-  if (input.registrationType === "sponsorship" && !getSponsorshipById(input.packageId)) {
+  if (input.registrationType === "sponsorship" && !selectedSponsorship) {
     errors.packageId = "Choose a sponsorship level.";
+  }
+
+  if (
+    input.registrationType === "sponsorship" &&
+    selectedSponsorship &&
+    !isRegisterableBowlingSponsorship(input.packageId)
+  ) {
+    errors.packageId = "Choose an available sponsorship level.";
   }
 
   if (input.registrationType === "lane-sponsor" && input.packageId !== "lane-sponsor") {
@@ -190,7 +209,7 @@ export const validateBowlingRegistrationInput = (
   }
 
   const subtotal = selectedPrice(input);
-  const laneCount = requiresSession ? 1 : 0;
+  const laneCount = requestedLaneCount;
   const normalizedPackageId =
     input.registrationType === "team"
       ? teamRegistration.id

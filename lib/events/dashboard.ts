@@ -3,7 +3,11 @@ import {
   isBowlingDatabaseConfigured,
   listBowlingRegistrations,
 } from "@/lib/bowling/database";
-import { committedBowlingRegistrations } from "@/lib/bowling/records";
+import {
+  committedBowlingRegistrations,
+  giftOnlyRegistrations,
+} from "@/lib/bowling/records";
+import { buildBowlingSponsorshipSummary } from "@/lib/bowling/sponsorship-progress";
 import type { BowlingRegistrationRecord } from "@/lib/bowling/types";
 import { remainingLanesFromRegistrations } from "@/lib/bowling/validation";
 import type { GalaRegistrationRecord } from "@/lib/gala/types";
@@ -185,10 +189,12 @@ const buildBowlingSummary = async (): Promise<EventOperationsSummary> => {
   const liveRegistrations = await listBowlingRegistrations();
   const registrations = committedBowlingRegistrations(liveRegistrations ?? []);
   const dataSource = liveRegistrations ? "live" : "preview";
-  const totalValue = registrations.reduce(
-    (sum, registration) => sum + registration.grandTotal,
+  const sponsorshipSummary = buildBowlingSponsorshipSummary(registrations);
+  const giftOnlyTotal = giftOnlyRegistrations(registrations).reduce(
+    (sum, registration) => sum + registration.donationTotal,
     0,
   );
+  const totalValue = sponsorshipSummary.totalRaised + giftOnlyTotal;
   const teams = registrations.filter((registration) => registration.laneCount > 0);
   const openPayments = countOpenBowlingPayments(registrations);
   const exportQueue = countExportQueue(registrations);
@@ -231,7 +237,10 @@ const buildBowlingSummary = async (): Promise<EventOperationsSummary> => {
       {
         label: "Visible value",
         value: formatCurrency(totalValue),
-        detail: dataSource === "live" ? "Supabase" : "No live connection",
+        detail:
+          dataSource === "live"
+            ? "Confirmed sponsorships + committed gifts"
+            : "Confirmed sponsorships, no live connection",
       },
       {
         label: "Open payments",

@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { Gift, UsersRound } from "lucide-react";
-import { sampleBowlingRegistrations } from "@/lib/bowling/config";
 import { bowlingPhotos } from "@/lib/bowling/photos";
 import {
   committedBowlingRegistrations,
@@ -28,10 +27,9 @@ const eventMoments = [
 ];
 
 export function BowlingMomentumSection({ registrations }: BowlingMomentumSectionProps) {
-  const records = committedBowlingRegistrations(registrations ?? sampleBowlingRegistrations);
+  const records = committedBowlingRegistrations(registrations ?? []);
   const eventRecords = eventParticipationRegistrations(records);
   const giftRecords = giftOnlyRegistrations(records);
-  const isPreview = registrations === undefined;
   const committedTeams = eventRecords
     .filter(
       (registration) =>
@@ -74,8 +72,7 @@ export function BowlingMomentumSection({ registrations }: BowlingMomentumSection
                 </h3>
                 <p className="mt-2 text-sm leading-6 text-bfb-ink/65">
                   {giftRecords.length} supporter{giftRecords.length === 1 ? "" : "s"} gave
-                  without registering a team or sponsoring a lane
-                  {isPreview ? " in preview data" : ""}.
+                  without registering a team or sponsoring a lane.
                 </p>
               </div>
               <Gift aria-hidden="true" className="text-bfb-green" size={32} />

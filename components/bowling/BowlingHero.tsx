@@ -9,17 +9,10 @@ import {
   Sun,
 } from "lucide-react";
 import { EventPageNav } from "@/components/events/EventPageNav";
-import {
-  bowlingEventConfig,
-  sampleBowlingRegistrations,
-} from "@/lib/bowling/config";
+import { bowlingEventConfig } from "@/lib/bowling/config";
 import { bowlingCopy } from "@/lib/bowling/copy";
 import { bowlingPhotos } from "@/lib/bowling/photos";
-import {
-  committedBowlingRegistrations,
-  eventParticipationRegistrations,
-} from "@/lib/bowling/records";
-import { buildBowlingSponsorshipProgress } from "@/lib/bowling/sponsorship-progress";
+import { buildBowlingSponsorshipSummary } from "@/lib/bowling/sponsorship-progress";
 import type { BowlingRegistrationRecord } from "@/lib/bowling/types";
 import { formatCurrency } from "@/lib/bowling/validation";
 
@@ -107,21 +100,11 @@ export function BowlingHero({ registrations }: BowlingHeroProps) {
 }
 
 function HeroThermometer({ registrations }: BowlingHeroProps) {
-  const records = committedBowlingRegistrations(registrations ?? sampleBowlingRegistrations);
-  const eventRecords = eventParticipationRegistrations(records);
-  const sponsorshipRaised = eventRecords.reduce(
-    (sum, registration) => sum + registration.grandTotal,
-    0,
-  );
-  const progress = Math.min(
-    100,
-    Math.round((sponsorshipRaised / bowlingEventConfig.fundraisingGoal) * 100),
-  );
+  const sponsorshipSummary = buildBowlingSponsorshipSummary(registrations);
+  const sponsorshipRaised = sponsorshipSummary.totalRaised;
+  const progress = sponsorshipSummary.progress;
   const thermometerFill = Math.max(6, progress);
-  const remainingToGoal = Math.max(
-    0,
-    bowlingEventConfig.fundraisingGoal - sponsorshipRaised,
-  );
+  const remainingToGoal = sponsorshipSummary.remainingToGoal;
   const tickMarks = [
     { label: formatCurrency(bowlingEventConfig.fundraisingGoal), top: "0%" },
     { label: formatCurrency(bowlingEventConfig.fundraisingGoal / 2), top: "50%" },
@@ -179,8 +162,8 @@ function HeroThermometer({ registrations }: BowlingHeroProps) {
             {formatCurrency(sponsorshipRaised)} raised
           </p>
           <p className="mt-2 text-sm font-semibold leading-6 text-white/80">
-            Event sponsorships, team registrations, and lane sponsors move this
-            meter toward backpacks and school-year support.
+            Confirmed sponsorships and committed registrations move this meter
+            toward backpacks and school-year support.
           </p>
           <div className="mt-4">
             <div className="flex justify-between gap-4 text-xs font-bold uppercase text-white/70">
@@ -201,9 +184,46 @@ function HeroThermometer({ registrations }: BowlingHeroProps) {
 }
 
 function HeroSponsorshipProgress({ registrations }: BowlingHeroProps) {
-  const progressItems = Object.values(
-    buildBowlingSponsorshipProgress(registrations),
-  );
+  const sponsorshipSummary = buildBowlingSponsorshipSummary(registrations);
+  const progressItems = [
+    {
+      id: "raised",
+      label: "Raised",
+      value: formatCurrency(sponsorshipSummary.totalRaised),
+      detail: `${sponsorshipSummary.progress}% funded`,
+      progress: sponsorshipSummary.progress,
+    },
+    {
+      id: "lanes",
+      label: "Sponsored lanes",
+      value: sponsorshipSummary.sponsoredLanes.toString(),
+      detail: `${sponsorshipSummary.sponsoredLanes}/${sponsorshipSummary.totalLanes} lanes confirmed`,
+      progress:
+        sponsorshipSummary.totalLanes > 0
+          ? Math.min(
+              100,
+              Math.round(
+                (sponsorshipSummary.sponsoredLanes / sponsorshipSummary.totalLanes) * 100,
+              ),
+            )
+          : 0,
+    },
+    {
+      id: "secured",
+      label: "Secured sponsorships",
+      value: sponsorshipSummary.securedSponsorships.toString(),
+      detail: `${sponsorshipSummary.availableSponsorships} opportunities available`,
+      progress:
+        sponsorshipSummary.securedSponsorships + sponsorshipSummary.availableSponsorships > 0
+          ? Math.round(
+              (sponsorshipSummary.securedSponsorships /
+                (sponsorshipSummary.securedSponsorships +
+                  sponsorshipSummary.availableSponsorships)) *
+                100,
+            )
+          : 0,
+    },
+  ];
 
   return (
     <div className="mt-4 max-w-[650px] rounded-sm border border-white/15 bg-white/[0.08] p-4 text-white shadow-soft backdrop-blur sm:p-5">
@@ -213,7 +233,7 @@ function HeroSponsorshipProgress({ registrations }: BowlingHeroProps) {
             Sponsorship path
           </p>
           <h2 className="mt-2 font-heading text-xl font-black uppercase leading-tight text-white sm:text-2xl">
-            Choose how to move the goal.
+            Sponsorship momentum is building.
           </h2>
         </div>
         <a
@@ -235,10 +255,10 @@ function HeroSponsorshipProgress({ registrations }: BowlingHeroProps) {
               {item.label}
             </p>
             <p className="mt-2 font-heading text-base font-black uppercase leading-tight text-white">
-              {item.remainingLabel}
+              {item.value}
             </p>
             <p className="mt-2 text-xs font-semibold leading-5 text-white/62">
-              {item.progressLabel}
+              {item.detail}
             </p>
             <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/18">
               <span

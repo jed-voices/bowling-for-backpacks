@@ -73,48 +73,196 @@ export const bowlingTimeline = [
 
 export const bowlingSponsorships: BowlingSponsorship[] = [
   {
-    id: "event-sponsor",
-    name: "Event Sponsor",
-    price: 5000,
+    id: "presenting-sponsor",
+    name: "Presenting Sponsor",
+    price: 15000,
+    lanes: 3,
+    status: "sponsored",
     description:
-      "The primary sponsorship for Christmas in July. This level helps carry the event, includes a team spot, and gives supporters clear recognition tied to the full Back 2 School effort.",
+      "The lead sponsorship for Christmas in July. This gift anchors the full event and helps move backpacks, school supplies, and meaningful support toward Oklahoma City students.",
     benefits: [
-      "Primary event recognition",
-      "Logo on the event page and event materials",
+      "Three lanes included",
+      "Premier event recognition",
+      "Prominent brand placement",
       "Recognition during the bowling sessions",
-      "Team registration included",
-      "A dedicated City Center thank-you after the event",
+      "City Center follow-up for public sponsor recognition",
     ],
+    recognition: [
+      "3 lanes",
+      "Premier event recognition",
+      "Prominent brand placement",
+    ],
+    impactMessage:
+      "This sponsorship helps place backpacks, school supplies, and meaningful support directly into the hands of Oklahoma City students and families. We are deeply grateful for the generosity behind this gift and the confidence it shows in the next generation of our city.",
     includesTeam: true,
     featured: true,
+    sponsorName: "",
+    notificationRequired: true,
+    notificationSent: false,
+    publicDisplay: true,
+  },
+  {
+    id: "back-to-school-sponsor",
+    name: "Back-to-School Sponsor",
+    price: 10000,
+    lanes: 3,
+    status: "available",
+    description:
+      "A major sponsorship that connects your support directly to the Back 2 School effort and creates visible momentum for students and families.",
+    benefits: [
+      "Three lanes included",
+      "Backpack program recognition",
+      "Prominent branding",
+      "Activation table",
+    ],
+    recognition: [
+      "Backpack program recognition",
+      "Prominent branding",
+      "Activation table",
+    ],
+    includesTeam: true,
+    notificationRequired: false,
+    notificationSent: false,
+    publicDisplay: true,
+  },
+  {
+    id: "corporate-session-sponsor",
+    name: "Corporate Session Sponsor",
+    price: 5000,
+    lanes: 2,
+    status: "available",
+    description:
+      "Support the corporate bowling session and help companies rally around practical Back 2 School support for Oklahoma City youth.",
+    benefits: [
+      "Two lanes included",
+      "Event signage",
+      "Program recognition",
+      "Sponsor table presence",
+    ],
+    recognition: [
+      "Event signage",
+      "Program recognition",
+      "Sponsor table presence",
+    ],
+    includesTeam: true,
+    notificationRequired: false,
+    notificationSent: false,
+    publicDisplay: true,
+  },
+  {
+    id: "family-night-sponsor",
+    name: "Family Night Sponsor",
+    price: 5000,
+    lanes: 2,
+    status: "sponsored",
+    description:
+      "A secured sponsorship helping make the family session warm, welcoming, and connected to practical Back 2 School support.",
+    benefits: [
+      "Two lanes included",
+      "Family night recognition",
+      "Event signage",
+      "City Center follow-up for public sponsor recognition",
+    ],
+    recognition: ["2 lanes", "Family night recognition", "Event signage"],
+    impactMessage:
+      "This gift helps create a welcoming family experience around Back-to-School support, giving students and parents a moment of joy, connection, and practical help before the school year begins.",
+    includesTeam: true,
+    sponsorName: "",
+    notificationRequired: true,
+    notificationSent: false,
+    publicDisplay: true,
+  },
+  {
+    id: "friend-of-city-center-sponsor",
+    name: "Friend of City Center Sponsor",
+    price: 1000,
+    lanes: 1,
+    status: "available",
+    description:
+      "A meaningful entry point for families, small businesses, and community partners who want to stand with City Center students.",
+    benefits: [
+      "One lane included",
+      "Sponsor board listing",
+      "Social recognition",
+      "Participation",
+    ],
+    recognition: [
+      "Sponsor board listing",
+      "Social recognition",
+      "Participation",
+    ],
+    includesTeam: true,
+    notificationRequired: false,
+    notificationSent: false,
+    publicDisplay: true,
   },
   {
     id: "team-sponsor",
-    name: "Team Sponsor / Team Registration",
+    name: "Team Sponsor",
     price: 750,
+    lanes: 1,
+    status: "available",
     description:
-      "Reserve a team spot for your company, church, family, or friend group and join Christmas in July in person.",
+      "Reserve one bowling team for your company, church, family, or friend group and join Christmas in July in person.",
     benefits: [
-      "One team spot",
+      "One lane included",
       "Up to six bowlers",
       "Choice of preferred session",
-      "Team captain can add bowler names later",
+      "Name displayed on bowling lane and event signage",
+    ],
+    recognition: [
+      "Name displayed on bowling lane",
+      "Event signage",
     ],
     includesTeam: true,
+    notificationRequired: false,
+    notificationSent: false,
+    publicDisplay: true,
   },
   {
     id: "lane-sponsor",
     name: "Lane Sponsor",
     price: 500,
+    lanes: 0,
+    status: "available",
     description:
       "Sponsor a lane and help turn Christmas in July into practical support for students starting the school year.",
     benefits: [
-      "Name or logo recognition on one lane",
-      "Recognition on event website",
+      "Name displayed on bowling lane",
+      "Event signage",
       "Great option for families, small businesses, and community partners",
     ],
+    recognition: [
+      "Name displayed on bowling lane",
+      "Event signage",
+    ],
+    notificationRequired: false,
+    notificationSent: false,
+    publicDisplay: true,
   },
 ];
+
+const legacySponsorshipAliases: Record<string, string> = {
+  "event-sponsor": "corporate-session-sponsor",
+};
+
+const directRegistrationSponsorshipIds = new Set(["team-sponsor", "lane-sponsor"]);
+
+export const registerableBowlingSponsorships = bowlingSponsorships.filter(
+  (sponsorship) =>
+    sponsorship.status === "available" &&
+    !directRegistrationSponsorshipIds.has(sponsorship.id),
+);
+
+export const getDefaultBowlingSponsorshipId = () =>
+  registerableBowlingSponsorships.find(
+    (sponsorship) => sponsorship.id === "friend-of-city-center-sponsor",
+  )?.id ?? registerableBowlingSponsorships[0]?.id ?? "";
+
+export const isRegisterableBowlingSponsorship = (id: string) =>
+  registerableBowlingSponsorships.some(
+    (sponsorship) => sponsorship.id === getSponsorshipById(id)?.id,
+  );
 
 export const teamRegistration: BowlingOption = {
   id: "team",
@@ -133,14 +281,14 @@ export const teamRegistration: BowlingOption = {
 export const bowlingRegistrationOptions: BowlingOption[] = [
   {
     id: "sponsorship",
-    name: "Event Sponsor",
-    price: 5000,
+    name: "Sponsorship",
+    price: 1000,
     description:
-      "The primary sponsorship level for companies, families, or partners ready to lead the Christmas in July effort.",
+      "Choose an available sponsorship level for companies, families, or partners ready to lead the Christmas in July effort.",
     includes: [
-      "Primary event recognition",
-      "Sponsor logo placement",
-      "Team registration included",
+      "Available sponsorship levels",
+      "Sponsor recognition",
+      "Included lanes by level",
       "City Center contact for next steps",
     ],
   },
@@ -187,7 +335,10 @@ export const getSessionById = (id: string) =>
   bowlingSessions.find((session) => session.id === id);
 
 export const getSponsorshipById = (id: string) =>
-  bowlingSponsorships.find((sponsorship) => sponsorship.id === id);
+  bowlingSponsorships.find((sponsorship) => sponsorship.id === id) ??
+  bowlingSponsorships.find(
+    (sponsorship) => sponsorship.id === legacySponsorshipAliases[id],
+  );
 
 export const getRegistrationOptionById = (id: string) =>
   bowlingRegistrationOptions.find((option) => option.id === id);
@@ -239,7 +390,7 @@ export const sampleBowlingRegistrations: BowlingRegistrationRecord[] = [
     id: "BFB-A1002",
     createdAt: "2026-04-24T16:30:00.000Z",
     registrationType: "sponsorship",
-    packageId: "event-sponsor",
+    packageId: "corporate-session-sponsor",
     buyerFirstName: "Jamie",
     buyerLastName: "Nguyen",
     buyerEmail: "jamie@example.com",
@@ -254,8 +405,8 @@ export const sampleBowlingRegistrations: BowlingRegistrationRecord[] = [
     notes: "Needs invoice follow-up.",
     paymentPreference: "invoice",
     saveTeamLink: true,
-    packageName: "Event Sponsor",
-    laneCount: 1,
+    packageName: "Corporate Session Sponsor",
+    laneCount: 2,
     subtotal: 5000,
     donationTotal: 0,
     grandTotal: 5000,

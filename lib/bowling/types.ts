@@ -2,6 +2,7 @@ export type BowlingRegistrationType = "team" | "sponsorship" | "lane-sponsor" | 
 export type BowlingPaymentPreference = "card" | "invoice" | "check";
 export type BowlingPaymentStatus = "pending" | "paid" | "invoice_requested" | "check_pledged";
 export type BowlingExportStatus = "not_exported" | "exported" | "needs_review";
+export type BowlingSponsorshipStatus = "available" | "sponsored";
 
 export type BowlingSession = {
   id: string;
@@ -17,8 +18,16 @@ export type BowlingSponsorship = {
   id: string;
   name: string;
   price: number;
+  lanes: number;
+  status: BowlingSponsorshipStatus;
   description: string;
   benefits: string[];
+  recognition: string[];
+  impactMessage?: string;
+  sponsorName?: string;
+  notificationRequired?: boolean;
+  notificationSent?: boolean;
+  publicDisplay?: boolean;
   includesTeam?: boolean;
   featured?: boolean;
 };
