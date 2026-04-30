@@ -248,10 +248,6 @@ img {
     animation: bfb-thermometer-bulb 4.8s ease-in-out 1.4s infinite;
   }
 
-  .bfb-sponsor-pulse {
-    animation: bfb-sponsor-pulse 6.5s ease-in-out infinite;
-    box-shadow: 0 0 0 rgba(93, 203, 163, 0);
-  }
 }
 
 @keyframes bfb-thermometer-rise {
@@ -269,11 +265,11 @@ img {
 @keyframes bfb-thermometer-glow {
   0%,
   100% {
-    filter: drop-shadow(0 0 0 rgba(93, 203, 163, 0));
+    filter: drop-shadow(0 0 0 rgba(228, 63, 53, 0));
   }
 
   50% {
-    filter: drop-shadow(0 0 8px rgba(93, 203, 163, 0.35));
+    filter: drop-shadow(0 0 8px rgba(228, 63, 53, 0.35));
   }
 }
 
@@ -281,35 +277,18 @@ img {
   0%,
   100% {
     transform: scale(1);
-    box-shadow: 0 0 18px rgba(93, 203, 163, 0.28);
+    box-shadow: 0 0 18px rgba(228, 63, 53, 0.28);
   }
 
   50% {
     transform: scale(1.025);
-    box-shadow: 0 0 24px rgba(93, 203, 163, 0.38);
-  }
-}
-
-@keyframes bfb-sponsor-pulse {
-  0%,
-  100% {
-    box-shadow:
-      0 0 0 rgba(93, 203, 163, 0),
-      0 0 0 rgba(63, 159, 236, 0);
-  }
-
-  50% {
-    box-shadow:
-      0 0 0 1px rgba(93, 203, 163, 0.14),
-      0 0 18px rgba(93, 203, 163, 0.16),
-      0 0 28px rgba(63, 159, 236, 0.08);
+    box-shadow: 0 0 24px rgba(228, 63, 53, 0.38);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .bfb-thermometer-fill,
-  .bfb-thermometer-bulb-fill,
-  .bfb-sponsor-pulse {
+  .bfb-thermometer-bulb-fill {
     animation: none;
   }
 }

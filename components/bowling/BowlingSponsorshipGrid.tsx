@@ -126,7 +126,7 @@ function SponsorMeasure({
 }) {
   return (
     <div
-      className={`bfb-sponsor-pulse mt-5 rounded-sm border p-4 ${
+      className={`mt-5 rounded-sm border p-4 ${
         featured
           ? "border-white/20 bg-white/10"
           : "border-bfb-navy/10 bg-bfb-light/65"

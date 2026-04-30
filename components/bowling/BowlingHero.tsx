@@ -138,7 +138,7 @@ function HeroThermometer({ registrations }: BowlingHeroProps) {
           <div className="absolute bottom-7 left-1/2 h-[6.5rem] w-10 -translate-x-1/2 rounded-full border border-white/45 bg-white/20 p-1 shadow-inner sm:h-[7.5rem] sm:w-11">
             <div className="relative h-full overflow-hidden rounded-full bg-white/35">
               <span
-                className="bfb-thermometer-fill absolute bottom-0 left-0 right-0 rounded-full bg-[linear-gradient(180deg,#5DCBA3_0%,#3F9FEC_58%,#112F6D_100%)]"
+                className="bfb-thermometer-fill absolute bottom-0 left-0 right-0 rounded-full bg-[linear-gradient(180deg,#ff6b5f_0%,#e43f35_56%,#b72424_100%)]"
                 style={{ height: `${thermometerFill}%` }}
               />
               <span className="pointer-events-none absolute inset-y-2 left-2 w-2 rounded-full bg-white/50 blur-[1px]" />
@@ -146,7 +146,7 @@ function HeroThermometer({ registrations }: BowlingHeroProps) {
           </div>
 
           <div className="absolute bottom-0 left-1/2 flex h-16 w-16 -translate-x-1/2 items-center justify-center rounded-full border border-white/45 bg-white/20 p-1.5 shadow-sm">
-            <div className="bfb-thermometer-bulb-fill h-full w-full rounded-full bg-[radial-gradient(circle_at_34%_30%,#d9fff1_0%,#5DCBA3_30%,#3F9FEC_64%,#112F6D_100%)] shadow-[0_0_18px_rgba(93,203,163,0.28)]" />
+            <div className="bfb-thermometer-bulb-fill h-full w-full rounded-full bg-[radial-gradient(circle_at_34%_30%,#ffd2cd_0%,#ff6b5f_24%,#e43f35_60%,#a91f1f_100%)] shadow-[0_0_18px_rgba(228,63,53,0.28)]" />
             <span className="pointer-events-none absolute left-5 top-4 h-3 w-3 rounded-full bg-white/55 blur-[1px]" />
           </div>
 
@@ -168,7 +168,7 @@ function HeroThermometer({ registrations }: BowlingHeroProps) {
 
         <div>
           <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-            <p className="font-heading text-xs font-black uppercase tracking-[0.08em] text-bfb-green">
+            <p className="font-heading text-xs font-black uppercase text-bfb-green">
               Help reach the goal
             </p>
             <p className="font-heading text-xs font-black uppercase text-white/80">
@@ -229,7 +229,7 @@ function HeroSponsorshipProgress({ registrations }: BowlingHeroProps) {
         {progressItems.map((item) => (
           <div
             key={item.id}
-            className="bfb-sponsor-pulse rounded-sm border border-white/12 bg-white/[0.08] p-3"
+            className="rounded-sm border border-white/12 bg-white/[0.08] p-3"
           >
             <p className="font-heading text-[0.68rem] font-black uppercase text-bfb-green">
               {item.label}
