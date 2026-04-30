@@ -32,7 +32,7 @@ export function EventPageNav({ tone, ctaHref, ctaLabel }: EventPageNavProps) {
       <div className="section-shell flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
         <Link
           href="/"
-          className={`inline-flex items-center gap-2 font-heading text-sm font-semibold uppercase tracking-[0.04em] transition ${styles.brand}`}
+          className={`inline-flex items-center gap-2 font-heading text-sm font-semibold uppercase transition ${styles.brand}`}
         >
           CITY CENTER EVENTS
         </Link>
@@ -40,21 +40,21 @@ export function EventPageNav({ tone, ctaHref, ctaLabel }: EventPageNavProps) {
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 sm:justify-end sm:gap-x-5">
           <Link
             href="https://okcitycenter.org/"
-            className={`inline-flex min-h-8 items-center gap-1.5 font-heading text-xs font-semibold uppercase tracking-[0.04em] transition sm:text-sm ${styles.link}`}
+            className={`inline-flex min-h-8 items-center gap-1.5 font-heading text-xs font-semibold uppercase transition sm:text-sm ${styles.link}`}
           >
             <Home aria-hidden="true" className={styles.icon} size={14} />
             CITY CENTER HOME
           </Link>
           <Link
             href="/supporters"
-            className={`inline-flex min-h-8 items-center gap-1.5 font-heading text-xs font-semibold uppercase tracking-[0.04em] transition sm:text-sm ${styles.link}`}
+            className={`inline-flex min-h-8 items-center gap-1.5 font-heading text-xs font-semibold uppercase transition sm:text-sm ${styles.link}`}
           >
             <UsersRound aria-hidden="true" className={styles.icon} size={14} />
             SUPPORTERS
           </Link>
           <Link
             href="/development"
-            className={`inline-flex min-h-8 items-center gap-1.5 font-heading text-xs font-semibold uppercase tracking-[0.04em] transition sm:text-sm ${styles.link}`}
+            className={`inline-flex min-h-8 items-center gap-1.5 font-heading text-xs font-semibold uppercase transition sm:text-sm ${styles.link}`}
           >
             <LockKeyhole aria-hidden="true" className={styles.icon} size={14} />
             DASHBOARD
@@ -62,7 +62,7 @@ export function EventPageNav({ tone, ctaHref, ctaLabel }: EventPageNavProps) {
           {ctaHref && ctaLabel ? (
             <a
               href={ctaHref}
-              className={`inline-flex min-h-9 items-center gap-1.5 rounded-sm border px-3 py-2 font-heading text-xs font-semibold uppercase tracking-[0.04em] transition sm:text-sm ${styles.cta}`}
+              className={`inline-flex min-h-9 items-center gap-1.5 rounded-sm border px-3 py-2 font-heading text-xs font-semibold uppercase transition sm:text-sm ${styles.cta}`}
             >
               {ctaLabel}
               <ArrowRight aria-hidden="true" size={14} />

@@ -34,7 +34,7 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(18,18,48,0.94),rgba(33,52,104,0.74),rgba(22,34,46,0.46))]" />
 
         <div className="section-shell relative pt-5">
-          <nav className="flex flex-col gap-4 border-b border-white/10 pb-4 text-sm font-semibold uppercase tracking-[0.04em] text-white/75 sm:flex-row sm:items-center sm:justify-between">
+          <nav className="flex flex-col gap-4 border-b border-white/10 pb-4 text-sm font-semibold uppercase text-white/75 sm:flex-row sm:items-center sm:justify-between">
             <Link href="/" className="font-heading font-semibold text-white transition hover:text-sftc-hope">
               CITY CENTER EVENTS
             </Link>
