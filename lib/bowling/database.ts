@@ -38,6 +38,7 @@ type BowlingBowlerRow = {
   last_name: string | null;
   email: string | null;
   phone: string | null;
+  shoe_size: string | null;
   notes: string | null;
 };
 
@@ -86,6 +87,7 @@ const bowlerToRow = (registrationId: string, bowler: Bowler) => ({
   last_name: bowler.lastName,
   email: bowler.email,
   phone: bowler.phone,
+  shoe_size: bowler.shoeSize,
   notes: bowler.notes,
 });
 
@@ -94,6 +96,7 @@ const rowToBowler = (row: BowlingBowlerRow): Bowler => ({
   lastName: row.last_name ?? "",
   email: row.email ?? "",
   phone: row.phone ?? "",
+  shoeSize: row.shoe_size ?? "",
   notes: row.notes ?? "",
 });
 
@@ -166,7 +169,16 @@ export const createBowlingRegistration = async (registration: BowlingRegistratio
   }
 
   const bowlerRows = registration.bowlers
-    .filter((bowler) => Boolean(bowler.firstName || bowler.lastName || bowler.email || bowler.phone || bowler.notes))
+    .filter((bowler) =>
+      Boolean(
+        bowler.firstName ||
+          bowler.lastName ||
+          bowler.email ||
+          bowler.phone ||
+          bowler.shoeSize ||
+          bowler.notes,
+      ),
+    )
     .map((bowler) => bowlerToRow(registration.id, bowler));
 
   if (bowlerRows.length > 0) {
@@ -328,7 +340,16 @@ export const updateBowlingTeamDetails = async (registrationId: string, update: T
   }
 
   const bowlerRows = update.bowlers
-    .filter((bowler) => Boolean(bowler.firstName || bowler.lastName || bowler.email || bowler.phone || bowler.notes))
+    .filter((bowler) =>
+      Boolean(
+        bowler.firstName ||
+          bowler.lastName ||
+          bowler.email ||
+          bowler.phone ||
+          bowler.shoeSize ||
+          bowler.notes,
+      ),
+    )
     .map((bowler) => bowlerToRow(registrationId, bowler));
 
   if (bowlerRows.length > 0) {

@@ -363,6 +363,7 @@ export const sampleBowlingRegistrations: BowlingRegistrationRecord[] = [
         lastName: "Brooks",
         email: "taylor@example.com",
         phone: "405-555-0111",
+        shoeSize: "",
         notes: "",
       },
       {
@@ -370,6 +371,7 @@ export const sampleBowlingRegistrations: BowlingRegistrationRecord[] = [
         lastName: "Brooks",
         email: "",
         phone: "",
+        shoeSize: "",
         notes: "",
       },
     ],

@@ -25,11 +25,15 @@ export const blankBowler = (): Bowler => ({
   lastName: "",
   email: "",
   phone: "",
+  shoeSize: "",
   notes: "",
 });
 
 export const buildBowlerList = (existing: Bowler[] = []) =>
-  Array.from({ length: bowlingEventConfig.teamSize }, (_, index) => existing[index] ?? blankBowler());
+  Array.from({ length: bowlingEventConfig.teamSize }, (_, index) => ({
+    ...blankBowler(),
+    ...(existing[index] ?? {}),
+  }));
 
 export const formatCurrency = (amount: number) =>
   new Intl.NumberFormat("en-US", {

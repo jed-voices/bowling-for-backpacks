@@ -45,6 +45,7 @@ export type Bowler = {
   lastName: string;
   email: string;
   phone: string;
+  shoeSize: string;
   notes: string;
 };
 

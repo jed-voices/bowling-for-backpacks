@@ -1,6 +1,6 @@
 "use client";
 
-import { Mail, UserRound } from "lucide-react";
+import { Footprints, Mail, UserRound } from "lucide-react";
 import type { Bowler } from "@/lib/bowling/types";
 
 type BowlerListBuilderProps = {
@@ -92,6 +92,23 @@ export function BowlerListBuilder({ bowlers, onChange }: BowlerListBuilderProps)
                   onChange={(event) => updateBowler(index, "phone", event.target.value)}
                   autoComplete="tel"
                 />
+              </label>
+              <label>
+                <span className="field-label">Shoe size</span>
+                <div className="relative">
+                  <Footprints
+                    aria-hidden="true"
+                    className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-bfb-ink/35"
+                    size={17}
+                  />
+                  <input
+                    className="bfb-field pl-10"
+                    aria-label={`Bowler ${index + 1} shoe size`}
+                    value={bowler.shoeSize}
+                    onChange={(event) => updateBowler(index, "shoeSize", event.target.value)}
+                    placeholder="Optional"
+                  />
+                </div>
               </label>
               <label className="md:col-span-2">
                 <span className="field-label">Notes</span>
