@@ -169,6 +169,7 @@ export const mealChoices = [
 export const sampleRegistrations: GalaRegistrationRecord[] = [
   {
     id: "preview-1001",
+    accessToken: "sample-gala-access-token-1001",
     createdAt: "2026-04-24T15:00:00.000Z",
     buyerFirstName: "Avery",
     buyerLastName: "Patterson",
@@ -202,6 +203,7 @@ export const sampleRegistrations: GalaRegistrationRecord[] = [
   },
   {
     id: "preview-1002",
+    accessToken: "sample-gala-access-token-1002",
     createdAt: "2026-04-24T16:00:00.000Z",
     buyerFirstName: "Jordan",
     buyerLastName: "Mills",

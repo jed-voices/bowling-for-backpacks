@@ -4,7 +4,7 @@ import { BowlingTeamManager } from "@/components/bowling/BowlingTeamManager";
 import { EventGatewayBackLink } from "@/components/events/EventGatewayBackLink";
 import { bowlingEventConfig } from "@/lib/bowling/config";
 import {
-  getBowlingRegistration,
+  getBowlingRegistrationByAccessToken,
   isBowlingDatabaseConfigured,
 } from "@/lib/bowling/database";
 import { buildBowlerList, getsTeamManagementLink } from "@/lib/bowling/validation";
@@ -18,10 +18,16 @@ type TeamPageProps = {
 };
 
 export default async function BowlingTeamPage({ params }: TeamPageProps) {
-  const { registrationId } = await params;
+  const { registrationId: accessToken } = await params;
   const isDatabaseConfigured = isBowlingDatabaseConfigured();
-  const registration = isDatabaseConfigured ? await getBowlingRegistration(registrationId) : null;
-  const canSave = Boolean(registration && getsTeamManagementLink(registration.registrationType));
+  const registration = isDatabaseConfigured
+    ? await getBowlingRegistrationByAccessToken(accessToken).catch(() => null)
+    : null;
+  const canSave = Boolean(
+    registration &&
+      getsTeamManagementLink(registration.registrationType) &&
+      registration.saveTeamLink,
+  );
   const initialTeamName = registration?.teamName ?? "";
   const initialBowlers = buildBowlerList(registration?.bowlers ?? []);
 
@@ -37,8 +43,8 @@ export default async function BowlingTeamPage({ params }: TeamPageProps) {
           </h1>
           <p className="bfb-copy mt-6">
             {canSave
-              ? `Confirmation code ${registrationId} has a dedicated captain link for bowler names and team updates. Keep this page handy as your group gets ready for ${bowlingEventConfig.name}.`
-              : `Confirmation code ${registrationId} is not a public team-management registration. Event sponsors, lane sponsors, and gift donors can contact City Center for any needed updates.`}
+              ? `Confirmation code ${registration?.id} has a dedicated captain link for bowler names and team updates. Keep this page handy as your group gets ready for ${bowlingEventConfig.name}.`
+              : "This team-management link is invalid or no longer available. Event sponsors, lane sponsors, and gift donors can contact City Center for any needed updates."}
           </p>
           {registration ? (
             <div className="mt-6 grid gap-4 rounded-sm bg-bfb-light p-5 sm:grid-cols-2">
@@ -58,7 +64,7 @@ export default async function BowlingTeamPage({ params }: TeamPageProps) {
           ) : null}
           {canSave ? (
             <BowlingTeamManager
-              registrationId={registrationId}
+              accessToken={accessToken}
               initialTeamName={initialTeamName}
               initialBowlers={initialBowlers}
               canSave={canSave}

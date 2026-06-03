@@ -45,6 +45,7 @@ export type Bowler = {
   lastName: string;
   email: string;
   phone: string;
+  shoeSize: string;
   notes: string;
 };
 
@@ -68,6 +69,7 @@ export type BowlingRegistrationInput = {
 
 export type BowlingRegistrationRecord = BowlingRegistrationInput & {
   id: string;
+  accessToken: string;
   createdAt: string;
   packageName: string;
   sessionName: string;

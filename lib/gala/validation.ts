@@ -11,6 +11,10 @@ export type ValidationResult =
   | { ok: true; record: GalaRegistrationRecord }
   | { ok: false; errors: Record<string, string> };
 
+export type GalaInputParseResult =
+  | { ok: true; input: GalaRegistrationInput }
+  | { ok: false; errors: Record<string, string> };
+
 export const blankGuest = (): GalaGuest => ({
   firstName: "",
   lastName: "",
@@ -62,6 +66,116 @@ export const formatCurrency = (amount: number) =>
   }).format(amount);
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  Boolean(value && typeof value === "object" && !Array.isArray(value));
+
+const stringField = (
+  payload: Record<string, unknown>,
+  key: keyof GalaRegistrationInput,
+  errors: Record<string, string>,
+) => {
+  const value = payload[key];
+
+  if (typeof value === "string") {
+    return value;
+  }
+
+  errors[key] = "Expected text.";
+  return "";
+};
+
+const numberField = (
+  payload: Record<string, unknown>,
+  key: keyof GalaRegistrationInput,
+  errors: Record<string, string>,
+) => {
+  const value = payload[key];
+
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return value;
+  }
+
+  if (typeof value === "string" && value.trim() !== "" && Number.isFinite(Number(value))) {
+    return Number(value);
+  }
+
+  errors[key] = "Expected a number.";
+  return 0;
+};
+
+const booleanField = (
+  payload: Record<string, unknown>,
+  key: keyof GalaRegistrationInput,
+  errors: Record<string, string>,
+) => {
+  const value = payload[key];
+
+  if (typeof value === "boolean") {
+    return value;
+  }
+
+  errors[key] = "Expected true or false.";
+  return false;
+};
+
+const parseGuest = (value: unknown): GalaGuest => {
+  const payload = isRecord(value) ? value : {};
+
+  return {
+    firstName: typeof payload.firstName === "string" ? payload.firstName : "",
+    lastName: typeof payload.lastName === "string" ? payload.lastName : "",
+    email: typeof payload.email === "string" ? payload.email : "",
+    phone: typeof payload.phone === "string" ? payload.phone : "",
+    mealChoice: typeof payload.mealChoice === "string" ? payload.mealChoice : "Standard dinner",
+    dietaryNotes: typeof payload.dietaryNotes === "string" ? payload.dietaryNotes : "",
+    tableRequest: typeof payload.tableRequest === "string" ? payload.tableRequest : "",
+    admissionIncluded:
+      typeof payload.admissionIncluded === "number" && Number.isFinite(payload.admissionIncluded)
+        ? payload.admissionIncluded
+        : 1,
+  };
+};
+
+export const parseGalaRegistrationInput = (payload: unknown): GalaInputParseResult => {
+  if (!isRecord(payload)) {
+    return { ok: false, errors: { form: "Registration payload must be an object." } };
+  }
+
+  const errors: Record<string, string> = {};
+  const guestsValue = payload.guests;
+  const guests = Array.isArray(guestsValue) ? guestsValue.map(parseGuest) : [];
+
+  if (guestsValue !== undefined && !Array.isArray(guestsValue)) {
+    errors.guests = "Expected a list of guests.";
+  }
+
+  const input: GalaRegistrationInput = {
+    buyerFirstName: stringField(payload, "buyerFirstName", errors),
+    buyerLastName: stringField(payload, "buyerLastName", errors),
+    buyerEmail: stringField(payload, "buyerEmail", errors),
+    buyerPhone: stringField(payload, "buyerPhone", errors),
+    organization: stringField(payload, "organization", errors),
+    address: stringField(payload, "address", errors),
+    cityStateZipCode: stringField(payload, "cityStateZipCode", errors),
+    affiliate: stringField(payload, "affiliate", errors),
+    groupName: stringField(payload, "groupName", errors),
+    tableRequest: stringField(payload, "tableRequest", errors),
+    admitInfo: stringField(payload, "admitInfo", errors),
+    packageId: stringField(payload, "packageId", errors),
+    quantity: numberField(payload, "quantity", errors),
+    guests,
+    sponsorLogoName:
+      typeof payload.sponsorLogoName === "string" ? payload.sponsorLogoName : "",
+    notes: stringField(payload, "notes", errors),
+    optionalGift: numberField(payload, "optionalGift", errors),
+    chanceEntryQuantity: numberField(payload, "chanceEntryQuantity", errors),
+    paymentPreference: stringField(payload, "paymentPreference", errors) as GalaRegistrationInput["paymentPreference"],
+    sendGuestListLink: booleanField(payload, "sendGuestListLink", errors),
+  };
+
+  return Object.keys(errors).length > 0 ? { ok: false, errors } : { ok: true, input };
+};
 
 export const getPaymentStatus = (
   paymentPreference: GalaRegistrationInput["paymentPreference"],
@@ -134,6 +248,7 @@ export const validateRegistrationInput = (
     record: {
       ...input,
       id,
+      accessToken: "",
       createdAt: new Date().toISOString(),
       packageId: selectedPackage.id,
       packageName: selectedPackage.name,

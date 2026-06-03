@@ -346,6 +346,7 @@ export const getRegistrationOptionById = (id: string) =>
 export const sampleBowlingRegistrations: BowlingRegistrationRecord[] = [
   {
     id: "BFB-A1001",
+    accessToken: "sample-team-access-token-a1001",
     createdAt: "2026-04-24T15:30:00.000Z",
     registrationType: "team",
     packageId: "team",
@@ -363,6 +364,7 @@ export const sampleBowlingRegistrations: BowlingRegistrationRecord[] = [
         lastName: "Brooks",
         email: "taylor@example.com",
         phone: "405-555-0111",
+        shoeSize: "",
         notes: "",
       },
       {
@@ -370,6 +372,7 @@ export const sampleBowlingRegistrations: BowlingRegistrationRecord[] = [
         lastName: "Brooks",
         email: "",
         phone: "",
+        shoeSize: "",
         notes: "",
       },
     ],
@@ -388,6 +391,7 @@ export const sampleBowlingRegistrations: BowlingRegistrationRecord[] = [
   },
   {
     id: "BFB-A1002",
+    accessToken: "sample-sponsor-access-token-a1002",
     createdAt: "2026-04-24T16:30:00.000Z",
     registrationType: "sponsorship",
     packageId: "corporate-session-sponsor",
@@ -415,6 +419,7 @@ export const sampleBowlingRegistrations: BowlingRegistrationRecord[] = [
   },
   {
     id: "BFB-A1003",
+    accessToken: "sample-lane-access-token-a1003",
     createdAt: "2026-04-24T17:00:00.000Z",
     registrationType: "lane-sponsor",
     packageId: "lane-sponsor",

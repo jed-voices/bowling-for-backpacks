@@ -55,6 +55,7 @@ create table if not exists bowling_bowlers (
   last_name text,
   email text,
   phone text,
+  shoe_size text,
   notes text
 );
 

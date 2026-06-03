@@ -7,6 +7,7 @@ import type {
 
 type BowlingRegistrationRow = {
   id: string;
+  access_token: string | null;
   created_at: string;
   registration_type: BowlingRegistrationRecord["registrationType"];
   package_id: string | null;
@@ -38,6 +39,7 @@ type BowlingBowlerRow = {
   last_name: string | null;
   email: string | null;
   phone: string | null;
+  shoe_size: string | null;
   notes: string | null;
 };
 
@@ -86,6 +88,7 @@ const bowlerToRow = (registrationId: string, bowler: Bowler) => ({
   last_name: bowler.lastName,
   email: bowler.email,
   phone: bowler.phone,
+  shoe_size: bowler.shoeSize,
   notes: bowler.notes,
 });
 
@@ -94,11 +97,13 @@ const rowToBowler = (row: BowlingBowlerRow): Bowler => ({
   lastName: row.last_name ?? "",
   email: row.email ?? "",
   phone: row.phone ?? "",
+  shoeSize: row.shoe_size ?? "",
   notes: row.notes ?? "",
 });
 
 const registrationToRow = (registration: BowlingRegistrationRecord) => ({
   id: registration.id,
+  access_token: registration.accessToken,
   created_at: registration.createdAt,
   registration_type: registration.registrationType,
   package_id: registration.packageId,
@@ -126,6 +131,7 @@ const registrationToRow = (registration: BowlingRegistrationRecord) => ({
 
 const rowToRegistration = (row: BowlingRegistrationRow): BowlingRegistrationRecord => ({
   id: row.id,
+  accessToken: row.access_token ?? "",
   createdAt: row.created_at,
   registrationType: row.registration_type,
   packageId: row.package_id ?? "",
@@ -166,7 +172,16 @@ export const createBowlingRegistration = async (registration: BowlingRegistratio
   }
 
   const bowlerRows = registration.bowlers
-    .filter((bowler) => Boolean(bowler.firstName || bowler.lastName || bowler.email || bowler.phone || bowler.notes))
+    .filter((bowler) =>
+      Boolean(
+        bowler.firstName ||
+          bowler.lastName ||
+          bowler.email ||
+          bowler.phone ||
+          bowler.shoeSize ||
+          bowler.notes,
+      ),
+    )
     .map((bowler) => bowlerToRow(registration.id, bowler));
 
   if (bowlerRows.length > 0) {
@@ -206,6 +221,50 @@ export const getBowlingRegistration = async (registrationId: string) => {
     .from("bowling_registrations")
     .select("*, bowling_bowlers(*)")
     .eq("id", registrationId)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data ? rowToRegistration(data as BowlingRegistrationRow) : null;
+};
+
+export const getBowlingRegistrationByAccessToken = async (accessToken: string) => {
+  const supabase = getSupabaseAdmin();
+
+  if (!supabase || !accessToken.trim()) {
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from("bowling_registrations")
+    .select("*, bowling_bowlers(*)")
+    .eq("access_token", accessToken)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data ? rowToRegistration(data as BowlingRegistrationRow) : null;
+};
+
+export const getBowlingRegistrationByIdAndAccessToken = async (
+  registrationId: string,
+  accessToken: string,
+) => {
+  const supabase = getSupabaseAdmin();
+
+  if (!supabase || !registrationId.trim() || !accessToken.trim()) {
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from("bowling_registrations")
+    .select("*, bowling_bowlers(*)")
+    .eq("id", registrationId)
+    .eq("access_token", accessToken)
     .maybeSingle();
 
   if (error) {
@@ -328,7 +387,16 @@ export const updateBowlingTeamDetails = async (registrationId: string, update: T
   }
 
   const bowlerRows = update.bowlers
-    .filter((bowler) => Boolean(bowler.firstName || bowler.lastName || bowler.email || bowler.phone || bowler.notes))
+    .filter((bowler) =>
+      Boolean(
+        bowler.firstName ||
+          bowler.lastName ||
+          bowler.email ||
+          bowler.phone ||
+          bowler.shoeSize ||
+          bowler.notes,
+      ),
+    )
     .map((bowler) => bowlerToRow(registrationId, bowler));
 
   if (bowlerRows.length > 0) {

@@ -7,7 +7,7 @@ import type { Bowler } from "@/lib/bowling/types";
 import { buildBowlerList } from "@/lib/bowling/validation";
 
 type BowlingTeamManagerProps = {
-  registrationId: string;
+  accessToken: string;
   initialTeamName: string;
   initialBowlers: Bowler[];
   canSave: boolean;
@@ -16,7 +16,7 @@ type BowlingTeamManagerProps = {
 type SaveState = "idle" | "saving" | "saved" | "error";
 
 export function BowlingTeamManager({
-  registrationId,
+  accessToken,
   initialTeamName,
   initialBowlers,
   canSave,
@@ -42,7 +42,7 @@ export function BowlingTeamManager({
     setSaveState("saving");
     setMessage("");
 
-    const response = await fetch(`/api/bowling/team/${registrationId}`, {
+    const response = await fetch(`/api/bowling/team/${accessToken}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

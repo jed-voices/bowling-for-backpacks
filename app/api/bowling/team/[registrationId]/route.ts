@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { Bowler } from "@/lib/bowling/types";
 import {
-  getBowlingRegistration,
+  getBowlingRegistrationByAccessToken,
   isBowlingDatabaseConfigured,
   updateBowlingTeamDetails,
 } from "@/lib/bowling/database";
@@ -19,7 +19,7 @@ type TeamUpdatePayload = {
 };
 
 export async function GET(_request: Request, { params }: TeamRouteProps) {
-  const { registrationId } = await params;
+  const { registrationId: accessToken } = await params;
 
   if (!isBowlingDatabaseConfigured()) {
     return NextResponse.json(
@@ -28,13 +28,13 @@ export async function GET(_request: Request, { params }: TeamRouteProps) {
     );
   }
 
-  const registration = await getBowlingRegistration(registrationId);
+  const registration = await getBowlingRegistrationByAccessToken(accessToken).catch(() => null);
 
   if (!registration) {
-    return NextResponse.json({ error: "Team registration not found." }, { status: 404 });
+    return NextResponse.json({ error: "Team link not found or no longer valid." }, { status: 404 });
   }
 
-  if (!getsTeamManagementLink(registration.registrationType)) {
+  if (!getsTeamManagementLink(registration.registrationType) || !registration.saveTeamLink) {
     return NextResponse.json(
       { error: "This registration does not include a public bowling team link." },
       { status: 400 },
@@ -53,7 +53,7 @@ export async function GET(_request: Request, { params }: TeamRouteProps) {
 }
 
 export async function PUT(request: Request, { params }: TeamRouteProps) {
-  const { registrationId } = await params;
+  const { registrationId: accessToken } = await params;
 
   if (!isBowlingDatabaseConfigured()) {
     return NextResponse.json(
@@ -62,13 +62,13 @@ export async function PUT(request: Request, { params }: TeamRouteProps) {
     );
   }
 
-  const registration = await getBowlingRegistration(registrationId);
+  const registration = await getBowlingRegistrationByAccessToken(accessToken).catch(() => null);
 
   if (!registration) {
-    return NextResponse.json({ error: "Team registration not found." }, { status: 404 });
+    return NextResponse.json({ error: "Team link not found or no longer valid." }, { status: 404 });
   }
 
-  if (!getsTeamManagementLink(registration.registrationType)) {
+  if (!getsTeamManagementLink(registration.registrationType) || !registration.saveTeamLink) {
     return NextResponse.json(
       { error: "This registration does not include a public bowling team link." },
       { status: 400 },
@@ -78,14 +78,14 @@ export async function PUT(request: Request, { params }: TeamRouteProps) {
   const payload = (await request.json().catch(() => ({}))) as TeamUpdatePayload;
   const bowlers = buildBowlerList(payload.bowlers ?? []);
 
-  await updateBowlingTeamDetails(registrationId, {
+  await updateBowlingTeamDetails(registration.id, {
     teamName: payload.teamName ?? "",
     bowlers,
   });
 
   return NextResponse.json({
     saved: true,
-    registrationId,
+    registrationId: registration.id,
     teamName: payload.teamName ?? "",
     bowlers,
   });

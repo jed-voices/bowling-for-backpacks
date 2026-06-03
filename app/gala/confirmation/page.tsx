@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CheckCircle2, ClipboardList, CreditCard, FileText } from "lucide-react";
 import { EventGatewayBackLink } from "@/components/events/EventGatewayBackLink";
 import { eventConfig, paymentPreferenceLabels } from "@/lib/gala/config";
+import { verifyGalaAccessToken } from "@/lib/gala/entitlement";
 import type { PaymentPreference } from "@/lib/gala/types";
 
 export const metadata: Metadata = {
@@ -24,12 +25,31 @@ const paymentCopy: Record<PaymentPreference, string> = {
 
 export default async function ConfirmationPage({ searchParams }: ConfirmationPageProps) {
   const params = (await searchParams) ?? {};
-  const registrationId =
-    typeof params.registrationId === "string" ? params.registrationId : "preview-registration";
+  const accessToken = typeof params.token === "string" ? params.token : "";
+  const registrationId = verifyGalaAccessToken(accessToken);
   const paymentParam = typeof params.payment === "string" ? params.payment : "card";
   const paymentPreference: PaymentPreference = ["card", "invoice", "check"].includes(paymentParam)
     ? (paymentParam as PaymentPreference)
     : "card";
+
+  if (!registrationId) {
+    return (
+      <main className="min-h-screen bg-sftc-ivory py-16">
+        <div className="section-shell max-w-4xl">
+          <EventGatewayBackLink tone="gala" />
+          <section className="mt-8 rounded-sm border border-sftc-ink/10 bg-white p-8 shadow-soft sm:p-10">
+            <p className="eyebrow">Link invalid</p>
+            <h1 className="mt-4 font-display text-5xl font-medium leading-tight text-sftc-ink">
+              This registration link is invalid or no longer available.
+            </h1>
+            <p className="body-copy mt-6">
+              Please use the confirmation link from your registration flow or contact City Center for help.
+            </p>
+          </section>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-sftc-ivory py-16">
@@ -73,10 +93,10 @@ export default async function ConfirmationPage({ searchParams }: ConfirmationPag
             <p className="mt-2 text-base leading-7 text-sftc-ink/70">
               Table hosts can complete names later at{" "}
               <Link
-                href={`${eventConfig.guestListBaseUrl}/${registrationId}`}
+                href={`${eventConfig.guestListBaseUrl}/${accessToken}`}
                 className="font-semibold text-sftc-navy underline underline-offset-4"
               >
-                {eventConfig.guestListBaseUrl}/{registrationId}
+                {eventConfig.guestListBaseUrl}/{accessToken}
               </Link>
               .
             </p>

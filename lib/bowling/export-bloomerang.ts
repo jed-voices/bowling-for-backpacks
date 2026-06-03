@@ -61,6 +61,15 @@ const baseRow = (registration: BowlingRegistrationRecord): BowlingExportRow => (
   Groups: bowlingEventConfig.groups,
 });
 
+const bowlerShoeSizes = (registration: BowlingRegistrationRecord) =>
+  registration.bowlers
+    .filter((bowler) => bowler.firstName || bowler.lastName || bowler.shoeSize)
+    .map((bowler, index) => {
+      const name = [bowler.firstName, bowler.lastName].filter(Boolean).join(" ");
+      return `${name || `Bowler ${index + 1}`}: ${bowler.shoeSize || "not provided"}`;
+    })
+    .join(" | ");
+
 export const buildBowlingBloomerangRows = (
   registrations: BowlingRegistrationRecord[],
 ): BowlingExportRow[] =>
@@ -103,6 +112,7 @@ export const buildBowlingOperationsRows = (
     Session: registration.sessionName,
     LaneCount: registration.laneCount,
     BowlerCount: registration.bowlers.filter((bowler) => bowler.firstName || bowler.lastName).length,
+    BowlerShoeSizes: bowlerShoeSizes(registration),
     SponsorLogo: registration.sponsorLogoName ? "received" : "missing",
     Subtotal: registration.subtotal,
     Gift: registration.donationTotal,
@@ -127,6 +137,7 @@ export const bowlingExports = {
     "Session",
     "LaneCount",
     "BowlerCount",
+    "BowlerShoeSizes",
     "SponsorLogo",
     "Subtotal",
     "Gift",

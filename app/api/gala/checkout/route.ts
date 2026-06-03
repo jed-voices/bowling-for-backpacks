@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
   const payload = (await request.json().catch(() => ({}))) as {
     registrationId?: string;
+    accessToken?: string;
   };
   const registrationId = payload.registrationId ?? "preview-registration";
 
@@ -18,7 +19,7 @@ export async function POST(request: Request) {
 
   return NextResponse.json({
     mode: "stripe-placeholder",
-    url: `/gala/confirmation?registrationId=${registrationId}&payment=card&checkout=preview`,
+    url: `/gala/confirmation?token=${payload.accessToken ?? ""}&payment=card&checkout=preview&registrationId=${registrationId}`,
     message:
       "Stripe is not configured. Returning a local confirmation URL for prototype testing.",
   });

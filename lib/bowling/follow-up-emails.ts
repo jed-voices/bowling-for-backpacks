@@ -24,7 +24,7 @@ const supporterName = (registration: BowlingRegistrationRecord) =>
 
 const eventUrl = (siteUrl: string) => `${siteUrl}/bowling-for-backpacks`;
 const teamUrl = (siteUrl: string, registration: BowlingRegistrationRecord) =>
-  `${siteUrl}${bowlingEventConfig.teamBaseUrl}/${registration.id}`;
+  `${siteUrl}${bowlingEventConfig.teamBaseUrl}/${registration.accessToken}`;
 
 function wrapEmailHtml({
   subject,
