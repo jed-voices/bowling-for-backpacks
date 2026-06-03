@@ -6,7 +6,8 @@ import {
   getStripe,
 } from "@/lib/bowling/stripe";
 import {
-  getBowlingRegistration,
+  getBowlingRegistrationByIdAndAccessToken,
+  isBowlingDatabaseConfigured,
   updateBowlingRegistrationPayment,
 } from "@/lib/bowling/database";
 import { validateBowlingRegistrationInput } from "@/lib/bowling/validation";
@@ -15,6 +16,7 @@ export const runtime = "nodejs";
 
 type BowlingCheckoutPayload = {
   registrationId?: string;
+  accessToken?: string;
   registrationInput?: BowlingRegistrationInput;
   registration?: BowlingRegistrationRecord;
 };
@@ -40,18 +42,39 @@ export async function POST(request: Request) {
   const stripe = getStripe();
 
   if (!stripe) {
+    const previewUrl = new URL("/bowling-for-backpacks/confirmation", "https://example.com");
+    previewUrl.searchParams.set("registrationId", registrationId);
+    previewUrl.searchParams.set("payment", "card");
+    previewUrl.searchParams.set("checkout", "preview");
+
+    if (payload.accessToken) {
+      previewUrl.searchParams.set("token", payload.accessToken);
+    }
+
+    if (fallbackRegistrationType) {
+      previewUrl.searchParams.set("type", fallbackRegistrationType);
+    }
+
     return NextResponse.json({
       mode: "stripe-placeholder",
-      url: `/bowling-for-backpacks/confirmation?registrationId=${registrationId}&payment=card&checkout=preview${
-        fallbackRegistrationType ? `&type=${fallbackRegistrationType}` : ""
-      }`,
+      url: `${previewUrl.pathname}${previewUrl.search}`,
       message:
         "Stripe is not configured. Returning a local confirmation URL for prototype testing.",
     });
   }
 
   const savedRegistration =
-    registrationId !== "BFB-PENDING" ? await getBowlingRegistration(registrationId) : null;
+    registrationId !== "BFB-PENDING"
+      ? await getBowlingRegistrationByIdAndAccessToken(registrationId, payload.accessToken ?? "")
+      : null;
+
+  if (registrationId !== "BFB-PENDING" && isBowlingDatabaseConfigured() && !savedRegistration) {
+    return NextResponse.json(
+      { error: "Registration link not found or no longer valid." },
+      { status: 404 },
+    );
+  }
+
   const input = savedRegistration ?? payload.registrationInput ?? payload.registration;
 
   if (!input) {
@@ -100,7 +123,7 @@ export async function POST(request: Request) {
     payment_intent_data: {
       metadata,
     },
-    success_url: `${baseUrl}/bowling-for-backpacks/confirmation?registrationId=${registration.id}&payment=card&type=${registration.registrationType}&session_id={CHECKOUT_SESSION_ID}`,
+    success_url: `${baseUrl}/bowling-for-backpacks/confirmation?registrationId=${registration.id}&token=${registration.accessToken}&payment=card&type=${registration.registrationType}&session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: cancelUrl.toString(),
   });
 
@@ -123,6 +146,7 @@ export async function POST(request: Request) {
   return NextResponse.json({
     mode: "stripe-checkout",
     registrationId: registration.id,
+    accessToken: registration.accessToken,
     sessionId: checkoutSession.id,
     url: checkoutSession.url,
   });

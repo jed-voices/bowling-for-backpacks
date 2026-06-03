@@ -48,7 +48,7 @@ export function buildBowlingConfirmationEmail(
 ): BowlingConfirmationEmail {
   const firstName = registration.buyerFirstName.trim() || "friend";
   const eventUrl = `${siteUrl}/bowling-for-backpacks`;
-  const teamUrl = `${siteUrl}${bowlingEventConfig.teamBaseUrl}/${registration.id}`;
+  const teamUrl = `${siteUrl}${bowlingEventConfig.teamBaseUrl}/${registration.accessToken}`;
   const isGiftOnly = registration.registrationType === "gift";
   const canManageTeam =
     getsTeamManagementLink(registration.registrationType) && registration.saveTeamLink;

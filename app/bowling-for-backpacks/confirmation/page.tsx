@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Backpack, CheckCircle2, ClipboardList, CreditCard, Mail } from "lucide-react";
 import { EventGatewayBackLink } from "@/components/events/EventGatewayBackLink";
 import { bowlingEventConfig, paymentPreferenceLabels } from "@/lib/bowling/config";
-import { getBowlingRegistration } from "@/lib/bowling/database";
+import { getBowlingRegistrationByIdAndAccessToken } from "@/lib/bowling/database";
 import type { BowlingPaymentPreference, BowlingRegistrationType } from "@/lib/bowling/types";
 import { getsTeamManagementLink } from "@/lib/bowling/validation";
 
@@ -35,20 +35,25 @@ const getRegistrationTypeParam = (value: string): BowlingRegistrationType | unde
 export default async function BowlingConfirmationPage({ searchParams }: ConfirmationPageProps) {
   const params = (await searchParams) ?? {};
   const registrationId = getStringParam(params, "registrationId", "BFB-PENDING");
+  const accessToken = getStringParam(params, "token");
   const paymentParam = getStringParam(params, "payment", "card");
   const queryRegistrationType = getRegistrationTypeParam(getStringParam(params, "type"));
   const registration =
     registrationId !== "BFB-PENDING"
-      ? await getBowlingRegistration(registrationId).catch(() => null)
+      ? await getBowlingRegistrationByIdAndAccessToken(registrationId, accessToken).catch(() => null)
       : null;
   const paymentPreference: BowlingPaymentPreference = ["card", "invoice", "check"].includes(paymentParam)
     ? (paymentParam as BowlingPaymentPreference)
     : "card";
   const registrationType = registration?.registrationType ?? queryRegistrationType ?? "team";
   const isGiftOnly = registrationType === "gift";
-  const canManageTeam = registration
-    ? getsTeamManagementLink(registration.registrationType) && registration.saveTeamLink
-    : Boolean(queryRegistrationType && getsTeamManagementLink(queryRegistrationType));
+  const canManageTeam = Boolean(
+    registration &&
+      getsTeamManagementLink(registration.registrationType) &&
+      registration.saveTeamLink &&
+      registration.accessToken,
+  );
+  const teamAccessToken = canManageTeam && registration ? registration.accessToken : "";
   const registrationPaymentCopy: Record<BowlingPaymentPreference, string> = {
     card: "Your registration is saved and your card payment path is complete or underway. If anything needs attention, City Center will follow up directly.",
     invoice: `Your invoice request is saved. ${bowlingEventConfig.contactName}, City Center's ${bowlingEventConfig.contactTitle}, will follow up with invoice details and any final event notes.`,
@@ -119,10 +124,10 @@ export default async function BowlingConfirmationPage({ searchParams }: Confirma
               <p className="mt-2 text-base leading-7 text-bfb-ink/70">
                 Team captains can use this link to complete or update bowler names when they are ready:{" "}
                 <Link
-                  href={`${bowlingEventConfig.teamBaseUrl}/${registrationId}`}
+                  href={`${bowlingEventConfig.teamBaseUrl}/${teamAccessToken}`}
                   className="break-all font-bold text-bfb-navy underline underline-offset-4"
                 >
-                  {bowlingEventConfig.teamBaseUrl}/{registrationId}
+                  {bowlingEventConfig.teamBaseUrl}/{teamAccessToken}
                 </Link>
                 .
               </p>

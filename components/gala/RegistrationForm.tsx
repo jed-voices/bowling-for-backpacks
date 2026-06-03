@@ -161,7 +161,7 @@ export function RegistrationForm() {
         body: JSON.stringify(form),
       });
       const payload = (await response.json()) as {
-        registration?: { id: string };
+        registration?: { id: string; accessToken: string };
         errors?: Record<string, string>;
       };
 
@@ -176,7 +176,10 @@ export function RegistrationForm() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ registrationId: payload.registration.id }),
+          body: JSON.stringify({
+            registrationId: payload.registration.id,
+            accessToken: payload.registration.accessToken,
+          }),
         });
         const checkoutPayload = (await checkoutResponse.json()) as { url?: string };
 
@@ -189,7 +192,7 @@ export function RegistrationForm() {
       }
 
       router.push(
-        `/gala/confirmation?registrationId=${payload.registration.id}&payment=${form.paymentPreference}`,
+        `/gala/confirmation?token=${payload.registration.accessToken}&payment=${form.paymentPreference}&registrationId=${payload.registration.id}`,
       );
     } catch (error) {
       setSubmitState("error");

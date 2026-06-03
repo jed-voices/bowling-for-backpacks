@@ -6,6 +6,7 @@ import {
 } from "@/lib/bowling/database";
 import {
   needsSession,
+  parseBowlingRegistrationInput,
   remainingLanesFromRegistrations,
   validateBowlingRegistrationInput,
 } from "@/lib/bowling/validation";
@@ -13,16 +14,24 @@ import {
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
-  let input: BowlingRegistrationInput;
+  let payload: unknown;
 
   try {
-    input = (await request.json()) as BowlingRegistrationInput;
+    payload = await request.json();
   } catch {
     return NextResponse.json(
       { errors: { form: "Registration payload could not be read." } },
       { status: 400 },
     );
   }
+
+  const parsed = parseBowlingRegistrationInput(payload);
+
+  if (!parsed.ok) {
+    return NextResponse.json({ errors: parsed.errors }, { status: 400 });
+  }
+
+  const input: BowlingRegistrationInput = parsed.input;
 
   const validation = validateBowlingRegistrationInput(input);
 

@@ -51,6 +51,7 @@ export type GalaRegistrationInput = {
 
 export type GalaRegistrationRecord = GalaRegistrationInput & {
   id: string;
+  accessToken: string;
   createdAt: string;
   packageName: string;
   greaterGivingPackageNumber: string;

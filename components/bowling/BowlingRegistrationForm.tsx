@@ -156,7 +156,7 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
         body: JSON.stringify(form),
       });
       const payload = (await response.json()) as {
-        registration?: { id: string };
+        registration?: { id: string; accessToken: string };
         errors?: Record<string, string>;
       };
 
@@ -173,6 +173,7 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
           },
           body: JSON.stringify({
             registrationId: payload.registration.id,
+            accessToken: payload.registration.accessToken,
             registrationInput: form,
           }),
         });
@@ -192,7 +193,7 @@ export function BowlingRegistrationForm({ registrations }: BowlingRegistrationFo
       }
 
       router.push(
-        `/bowling-for-backpacks/confirmation?registrationId=${payload.registration.id}&payment=${form.paymentPreference}&type=${form.registrationType}`,
+        `/bowling-for-backpacks/confirmation?registrationId=${payload.registration.id}&token=${payload.registration.accessToken}&payment=${form.paymentPreference}&type=${form.registrationType}`,
       );
     } catch (error) {
       setSubmitState("error");

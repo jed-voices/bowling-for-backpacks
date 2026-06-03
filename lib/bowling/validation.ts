@@ -18,6 +18,10 @@ export type BowlingValidationResult =
   | { ok: true; record: BowlingRegistrationRecord }
   | { ok: false; errors: Record<string, string> };
 
+export type BowlingInputParseResult =
+  | { ok: true; input: BowlingRegistrationInput }
+  | { ok: false; errors: Record<string, string> };
+
 export const minimumGiftAmount = 5;
 
 export const blankBowler = (): Bowler => ({
@@ -121,6 +125,7 @@ export const getPaymentStatus = (
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const confirmationAlphabet = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+const accessTokenAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
 export const buildBowlingConfirmationCode = () => {
   const bytes = crypto.getRandomValues(new Uint8Array(6));
@@ -130,6 +135,115 @@ export const buildBowlingConfirmationCode = () => {
   ).join("");
 
   return `BFB-${code}`;
+};
+
+export const buildBowlingAccessToken = () => {
+  const bytes = crypto.getRandomValues(new Uint8Array(32));
+
+  return Array.from(
+    bytes,
+    (byte) => accessTokenAlphabet[byte % accessTokenAlphabet.length],
+  ).join("");
+};
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  Boolean(value && typeof value === "object" && !Array.isArray(value));
+
+const stringField = (
+  payload: Record<string, unknown>,
+  key: keyof BowlingRegistrationInput,
+  errors: Record<string, string>,
+) => {
+  const value = payload[key];
+
+  if (typeof value === "string") {
+    return value;
+  }
+
+  errors[key] = "Expected text.";
+  return "";
+};
+
+const numberField = (
+  payload: Record<string, unknown>,
+  key: keyof BowlingRegistrationInput,
+  errors: Record<string, string>,
+) => {
+  const value = payload[key];
+
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return value;
+  }
+
+  if (typeof value === "string" && value.trim() !== "" && Number.isFinite(Number(value))) {
+    return Number(value);
+  }
+
+  errors[key] = "Expected a number.";
+  return 0;
+};
+
+const booleanField = (
+  payload: Record<string, unknown>,
+  key: keyof BowlingRegistrationInput,
+  errors: Record<string, string>,
+) => {
+  const value = payload[key];
+
+  if (typeof value === "boolean") {
+    return value;
+  }
+
+  errors[key] = "Expected true or false.";
+  return false;
+};
+
+const parseBowler = (value: unknown): Bowler => {
+  const payload = isRecord(value) ? value : {};
+
+  return {
+    firstName: typeof payload.firstName === "string" ? payload.firstName : "",
+    lastName: typeof payload.lastName === "string" ? payload.lastName : "",
+    email: typeof payload.email === "string" ? payload.email : "",
+    phone: typeof payload.phone === "string" ? payload.phone : "",
+    shoeSize: typeof payload.shoeSize === "string" ? payload.shoeSize : "",
+    notes: typeof payload.notes === "string" ? payload.notes : "",
+  };
+};
+
+export const parseBowlingRegistrationInput = (payload: unknown): BowlingInputParseResult => {
+  if (!isRecord(payload)) {
+    return { ok: false, errors: { form: "Registration payload must be an object." } };
+  }
+
+  const errors: Record<string, string> = {};
+  const bowlersValue = payload.bowlers;
+  const bowlers = Array.isArray(bowlersValue) ? bowlersValue.map(parseBowler) : [];
+
+  if (bowlersValue !== undefined && !Array.isArray(bowlersValue)) {
+    errors.bowlers = "Expected a list of bowlers.";
+  }
+
+  const input: BowlingRegistrationInput = {
+    registrationType: stringField(payload, "registrationType", errors) as BowlingRegistrationInput["registrationType"],
+    packageId: stringField(payload, "packageId", errors),
+    buyerFirstName: stringField(payload, "buyerFirstName", errors),
+    buyerLastName: stringField(payload, "buyerLastName", errors),
+    buyerEmail: stringField(payload, "buyerEmail", errors),
+    buyerPhone: stringField(payload, "buyerPhone", errors),
+    organization: stringField(payload, "organization", errors),
+    teamName: stringField(payload, "teamName", errors),
+    sessionId: stringField(payload, "sessionId", errors),
+    bowlers,
+    sponsorLogoName:
+      typeof payload.sponsorLogoName === "string" ? payload.sponsorLogoName : "",
+    optionalGift: numberField(payload, "optionalGift", errors),
+    notes: stringField(payload, "notes", errors),
+    paymentPreference: stringField(payload, "paymentPreference", errors) as BowlingRegistrationInput["paymentPreference"],
+    saveTeamLink: booleanField(payload, "saveTeamLink", errors),
+  };
+
+  return Object.keys(errors).length > 0 ? { ok: false, errors } : { ok: true, input };
 };
 
 export const validateBowlingRegistrationInput = (
@@ -228,6 +342,7 @@ export const validateBowlingRegistrationInput = (
     record: {
       ...input,
       id,
+      accessToken: buildBowlingAccessToken(),
       createdAt: new Date().toISOString(),
       packageId: normalizedPackageId,
       packageName: selectedName(input),

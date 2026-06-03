@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ClipboardList } from "lucide-react";
 import { EventGatewayBackLink } from "@/components/events/EventGatewayBackLink";
+import { verifyGalaAccessToken } from "@/lib/gala/entitlement";
 
 export const metadata: Metadata = {
   title: "Guest List",
@@ -11,7 +12,27 @@ type GuestListPageProps = {
 };
 
 export default async function GuestListPage({ params }: GuestListPageProps) {
-  const { registrationId } = await params;
+  const { registrationId: accessToken } = await params;
+  const registrationId = verifyGalaAccessToken(accessToken);
+
+  if (!registrationId) {
+    return (
+      <main className="min-h-screen bg-sftc-ivory py-16">
+        <div className="section-shell max-w-4xl">
+          <EventGatewayBackLink tone="gala" />
+          <section className="mt-8 rounded-sm border border-sftc-ink/10 bg-white p-8 shadow-soft sm:p-10">
+            <p className="eyebrow">Link invalid</p>
+            <h1 className="mt-4 font-display text-5xl font-medium leading-tight text-sftc-ink">
+              This guest-list link is invalid or no longer available.
+            </h1>
+            <p className="body-copy mt-6">
+              Please use the guest-list link from your confirmation page or contact City Center for help.
+            </p>
+          </section>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-sftc-ivory py-16">
