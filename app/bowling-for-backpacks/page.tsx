@@ -15,6 +15,8 @@ import { BowlingWhyItMatters } from "@/components/bowling/BowlingWhyItMatters";
 import { BowlingStickyMobileCTA } from "@/components/bowling/BowlingStickyMobileCTA";
 import { listBowlingRegistrations } from "@/lib/bowling/database";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title:
     "Christmas in July: Bowling for Backpacks | City Center Back 2 School Fundraiser",
