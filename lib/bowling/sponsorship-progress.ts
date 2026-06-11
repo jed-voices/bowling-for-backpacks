@@ -20,6 +20,8 @@ export type BowlingSponsorshipProgressItem = {
 
 export type BowlingSponsorshipSummary = {
   totalRaised: number;
+  giftOnlyRaised: number;
+  eventRaised: number;
   remainingToGoal: number;
   fundraisingGoal: number;
   progress: number;
@@ -87,6 +89,9 @@ export const buildBowlingSponsorshipSummary = (
 
     return !registeredSponsorship || !staticallySecuredIds.has(registeredSponsorship.id);
   });
+  const giftRecords = records.filter(
+    (registration) => registration.registrationType === "gift",
+  );
   const liveSecuredSingleSponsorIds = new Set(
     liveEventRecords
       .map((registration) => getSponsorshipById(registration.packageId)?.id)
@@ -99,11 +104,16 @@ export const buildBowlingSponsorshipSummary = (
     (sum, sponsor) => sum + sponsor.price,
     0,
   );
-  const liveRaised = liveEventRecords.reduce(
+  const liveEventRaised = liveEventRecords.reduce(
     (sum, registration) => sum + registration.grandTotal,
     0,
   );
-  const totalRaised = staticRaised + liveRaised;
+  const giftOnlyRaised = giftRecords.reduce(
+    (sum, registration) => sum + registration.grandTotal,
+    0,
+  );
+  const eventRaised = staticRaised + liveEventRaised;
+  const totalRaised = eventRaised + giftOnlyRaised;
   const fundraisingGoal = bowlingEventConfig.fundraisingGoal;
   const remainingToGoal = Math.max(0, fundraisingGoal - totalRaised);
   const progress =
@@ -172,6 +182,8 @@ export const buildBowlingSponsorshipSummary = (
 
   return {
     totalRaised,
+    giftOnlyRaised,
+    eventRaised,
     remainingToGoal,
     fundraisingGoal,
     progress,
