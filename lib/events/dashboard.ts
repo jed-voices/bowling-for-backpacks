@@ -5,7 +5,6 @@ import {
 } from "@/lib/bowling/database";
 import {
   committedBowlingRegistrations,
-  giftOnlyRegistrations,
 } from "@/lib/bowling/records";
 import { buildBowlingSponsorshipSummary } from "@/lib/bowling/sponsorship-progress";
 import type { BowlingRegistrationRecord } from "@/lib/bowling/types";
@@ -190,11 +189,7 @@ const buildBowlingSummary = async (): Promise<EventOperationsSummary> => {
   const registrations = committedBowlingRegistrations(liveRegistrations ?? []);
   const dataSource = liveRegistrations ? "live" : "preview";
   const sponsorshipSummary = buildBowlingSponsorshipSummary(registrations);
-  const giftOnlyTotal = giftOnlyRegistrations(registrations).reduce(
-    (sum, registration) => sum + registration.donationTotal,
-    0,
-  );
-  const totalValue = sponsorshipSummary.totalRaised + giftOnlyTotal;
+  const totalValue = sponsorshipSummary.totalRaised;
   const teams = registrations.filter((registration) => registration.laneCount > 0);
   const openPayments = countOpenBowlingPayments(registrations);
   const exportQueue = countExportQueue(registrations);
