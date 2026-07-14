@@ -4,6 +4,7 @@ import {
   createBowlingRegistration,
   listBowlingRegistrations,
 } from "@/lib/bowling/database";
+import { sendBowlingConfirmation } from "@/lib/bowling/send-confirmation";
 import {
   needsSession,
   parseBowlingRegistrationInput,
@@ -62,6 +63,20 @@ export async function POST(request: Request) {
     }
 
     const result = await createBowlingRegistration(validation.record);
+
+    // Card payments send their confirmation from the Stripe webhook once the
+    // payment succeeds. Invoice/check registrations are final at this point, so
+    // send the confirmation email + PDF receipt now. sendBowlingConfirmation
+    // never throws and skips gracefully when SMTP is not configured.
+    if (result.registration.paymentPreference !== "card") {
+      const emailResult = await sendBowlingConfirmation(result.registration);
+
+      if (!emailResult.sent && emailResult.skipped === false) {
+        console.error(
+          `[bowling] confirmation email failed for ${result.registration.id}: ${emailResult.error}`,
+        );
+      }
+    }
 
     return NextResponse.json({
       registration: result.registration,

@@ -1,5 +1,5 @@
 {
-  "name": "bowling-for-backpacks",
+  "name": "events-website",
   "version": "0.1.0",
   "private": true,
   "engines": {
@@ -16,8 +16,10 @@
     "@supabase/supabase-js": "^2.104.1",
     "lucide-react": "^0.468.0",
     "next": "^15.3.0",
+    "pdf-lib": "^1.17.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "resend": "^6.17.2",
     "stripe": "^22.1.0"
   },
   "devDependencies": {

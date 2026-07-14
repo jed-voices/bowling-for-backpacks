@@ -16,6 +16,12 @@ Set these in Vercel before production launch:
 - `STRIPE_SECRET_KEY`
 - `STRIPE_WEBHOOK_SECRET`
 
+Confirmation email delivery (Resend):
+
+- `RESEND_API_KEY` — an API key from https://resend.com
+- Optional: `EMAIL_FROM` (default `City Center Events <receipts@okcitycenterevents.org>`), `EMAIL_REPLY_TO` (default `kimberly@okcitycenter.org`)
+- The sending domain in `EMAIL_FROM` (okcitycenterevents.org) must be verified in Resend via its DNS records before mail will deliver.
+
 Optional preview keys:
 
 - `BOWLING_ADMIN_PREVIEW_KEY`
@@ -23,11 +29,21 @@ Optional preview keys:
 
 Do not use the local fallback development password in production. Use a unique production password.
 
-Current production state after the first launch:
+Current production state:
 
-- `NEXT_PUBLIC_SITE_URL`, `SITE_URL`, Development login, `ADMIN_SECRET`, and admin preview keys are configured.
-- `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `STRIPE_SECRET_KEY`, and `STRIPE_WEBHOOK_SECRET` still need to be added before Bowling can accept dependable live registrations and payments.
+- `NEXT_PUBLIC_SITE_URL`, `SITE_URL`, Development login, `ADMIN_SECRET`, admin preview keys, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `STRIPE_SECRET_KEY`, and `STRIPE_WEBHOOK_SECRET` are all configured. Bowling accepts live registrations and card payments.
+- `RESEND_API_KEY` is NOT yet configured. Until it is (and the sending domain is verified in Resend), confirmation emails and PDF receipts are not sent (registration and payments still work; the confirmation page simply does not promise an email).
 - The Development dashboard includes a Launch Readiness panel that shows the same status without exposing secret values.
+
+## Confirmation Emails + PDF Receipts
+
+Bowling registrations send a branded confirmation email with a PDF receipt attached:
+
+- Invoice and check registrations: email is sent immediately when the registration is created.
+- Card registrations: email is sent from the Stripe webhook once payment succeeds (so the receipt reads "Paid").
+- Delivery is best-effort — a mail failure never blocks a registration or payment. Failures are logged.
+- The confirmation page also offers an on-demand "Download PDF receipt" link (token-gated via `/api/bowling/receipt/[registrationId]`).
+- To enable: verify okcitycenterevents.org in Resend (add its DNS records), create an API key, and set `RESEND_API_KEY` in Vercel.
 
 ## 2. Database Setup
 

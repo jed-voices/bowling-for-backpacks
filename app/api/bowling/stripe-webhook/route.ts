@@ -2,8 +2,10 @@ import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/bowling/stripe";
 import {
   deletePendingBowlingRegistration,
+  getBowlingRegistration,
   updateBowlingRegistrationPayment,
 } from "@/lib/bowling/database";
+import { sendBowlingConfirmation } from "@/lib/bowling/send-confirmation";
 
 export const runtime = "nodejs";
 
@@ -50,12 +52,34 @@ export async function POST(request: Request) {
           ? session.payment_intent
           : session.payment_intent?.id;
 
+      let emailStatus: string | undefined;
+
       if (registrationId) {
         await updateBowlingRegistrationPayment(registrationId, {
           paymentStatus: "paid",
           stripeCheckoutSessionId: session.id,
           stripePaymentIntentId: paymentIntentId,
         });
+
+        // Send the confirmation email + PDF receipt now that the card payment
+        // has succeeded. Load the persisted (now "paid") registration so the
+        // receipt reflects the correct status. Never throws.
+        const registration = await getBowlingRegistration(registrationId);
+
+        if (registration) {
+          const emailResult = await sendBowlingConfirmation(registration);
+          emailStatus = emailResult.sent
+            ? "sent"
+            : emailResult.skipped
+              ? "skipped"
+              : "failed";
+
+          if (!emailResult.sent && emailResult.skipped === false) {
+            console.error(
+              `[bowling] confirmation email failed for ${registrationId}: ${emailResult.error}`,
+            );
+          }
+        }
       }
 
       return NextResponse.json({
@@ -63,6 +87,7 @@ export async function POST(request: Request) {
         eventType: event.type,
         registrationId,
         paymentStatus: session.payment_status,
+        confirmationEmail: emailStatus,
       });
     }
     case "checkout.session.async_payment_failed":

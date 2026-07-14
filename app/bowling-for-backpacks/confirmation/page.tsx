@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Backpack, CheckCircle2, ClipboardList, CreditCard, Mail } from "lucide-react";
+import { Backpack, CheckCircle2, ClipboardList, CreditCard, Download, Mail } from "lucide-react";
 import { EventGatewayBackLink } from "@/components/events/EventGatewayBackLink";
 import { bowlingEventConfig, paymentPreferenceLabels } from "@/lib/bowling/config";
 import { getBowlingRegistrationByIdAndAccessToken } from "@/lib/bowling/database";
+import { isEmailConfigured } from "@/lib/email/transport";
 import type { BowlingPaymentPreference, BowlingRegistrationType } from "@/lib/bowling/types";
 import { getsTeamManagementLink } from "@/lib/bowling/validation";
 
@@ -66,17 +67,29 @@ export default async function BowlingConfirmationPage({ searchParams }: Confirma
   };
 
   const registrationNextStepCopy: Record<BowlingPaymentPreference, string> = {
-    card: "Watch for your email confirmation and keep your confirmation code handy.",
+    card: "Keep your confirmation code handy for the event.",
     invoice: "Our team will send invoice details to the contact email provided.",
     check: "Your spot is recorded. Our team will help with check instructions and any needed details.",
   };
   const giftNextStepCopy: Record<BowlingPaymentPreference, string> = {
-    card: "Watch for your email confirmation and keep your gift reference handy.",
+    card: "Keep your gift reference handy for your records.",
     invoice: "Our team will send any needed gift details to the contact email provided.",
     check: "Our team will help with check instructions and any needed gift details.",
   };
   const paymentCopy = isGiftOnly ? giftPaymentCopy : registrationPaymentCopy;
   const nextStepCopy = isGiftOnly ? giftNextStepCopy : registrationNextStepCopy;
+
+  // Only promise an email if the mail transport is actually configured, so the
+  // page never tells someone to watch for a message the system cannot send.
+  const emailConfigured = isEmailConfigured();
+  const recipientEmail = registration?.buyerEmail ?? "";
+  const emailLine = emailConfigured
+    ? `A confirmation email${recipientEmail ? ` to ${recipientEmail}` : ""} with your PDF receipt attached is on its way.`
+    : "Save this page for your records — your confirmation code is shown below.";
+  const receiptUrl =
+    registration && registration.accessToken
+      ? `/api/bowling/receipt/${registration.id}?token=${encodeURIComponent(registration.accessToken)}`
+      : "";
 
   return (
     <main className="min-h-screen bg-bfb-cream py-16">
@@ -91,8 +104,20 @@ export default async function BowlingConfirmationPage({ searchParams }: Confirma
           </h1>
           <p className="bfb-copy mt-6">{paymentCopy[paymentPreference]}</p>
           <p className="mt-4 text-base leading-7 text-bfb-ink/70">
-            {nextStepCopy[paymentPreference]}
+            {emailLine} {nextStepCopy[paymentPreference]}
           </p>
+
+          {receiptUrl ? (
+            <a
+              href={receiptUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-sm border border-bfb-navy bg-white px-5 py-3 font-heading text-sm font-bold uppercase text-bfb-navy transition hover:bg-bfb-navy hover:text-white focus-visible:outline-bfb-blue"
+            >
+              <Download aria-hidden="true" size={17} />
+              Download PDF receipt
+            </a>
+          ) : null}
 
           <div className="mt-8 grid gap-4 md:grid-cols-2">
             <div className="rounded-sm bg-bfb-light p-5">
