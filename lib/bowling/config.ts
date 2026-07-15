@@ -96,7 +96,7 @@ export const bowlingSponsorships: BowlingSponsorship[] = [
       "This sponsorship helps place backpacks, school supplies, and meaningful support directly into the hands of Oklahoma City students and families. We are deeply grateful for the generosity behind this gift and the confidence it shows in the next generation of our city.",
     includesTeam: true,
     featured: true,
-    sponsorName: "",
+    sponsorName: "The Kneedy Family",
     notificationRequired: true,
     notificationSent: false,
     publicDisplay: true,
@@ -167,7 +167,7 @@ export const bowlingSponsorships: BowlingSponsorship[] = [
     impactMessage:
       "This gift helps create a welcoming family experience around Back-to-School support, giving students and parents a moment of joy, connection, and practical help before the school year begins.",
     includesTeam: true,
-    sponsorName: "",
+    sponsorName: "The Shank Family",
     notificationRequired: true,
     notificationSent: false,
     publicDisplay: true,
