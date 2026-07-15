@@ -62,13 +62,14 @@ test.describe("site visual audit", () => {
       waitUntil: "networkidle",
     });
     const sponsorshipSection = page.locator("#sponsorships");
+    // Headings render the sponsorship name only; the price sits in its own element.
+    // "Event Sponsor" was renamed to "Corporate Session Sponsor" (see
+    // legacySponsorshipAliases in lib/bowling/config.ts).
     await expect(
-      sponsorshipSection.getByRole("heading", { name: "Event Sponsor - $5,000" }),
+      sponsorshipSection.getByRole("heading", { name: "Corporate Session Sponsor" }),
     ).toBeVisible();
     await expect(
-      sponsorshipSection.getByRole("heading", {
-        name: "Team Sponsor / Team Registration",
-      }),
+      sponsorshipSection.getByRole("heading", { name: "Team Sponsor" }),
     ).toBeVisible();
     await expect(
       sponsorshipSection.getByRole("heading", { name: "Lane Sponsor" }),
