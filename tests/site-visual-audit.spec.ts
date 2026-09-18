@@ -56,7 +56,7 @@ test.describe("site visual audit", () => {
     await expect(page.getByRole("link", { name: "View supporter events" })).toBeVisible();
 
     await page.goto(`${baseUrl}/supporters`, { waitUntil: "networkidle" });
-    await expect(page.getByRole("link", { name: "Register or sponsor" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "See details and register" }).first()).toBeVisible();
 
     await page.goto(`${baseUrl}/bowling-for-backpacks`, {
       waitUntil: "networkidle",
@@ -140,7 +140,7 @@ test.describe("site visual audit", () => {
 
     const hoverTargets = [
       { path: "/", name: "View supporter events" },
-      { path: "/supporters", name: "Register or host a table" },
+      { path: "/supporters", name: "See details and register" },
       { path: "/bowling-for-backpacks", name: "Register a Team" },
       { path: "/gala", name: "Register or Host a Table" },
     ];

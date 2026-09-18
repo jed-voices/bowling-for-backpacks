@@ -24,6 +24,15 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
+  /* Start the production build for tests unless PLAYWRIGHT_BASE_URL points elsewhere. */
+  webServer: process.env.PLAYWRIGHT_BASE_URL
+    ? undefined
+    : {
+        command: 'npm run start -- -p 3000',
+        url: 'http://127.0.0.1:3000',
+        reuseExistingServer: !process.env.CI,
+        timeout: 120_000,
+      },
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
     // baseURL: 'http://localhost:3000',
