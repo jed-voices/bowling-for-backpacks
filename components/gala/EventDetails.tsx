@@ -1,4 +1,4 @@
-import { CalendarDays, MapPin, Shirt, Utensils } from "lucide-react";
+import { CalendarDays, Home, MapPin, Shirt } from "lucide-react";
 import { eventConfig } from "@/lib/gala/config";
 import { galaCopy } from "@/lib/gala/copy";
 
@@ -6,17 +6,17 @@ const details = [
   {
     icon: CalendarDays,
     label: "Date",
-    value: eventConfig.season,
+    value: `${eventConfig.date}, ${eventConfig.doorsTime}`,
   },
   {
     icon: MapPin,
     label: "Location",
-    value: `${eventConfig.venue} / ${eventConfig.city}`,
+    value: `${eventConfig.venue}, ${eventConfig.address}`,
   },
   {
-    icon: Utensils,
-    label: "Evening",
-    value: eventConfig.auctionLine,
+    icon: Home,
+    label: "Theme",
+    value: eventConfig.theme,
   },
   {
     icon: Shirt,

@@ -1,13 +1,14 @@
 import Image from "next/image";
 import { ArrowRight, CalendarDays, HeartHandshake } from "lucide-react";
 import { EventPageNav } from "@/components/events/EventPageNav";
+import { eventConfig } from "@/lib/gala/config";
 import { galaCopy } from "@/lib/gala/copy";
 import { galaPhotos } from "@/lib/gala/photos";
 
 export function GalaHero() {
   return (
     <header className="bg-sftc-evening text-white">
-      <EventPageNav tone="gala" ctaHref="#registration" ctaLabel="Reserve" />
+      <EventPageNav tone="gala" ctaHref={eventConfig.registrationUrl} ctaLabel="Register" />
 
       <div className="border-b border-white/15 bg-sftc-ink px-5 py-3 text-center font-heading text-xs font-semibold uppercase text-white/80 sm:text-sm">
         {galaCopy.announcement}
@@ -34,18 +35,18 @@ export function GalaHero() {
               {galaCopy.hero.body}
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a href="#registration" className="button-primary">
-                Reserve Your Place
+              <a href={eventConfig.registrationUrl} className="button-primary">
+                Register or Host a Table
                 <ArrowRight aria-hidden="true" size={17} />
               </a>
               <a href="#sponsorships" className="button-secondary">
-                View Sponsorship Options
+                See Options
               </a>
             </div>
             <div className="mt-8 flex max-w-2xl flex-col gap-3 border-l-2 border-sftc-hope pl-4 text-sm text-white/80 sm:flex-row sm:items-center sm:gap-6">
               <span className="inline-flex items-center gap-2">
                 <CalendarDays aria-hidden="true" size={17} />
-                Fall 2026 / Oklahoma City
+                {eventConfig.date} / {eventConfig.doorsTime}
               </span>
               <span className="inline-flex items-center gap-2">
                 <HeartHandshake aria-hidden="true" size={17} />

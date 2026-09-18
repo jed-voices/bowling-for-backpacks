@@ -1,28 +1,31 @@
+import { eventConfig } from "@/lib/gala/config";
+
 const faqs = [
   {
-    question: "When will final event details be shared?",
+    question: "Where do I register?",
     answer:
-      "Registered guests will receive arrival details, auction access information, and any final timing updates as the Gala approaches.",
+      "Registration, table purchases, and gifts are handled on Greater Giving, City Center's event partner. Use any Register button on this page.",
   },
   {
-    question: "Can I submit guest names later?",
-    answer:
-      "Yes. Table hosts and ticket buyers can save the registration first and return to the guest-list link as names are confirmed.",
+    question: "When does registration close?",
+    answer: `Online registration closes ${eventConfig.registrationCloses}.`,
   },
   {
-    question: "Can City Center invoice my organization?",
-    answer:
-      "Yes. Choose request invoice during registration and City Center will send the appropriate invoice details.",
+    question: "What should I wear?",
+    answer: "Business casual.",
   },
   {
-    question: "Can I pay by check?",
-    answer:
-      "Yes. Choose pay later by check and City Center will share check instructions with your contact email.",
+    question: "Can I pay by check or get an invoice?",
+    answer: `Yes. Checks can be mailed to ${eventConfig.checkMailingAddress}. For an invoice, email ${eventConfig.contactEmail} and we'll send one.`,
   },
   {
-    question: "Are chance-to-win entries available now?",
+    question: "Can I send guest names later?",
+    answer: `Yes. Register your table or tickets now and send guest names to ${eventConfig.contactEmail} when they're confirmed.`,
+  },
+  {
+    question: "I can't attend. Can I still give?",
     answer:
-      "Chance-to-win details will be shared with official rules, eligibility, drawing information, and any required tax language before entries open.",
+      "Yes. Gifts of any amount can be made on the same Greater Giving page, and every gift supports City Center's year-round work.",
   },
 ];
 

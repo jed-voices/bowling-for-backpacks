@@ -78,7 +78,7 @@ test.describe("site visual audit", () => {
     await page.goto(`${baseUrl}/gala`, { waitUntil: "networkidle" });
     await expect(
       page.getByRole("heading", {
-        name: "Reserve your place at Stories From the Center.",
+        name: "Reserve your seat or table.",
       }),
     ).toBeVisible();
   });
@@ -140,9 +140,9 @@ test.describe("site visual audit", () => {
 
     const hoverTargets = [
       { path: "/", name: "View supporter events" },
-      { path: "/supporters", name: "Register or sponsor" },
+      { path: "/supporters", name: "Register or host a table" },
       { path: "/bowling-for-backpacks", name: "Register a Team" },
-      { path: "/gala", name: "Reserve Your Place" },
+      { path: "/gala", name: "Register or Host a Table" },
     ];
 
     for (const target of hoverTargets) {

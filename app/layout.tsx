@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://okcitycenterevents.org"),
   title: {
     default:
       "OK City Center Events | Event Registration and Sponsorships",
@@ -12,6 +13,10 @@ export const metadata: Metadata = {
   keywords: [
     "OK City Center Events",
     "City Center events",
+    "Stories From the Center",
+    "City Center gala 2026",
+    "Oklahoma City nonprofit gala",
+    "City + State Oklahoma City gala",
     "Christmas in July: Bowling for Backpacks",
     "Bowling for Backpacks",
     "bringing Christmas to students for Back 2 School",

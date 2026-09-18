@@ -1,16 +1,16 @@
 export const galaCopy = {
   announcement:
-    "Fall 2026 / Oklahoma City / Sponsorships, tables, and tickets available",
+    "9th Annual Gala / Friday, October 30, 2026 / City + State, Oklahoma City / Registration closes October 15",
   hero: {
-    eyebrow: "City Center Annual Gala / Fall 2026 / Oklahoma City",
+    eyebrow: "City Center's 9th Annual Gala / Oct. 30, 2026",
     headline: "Stories From the Center",
+    theme: "Welcome to Our Neighborhood",
     body:
-      "City Center's annual Gala gathers friends, sponsors, and neighbors for an elegant evening of dinner, auction, and generosity in support of relief, restoration, and trusted relationships in Oklahoma City.",
-    detailLine:
-      "Dinner / Auction / Stories / Giving / Relief and Restoration",
+      "This year's theme, Welcome to Our Neighborhood, is about the kind of community City Center works to build every day: one where everyone is welcomed, supported, and valued. Join friends, sponsors, and neighbors for dinner, stories, and an auction that carries that work into another year.",
+    detailLine: "City + State / Oklahoma City",
   },
   eventDetails:
-    "Guests will receive arrival instructions, auction access information, and any final timing updates after registration.",
+    "Registration and payment are handled through Greater Giving, City Center's event partner. Registration closes Thursday, October 15. Guests will receive arrival and auction details before the evening.",
   whyItMatters: {
     eyebrow: "Why This Night Matters",
     headline: "Relief of needs. Restoration of lives.",
@@ -54,7 +54,7 @@ export const galaCopy = {
     eyebrow: "The Evening",
     headline: "Elegant, meaningful, and built around stories that deserve to be heard.",
     paragraphs: [
-      "Stories From the Center is designed to feel beautiful without losing the reason we gather. The evening includes dinner, conversation, auction experiences, and a program centered on the lives and stories connected to City Center's work.",
+      "Stories From the Center is designed to feel beautiful without losing the reason we gather. This year, under the theme Welcome to Our Neighborhood, the evening includes dinner, conversation, auction experiences, and a program centered on the lives and stories connected to City Center's work.",
       "This is not just a formal event. It is a chance to sit with friends, invite new partners, celebrate what has been built, and help provide the resources needed for what comes next.",
     ],
     list: [
@@ -62,18 +62,17 @@ export const galaCopy = {
       "Dinner and hosted table experience",
       "Silent auction preview and bidding",
       "Live auction moments",
-      "Chance-to-win opportunity",
       "Mission-centered program",
     ],
   },
   schedule: {
-    headline: "A thoughtful flow for a meaningful night.",
-    note: "Final times may adjust slightly as event details are confirmed.",
+    headline: "Friday, October 30, at City + State.",
+    note: "Program and auction times will be shared with registered guests before the event.",
     items: [
       {
         time: "5:30 PM",
-        title: "Arrival and Reception",
-        body: "Check in, gather with guests, enjoy the reception, and preview silent auction items.",
+        title: "Registration and Cocktail Hour",
+        body: "Check in, gather with guests, and preview silent auction items.",
       },
       {
         time: "6:30 PM",
@@ -81,19 +80,14 @@ export const galaCopy = {
         body: "Guests are seated for dinner and conversation with table hosts, sponsors, and friends of City Center.",
       },
       {
-        time: "7:15 PM",
+        time: "After dinner",
         title: "Stories From the Center",
-        body: "A focused program sharing the work, the need, and the stories behind City Center's mission of relief and restoration.",
+        body: "A program sharing the work, the need, and the stories behind City Center's mission of relief and restoration.",
       },
       {
-        time: "7:45 PM",
+        time: "Evening",
         title: "Live Auction and Giving Moment",
-        body: "Guests participate in the live auction and have an opportunity to give directly toward the work of City Center.",
-      },
-      {
-        time: "8:30 PM",
-        title: "Closing and Checkout",
-        body: "Final auction, checkout, and guest connection before the evening concludes.",
+        body: "Guests take part in the live auction and have a chance to give directly toward the work of City Center.",
       },
     ],
   },
@@ -101,7 +95,7 @@ export const galaCopy = {
     eyebrow: "Sponsorships",
     headline: "Gather a table. Bring people into the story. Help carry the work forward.",
     body:
-      "Sponsorship gives you a clear way to gather clients, friends, family, or colleagues around a night that matters. It also provides steady support for City Center's work with youth and families.\n\nEach table and sponsorship level helps provide the resources needed for meals, mentoring, basic needs, community connection, and trusted relationships in under-resourced neighborhoods.",
+      "Hosting a table gives you a simple way to gather clients, friends, family, or colleagues around a night that matters. It also provides steady support for City Center's work with youth and families.\n\nLooking for a presenting or custom sponsorship? Reach out and we'll walk through the options together.",
   },
   auction: {
     eyebrow: "Auction",
@@ -109,7 +103,7 @@ export const galaCopy = {
     body:
       "The Gala includes both silent and live auction opportunities. Auction packages are selected to create energy in the room while helping fund City Center's work beyond the evening itself.\n\nGuests will receive details about auction access, mobile bidding, and checkout before the event.",
     chance:
-      "Guests may have the opportunity to purchase entries for a featured chance-to-win item connected to the Gala. Entries help support the work of City Center and will be tracked carefully through the event system.\n\nOfficial rules, eligibility, drawing details, and tax language will be provided before purchase.",
+      "Auction items are still coming together. Registered guests will receive the auction preview, bidding details, and checkout instructions before October 30.",
   },
   voices: {
     eyebrow: "Stories in Their Own Voice",

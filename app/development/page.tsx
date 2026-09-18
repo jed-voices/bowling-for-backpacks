@@ -344,8 +344,9 @@ function LaunchReadiness({ items }: { items: LaunchReadinessItem[] }) {
   );
 }
 
-function StatusPill({ status }: { status: "registering" | "building" }) {
-  const label = status === "registering" ? "Registering" : "Building";
+function StatusPill({ status }: { status: "registering" | "building" | "complete" }) {
+  const label =
+    status === "registering" ? "Registering" : status === "complete" ? "Complete" : "Building";
   const className =
     status === "registering"
       ? "border-cc-light-green/35 bg-cc-light-green/10 text-cc-navy"

@@ -38,7 +38,7 @@ export type EventOperationsSummary = {
   href: string;
   adminHref: string;
   dataSource: "live" | "preview";
-  status: "registering" | "building";
+  status: "registering" | "building" | "complete";
   totalValue: number;
   registrationCount: number;
   openPaymentCount: number;
