@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Home, LockKeyhole, UsersRound } from "lucide-react";
+import { ArrowRight, Home, LockKeyhole, Menu, UsersRound } from "lucide-react";
 
 type EventPageNavProps = {
   tone: "bowling" | "gala";
@@ -29,7 +29,7 @@ export function EventPageNav({ tone, ctaHref, ctaLabel }: EventPageNavProps) {
 
   return (
     <nav className={styles.shell} aria-label="Event navigation">
-      <div className="section-shell flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="section-shell flex items-center justify-between gap-3 py-4">
         <Link
           href="/"
           className={`inline-flex items-center gap-2 font-heading text-sm font-semibold uppercase transition ${styles.brand}`}
@@ -37,7 +37,35 @@ export function EventPageNav({ tone, ctaHref, ctaLabel }: EventPageNavProps) {
           CITY CENTER EVENTS
         </Link>
 
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 sm:justify-end sm:gap-x-5">
+        <div className="flex items-center gap-2 sm:gap-x-5">
+          {/* Phones: the three utility links collapse into one menu so the event
+              content is visible without scrolling. No JS: native details/summary. */}
+          <details className="relative sm:hidden">
+            <summary
+              className={`inline-flex min-h-9 cursor-pointer list-none items-center gap-1.5 rounded-sm border px-3 py-2 font-heading text-xs font-semibold uppercase transition marker:hidden ${styles.cta}`}
+            >
+              <Menu aria-hidden="true" size={14} />
+              Menu
+            </summary>
+            <div
+              className={`absolute right-0 z-50 mt-2 flex w-52 flex-col gap-1 rounded-sm border p-2 shadow-soft ${styles.shell}`}
+            >
+              <Link href="https://okcitycenter.org/" className={`inline-flex min-h-10 items-center gap-2 px-2 font-heading text-xs font-semibold uppercase ${styles.link}`}>
+                <Home aria-hidden="true" className={styles.icon} size={14} />
+                CITY CENTER HOME
+              </Link>
+              <Link href="/supporters" className={`inline-flex min-h-10 items-center gap-2 px-2 font-heading text-xs font-semibold uppercase ${styles.link}`}>
+                <UsersRound aria-hidden="true" className={styles.icon} size={14} />
+                SUPPORTERS
+              </Link>
+              <Link href="/development" className={`inline-flex min-h-10 items-center gap-2 px-2 font-heading text-xs font-semibold uppercase ${styles.link}`}>
+                <LockKeyhole aria-hidden="true" className={styles.icon} size={14} />
+                DASHBOARD
+              </Link>
+            </div>
+          </details>
+
+          <div className="hidden flex-wrap items-center gap-x-4 gap-y-2 sm:flex sm:justify-end sm:gap-x-5">
           <Link
             href="https://okcitycenter.org/"
             className={`inline-flex min-h-8 items-center gap-1.5 font-heading text-xs font-semibold uppercase transition sm:text-sm ${styles.link}`}
@@ -59,6 +87,8 @@ export function EventPageNav({ tone, ctaHref, ctaLabel }: EventPageNavProps) {
             <LockKeyhole aria-hidden="true" className={styles.icon} size={14} />
             DASHBOARD
           </Link>
+          </div>
+
           {ctaHref && ctaLabel ? (
             <a
               href={ctaHref}
