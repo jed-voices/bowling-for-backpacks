@@ -1,29 +1,33 @@
+// Gala photos are served from this repo (public/gala) rather than hotlinked
+// from Google Drive, so a sharing change in Drive cannot blank the page.
+// Run scripts/fetch-gala-photos.sh once to populate public/gala, then commit
+// the files. driveImage stays exported for anything still pointing at Drive.
 export const driveImage = (id: string, width = 2200) =>
   `https://lh3.googleusercontent.com/d/${id}=w${width}`;
 
 export const galaPhotos = {
   hero: {
-    src: driveImage("1FXIA91WavmA3vEPLMRW_p9KjmPSP_9in"),
+    src: "/gala/hero.jpg",
     alt: "Guests gathered at City Center's Stories From the Center Gala in Oklahoma City",
   },
   heroSupport: {
-    src: driveImage("1DdB-i0Ky5jOlt2XADXY_BBrb_Ai9uvNV", 1600),
+    src: "/gala/hero-support.jpg",
     alt: "Elegant evening atmosphere at the City Center Gala",
   },
   detail: {
-    src: driveImage("1aJOtReJfkADBNpLbqSJ9VzzmS55q-24x", 1600),
+    src: "/gala/detail.jpg",
     alt: "Gala details from Stories From the Center",
   },
   eveningPrimary: {
-    src: driveImage("1FCPevUmzzT4HsVhXLvRysdxZCHtw-1iB", 1600),
+    src: "/gala/evening-primary.jpg",
     alt: "Guests attending Stories From the Center, City Center's annual Gala",
   },
   eveningSecondary: {
-    src: driveImage("1VnK8kaV4__D2qtKX7L9rF_JULqEmy2IR", 1600),
+    src: "/gala/evening-secondary.jpg",
     alt: "Dinner and gathering at City Center's annual Gala",
   },
   auctionAtmosphere: {
-    src: driveImage("12HbW3z3GAj_eM7osr6FcuWWEU2sGVsIf", 1800),
+    src: "/gala/auction-atmosphere.jpg",
     alt: "Auction and giving moment atmosphere at the City Center Gala",
   },
 } as const;
