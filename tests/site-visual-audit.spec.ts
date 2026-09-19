@@ -36,6 +36,8 @@ test.describe("site visual audit", () => {
 
         const screenshot = await page.screenshot({
           fullPage: true,
+          // Keep long pages within WebKit's image limit on high-DPI devices.
+          scale: "css",
           path: `tests/visual-artifacts/${route.name}-${viewport.name}.png`,
         });
 
