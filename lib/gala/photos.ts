@@ -1,33 +1,36 @@
-// Gala photos are served from this repo (public/gala) rather than hotlinked
-// from Google Drive, so a sharing change in Drive cannot blank the page.
-// Run scripts/fetch-gala-photos.sh once to populate public/gala, then commit
-// the files. driveImage stays exported for anything still pointing at Drive.
-export const driveImage = (id: string, width = 2200) =>
-  `https://lh3.googleusercontent.com/d/${id}=w${width}`;
-
+// Photography from City Center's Gala, served from this repo so the page never
+// depends on an outside host at request time. `position` is the CSS
+// object-position for each frame, chosen so faces and subjects survive the crop
+// at every breakpoint.
 export const galaPhotos = {
   hero: {
     src: "/gala/hero.jpg",
-    alt: "Guests gathered at City Center's Stories From the Center Gala in Oklahoma City",
+    alt: "Guests gathered around candlelit tables at City Center's Stories From the Center Gala",
+    position: "70% 48%",
   },
   heroSupport: {
-    src: "/gala/hero-support.jpg",
-    alt: "Elegant evening atmosphere at the City Center Gala",
+    src: "/gala/speaker.jpg",
+    alt: "A City Center leader speaking to guests from the Gala stage",
+    position: "50% 22%",
   },
-  detail: {
-    src: "/gala/detail.jpg",
-    alt: "Gala details from Stories From the Center",
+  rallyCry: {
+    src: "/gala/program.jpg",
+    alt: "City Center's founder addressing the room during the Gala program",
+    position: "60% 30%",
   },
   eveningPrimary: {
-    src: "/gala/evening-primary.jpg",
-    alt: "Guests attending Stories From the Center, City Center's annual Gala",
+    src: "/gala/dance-floor.jpg",
+    alt: "Guests dancing together late in the evening at the City Center Gala",
+    position: "55% 45%",
   },
   eveningSecondary: {
-    src: "/gala/evening-secondary.jpg",
-    alt: "Dinner and gathering at City Center's annual Gala",
+    src: "/gala/guests.jpg",
+    alt: "Two guests at their table during the City Center Gala",
+    position: "50% 35%",
   },
   auctionAtmosphere: {
-    src: "/gala/auction-atmosphere.jpg",
-    alt: "Auction and giving moment atmosphere at the City Center Gala",
+    src: "/gala/trophy.jpg",
+    alt: "A guest holding the City Center Champion trophy during the Gala auction",
+    position: "55% 35%",
   },
 } as const;

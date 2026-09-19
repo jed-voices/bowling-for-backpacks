@@ -33,6 +33,7 @@ export function AuctionSection() {
             fill
             sizes="(min-width: 1024px) 40vw, 100vw"
             className="rounded-sm object-cover"
+            style={{ objectPosition: galaPhotos.auctionAtmosphere.position }}
           />
         </div>
       </div>

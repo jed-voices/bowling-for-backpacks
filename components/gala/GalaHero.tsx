@@ -22,12 +22,22 @@ export function GalaHero() {
           priority
           sizes="100vw"
           className="object-cover"
+          style={{ objectPosition: galaPhotos.hero.position }}
         />
+        {/* Phones read the copy over the full width, so the scrim is even there.
+            From lg up it falls away to the right to let the room show. */}
         <div
-          className="absolute inset-0"
+          className="absolute inset-0 lg:hidden"
           style={{
             backgroundImage:
-              "linear-gradient(90deg, rgb(var(--sftc-evening) / 0.94) 0%, rgb(var(--sftc-evening) / 0.78) 42%, rgb(var(--sftc-evening) / 0.3) 100%)",
+              "linear-gradient(0deg, rgb(var(--sftc-evening) / 0.95) 0%, rgb(var(--sftc-evening) / 0.9) 60%, rgb(var(--sftc-evening) / 0.8) 100%)",
+          }}
+        />
+        <div
+          className="absolute inset-0 hidden lg:block"
+          style={{
+            backgroundImage:
+              "linear-gradient(90deg, rgb(var(--sftc-evening) / 0.97) 0%, rgb(var(--sftc-evening) / 0.92) 38%, rgb(var(--sftc-evening) / 0.66) 70%, rgb(var(--sftc-evening) / 0.5) 100%), linear-gradient(0deg, rgb(var(--sftc-evening) / 0.75) 0%, rgb(var(--sftc-evening) / 0) 45%)",
           }}
         />
 
@@ -67,22 +77,15 @@ export function GalaHero() {
             </div>
           </div>
 
-          <div className="pointer-events-none relative hidden h-[520px] lg:block">
+          <div className="pointer-events-none relative hidden h-[520px] items-center justify-end lg:flex">
             <Image
               src={galaPhotos.heroSupport.src}
               alt={galaPhotos.heroSupport.alt}
               width={512}
-              height={640}
-              sizes="256px"
-              className="absolute right-0 top-10 h-80 w-64 rounded-sm object-cover shadow-soft"
-            />
-            <Image
-              src={galaPhotos.detail.src}
-              alt={galaPhotos.detail.alt}
-              width={448}
-              height={576}
-              sizes="224px"
-              className="absolute bottom-10 right-32 h-72 w-56 rounded-sm object-cover shadow-soft ring-8 ring-white/10"
+              height={680}
+              sizes="340px"
+              className="h-[440px] w-[340px] rounded-sm object-cover shadow-soft ring-1 ring-sftc-gold/35"
+              style={{ objectPosition: galaPhotos.heroSupport.position }}
             />
           </div>
         </div>
