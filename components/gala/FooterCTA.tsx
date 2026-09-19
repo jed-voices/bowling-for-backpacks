@@ -1,4 +1,5 @@
 import { ArrowRight, Heart } from "lucide-react";
+import { eventConfig } from "@/lib/gala/config";
 
 export function FooterCTA() {
   return (
@@ -10,18 +11,18 @@ export function FooterCTA() {
             Your gift can still help carry the work.
           </h2>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-white/70">
-            Every gift supports City Center&apos;s movement of hope, fueled by love at
-            the center of our city.
+            Gifts of any amount can be made through the same registration page. Every
+            gift supports City Center&apos;s work with youth and families in Oklahoma City.
           </p>
         </div>
-        <a href="#registration" className="button-primary">
+        <a href={eventConfig.registrationUrl} className="button-primary">
           Make a Gift
           <Heart aria-hidden="true" size={17} />
         </a>
       </section>
       <div className="border-t border-white/12 py-6">
         <div className="section-shell flex flex-col gap-3 text-sm text-white/56 sm:flex-row sm:items-center sm:justify-between">
-          <p>City Center / Stories From the Center / Fall 2026</p>
+          <p>City Center / Stories From the Center / {eventConfig.date}</p>
           <a href="#top" className="inline-flex items-center gap-2 text-white hover:text-sftc-gold">
             Back to top
             <ArrowRight aria-hidden="true" size={14} />

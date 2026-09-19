@@ -1,13 +1,29 @@
 import type { GalaPackage, GalaRegistrationRecord } from "./types";
 
+// Source of truth for 2026 details (verified 2026-09-18):
+// Greater Giving registration page + Kimberly Winston's 9/16 and 9/17 supporter emails.
+// Registration and payment happen on Greater Giving, not on this site.
 export const eventConfig = {
   name: "Stories From the Center",
   organization: "City Center",
-  season: "Fall 2026",
-  venue: "City & State",
+  edition: "9th Annual Gala",
+  theme: "Welcome to Our Neighborhood",
+  date: "Friday, October 30, 2026",
+  dateShort: "Oct. 30, 2026",
+  isoDate: "2026-10-30",
+  season: "Friday, October 30, 2026",
+  doorsTime: "5:30 PM",
+  venue: "City + State",
+  address: "19 NE 6th St, Oklahoma City, OK 73104",
   city: "Oklahoma City",
-  attire: "Elegant evening attire",
-  auctionLine: "Dinner / Live Auction / Silent Auction / Chance to Win",
+  attire: "Business casual",
+  registrationUrl:
+    "https://okcitycenter.ejoinme.org/MyEvents/2026StoriesFromTheCenter/Registration/tabid/1601231/Default.aspx",
+  registrationCloses: "Thursday, October 15, 2026",
+  contactEmail: "info@okcitycenter.org",
+  contactPhone: "(405) 384-5670",
+  checkMailingAddress: "City Center, P.O. Box 42301, Oklahoma City, OK 73123",
+  auctionLine: "Dinner / Live Auction / Silent Auction",
   chanceEntryPrice: 100,
   guestListBaseUrl: "/gala/guest-list",
   voicesOfOkcUrl: "https://okcitycenter.org/podcast",
@@ -143,6 +159,45 @@ export const ticketOptions: GalaPackage[] = [
 ];
 
 export const galaPackages = [...sponsorships, ...ticketOptions];
+
+// What the public page shows. Matches the options open on Greater Giving
+// as of 2026-09-18. Add levels here only after they exist on Greater Giving.
+export type PublicGalaOption = {
+  id: string;
+  name: string;
+  price: number;
+  seats: number;
+  label: string;
+  description: string;
+  benefits: string[];
+};
+
+export const publicGalaOptions: PublicGalaOption[] = [
+  {
+    id: "legacy-table",
+    name: "Legacy Table Sponsor",
+    price: 2500,
+    seats: 8,
+    label: "Host a Table",
+    description:
+      "Gather eight people you care about (clients, family, church, or team) around City Center's work for one evening.",
+    benefits: [
+      "Reserved table for 8 guests",
+      "Dinner for every guest",
+      "Your name recognized at the table",
+    ],
+  },
+  {
+    id: "individual",
+    name: "Individual Ticket",
+    price: 250,
+    seats: 1,
+    label: "Open Seating",
+    description:
+      "One seat for the evening, including dinner. Seating is open, so let us know if you hope to sit with friends.",
+    benefits: ["One open-seating ticket", "Dinner and the full evening program"],
+  },
+];
 
 export const getPackageById = (id: string) =>
   galaPackages.find((item) => item.id === id);

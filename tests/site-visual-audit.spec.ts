@@ -36,6 +36,8 @@ test.describe("site visual audit", () => {
 
         const screenshot = await page.screenshot({
           fullPage: true,
+          // Keep long pages within WebKit's image limit on high-DPI devices.
+          scale: "css",
           path: `tests/visual-artifacts/${route.name}-${viewport.name}.png`,
         });
 
@@ -56,7 +58,7 @@ test.describe("site visual audit", () => {
     await expect(page.getByRole("link", { name: "View supporter events" })).toBeVisible();
 
     await page.goto(`${baseUrl}/supporters`, { waitUntil: "networkidle" });
-    await expect(page.getByRole("link", { name: "Register or sponsor" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "See details and register" }).first()).toBeVisible();
 
     await page.goto(`${baseUrl}/bowling-for-backpacks`, {
       waitUntil: "networkidle",
@@ -78,7 +80,7 @@ test.describe("site visual audit", () => {
     await page.goto(`${baseUrl}/gala`, { waitUntil: "networkidle" });
     await expect(
       page.getByRole("heading", {
-        name: "Reserve your place at Stories From the Center.",
+        name: "Reserve your seat or table.",
       }),
     ).toBeVisible();
   });
@@ -140,9 +142,9 @@ test.describe("site visual audit", () => {
 
     const hoverTargets = [
       { path: "/", name: "View supporter events" },
-      { path: "/supporters", name: "Register or sponsor" },
+      { path: "/supporters", name: "See details and register" },
       { path: "/bowling-for-backpacks", name: "Register a Team" },
-      { path: "/gala", name: "Reserve Your Place" },
+      { path: "/gala", name: "Register or Host a Table" },
     ];
 
     for (const target of hoverTargets) {
