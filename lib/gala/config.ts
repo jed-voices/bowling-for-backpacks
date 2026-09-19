@@ -17,8 +17,12 @@ export const eventConfig = {
   address: "19 NE 6th St, Oklahoma City, OK 73104",
   city: "Oklahoma City",
   attire: "Business casual",
+  // Greater Giving event page (Jed, 2026-09-19). It carries the event details,
+  // auction donations and online bidding, and links on to the registration
+  // form at .../Registration/tabid/1601231/. The /2026register short link is
+  // broken and is not used anywhere.
   registrationUrl:
-    "https://okcitycenter.ejoinme.org/MyEvents/2026StoriesFromTheCenter/Registration/tabid/1601231/Default.aspx",
+    "https://okcitycenter.ejoinme.org/MyEvents/2026StoriesFromTheCenter/tabid/1601230/Default.aspx",
   registrationCloses: "Thursday, October 15, 2026",
   contactEmail: "info@okcitycenter.org",
   contactPhone: "(405) 384-5670",
