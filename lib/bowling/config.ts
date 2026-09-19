@@ -6,6 +6,9 @@ import type {
 } from "./types";
 
 export const bowlingEventConfig = {
+  // The 2026 event happened on July 16. Registration and checkout are closed:
+  // the API routes reject new registrations and the page shows the recap.
+  registrationClosed: true,
   name: "Christmas in July: Bowling for Backpacks",
   subtitle: "A City Center Back 2 School Fundraiser",
   theme: "Christmas in July",

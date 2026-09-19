@@ -8,9 +8,10 @@ import {
   Snowflake,
   Sun,
 } from "lucide-react";
+import Link from "next/link";
 import { EventPageNav } from "@/components/events/EventPageNav";
 import { bowlingEventConfig } from "@/lib/bowling/config";
-import { bowlingCopy } from "@/lib/bowling/copy";
+import { bowlingClosedHero, bowlingCopy } from "@/lib/bowling/copy";
 import { bowlingPhotos } from "@/lib/bowling/photos";
 import { buildBowlingSponsorshipSummary } from "@/lib/bowling/sponsorship-progress";
 import type { BowlingRegistrationRecord } from "@/lib/bowling/types";
@@ -31,7 +32,11 @@ type BowlingHeroProps = {
 export function BowlingHero({ registrations }: BowlingHeroProps) {
   return (
     <header className="bg-bfb-navy text-bfb-ink">
-      <EventPageNav tone="bowling" ctaHref="#registration" ctaLabel="Register" />
+      <EventPageNav
+        tone="bowling"
+        ctaHref={bowlingEventConfig.registrationClosed ? "/gala" : "#registration"}
+        ctaLabel={bowlingEventConfig.registrationClosed ? "Gala" : "Register"}
+      />
 
       <section className="relative overflow-hidden bg-bfb-navy">
         <div className="absolute inset-0 bg-[linear-gradient(135deg,#11132F_0%,#112F6D_54%,#11132F_100%)]" />
@@ -50,15 +55,41 @@ export function BowlingHero({ registrations }: BowlingHeroProps) {
               </span>
             </h1>
             <p className="mt-5 max-w-3xl font-heading text-xl font-bold leading-tight text-white sm:text-3xl lg:text-4xl">
-              {bowlingCopy.hero.headline}
+              {bowlingEventConfig.registrationClosed
+                ? bowlingClosedHero.headline
+                : bowlingCopy.hero.headline}
             </p>
             <p className="mt-6 max-w-[650px] text-base font-medium leading-7 text-white/90 sm:text-xl sm:leading-8">
-              {bowlingCopy.hero.body}
+              {bowlingEventConfig.registrationClosed
+                ? bowlingClosedHero.body
+                : bowlingCopy.hero.body}
             </p>
 
-            <HeroThermometer registrations={registrations} />
-            <HeroSponsorshipProgress registrations={registrations} />
+            {bowlingEventConfig.registrationClosed ? null : (
+              <>
+                <HeroThermometer registrations={registrations} />
+                <HeroSponsorshipProgress registrations={registrations} />
+              </>
+            )}
 
+            {bowlingEventConfig.registrationClosed ? (
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <a
+                  href="#recap"
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-sm bg-white px-5 py-3 font-heading text-sm font-bold uppercase text-bfb-navy shadow-sm transition hover:bg-bfb-green hover:text-bfb-ink focus-visible:outline-bfb-green"
+                >
+                  See the Recap
+                  <ArrowRight aria-hidden="true" size={17} />
+                </a>
+                <Link
+                  href="/gala"
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-sm border border-white/30 bg-white/10 px-5 py-3 font-heading text-sm font-bold uppercase text-white transition hover:border-bfb-green hover:bg-white/20 focus-visible:outline-bfb-green"
+                >
+                  The Gala is Oct. 30
+                  <ArrowRight aria-hidden="true" size={17} />
+                </Link>
+              </div>
+            ) : (
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <a
                 href="#registration"
@@ -75,6 +106,7 @@ export function BowlingHero({ registrations }: BowlingHeroProps) {
                 <ArrowRight aria-hidden="true" size={17} />
               </a>
             </div>
+            )}
 
             <div className="mt-8 grid max-w-[650px] gap-3 border-l-2 border-bfb-green/70 pl-4 text-sm font-semibold text-white/90 sm:grid-cols-2">
               <span className="flex items-center gap-2">
