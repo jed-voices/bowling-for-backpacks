@@ -47,10 +47,10 @@ export function BowlingHero({ registrations }: BowlingHeroProps) {
               className="max-w-full font-heading font-black uppercase text-white"
               aria-label="Christmas in July: Bowling for Backpacks"
             >
-              <span className="block whitespace-nowrap text-[clamp(1.75rem,8.2vw,5.25rem)] leading-[1]">
+              <span className="block whitespace-nowrap text-[clamp(1.75rem,8.2vw,5.25rem)] leading-[1] lg:text-[clamp(2rem,3.55vw,3.4rem)]">
                 Christmas in July
               </span>
-              <span className="mt-3 block whitespace-nowrap text-[clamp(1.15rem,5.8vw,3.75rem)] leading-[1.02] text-bfb-green">
+              <span className="mt-3 block whitespace-nowrap text-[clamp(1.15rem,5.8vw,3.75rem)] leading-[1.02] text-bfb-green lg:text-[clamp(1.25rem,2.6vw,2.5rem)]">
                 Bowling for Backpacks
               </span>
             </h1>
