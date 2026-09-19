@@ -16,15 +16,17 @@ const config: Config = {
           "light-blue": "#ABBCC6",
           "light-green": "#89AF94",
         },
+        // Values live in app/globals.css so a route can retheme by setting
+        // the variables (see .theme-gala for the 2026 Gala).
         sftc: {
-          ink: "#11132F",
-          evening: "#0D1B3D",
-          navy: "#112F6D",
-          ivory: "#F7F2EA",
-          stone: "#E8E9EA",
-          brass: "#B8965A",
-          gold: "#D8BE82",
-          hope: "#5DCBA3",
+          ink: "rgb(var(--sftc-ink) / <alpha-value>)",
+          evening: "rgb(var(--sftc-evening) / <alpha-value>)",
+          navy: "rgb(var(--sftc-navy) / <alpha-value>)",
+          ivory: "rgb(var(--sftc-ivory) / <alpha-value>)",
+          stone: "rgb(var(--sftc-stone) / <alpha-value>)",
+          brass: "rgb(var(--sftc-brass) / <alpha-value>)",
+          gold: "rgb(var(--sftc-gold) / <alpha-value>)",
+          hope: "rgb(var(--sftc-hope) / <alpha-value>)",
         },
         bfb: {
           ink: "#11132F",
@@ -38,7 +40,8 @@ const config: Config = {
       fontFamily: {
         heading: ["Proxima Nova", "Inter", "ui-sans-serif", "system-ui", "sans-serif"],
         body: ["Arbeit", "Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-        display: ["Cormorant Garamond", "Canela", "IvyPresto Display", "Georgia", "serif"],
+        display: ["var(--font-display)", "Cormorant Garamond", "Georgia", "serif"],
+        label: ["var(--font-label)", "Cormorant Garamond", "Georgia", "serif"],
         accent: ["Sweet Sucker Punch", "Marker Felt", "Comic Sans MS", "cursive"],
         script: ["Great Vibes", "Brush Script MT", "cursive"],
       },

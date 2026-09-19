@@ -23,14 +23,26 @@ export function GalaHero() {
           sizes="100vw"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(13,27,61,0.92)_0%,rgba(13,27,61,0.76)_42%,rgba(13,27,61,0.28)_100%)]" />
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "linear-gradient(90deg, rgb(var(--sftc-evening) / 0.94) 0%, rgb(var(--sftc-evening) / 0.78) 42%, rgb(var(--sftc-evening) / 0.3) 100%)",
+          }}
+        />
 
         <div className="section-shell relative z-10 grid min-h-[62svh] items-center py-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(420px,0.62fr)] lg:gap-10">
           <div className="max-w-3xl">
             <p className="eyebrow text-sftc-gold">{galaCopy.hero.eyebrow}</p>
-            <h1 className="mt-6 max-w-4xl font-display text-5xl font-medium leading-[1.02] text-white sm:text-6xl lg:text-7xl">
+            <p className="script-accent mt-6 text-5xl text-sftc-gold sm:text-6xl lg:text-7xl">
+              Welcome
+            </p>
+            <h1 className="mt-2 max-w-4xl font-display text-4xl font-medium leading-[1.05] text-white sm:text-5xl lg:text-6xl">
               {galaCopy.hero.headline}
             </h1>
+            <p className="invite-label mt-4 text-xs text-white/70 sm:text-sm">
+              {galaCopy.hero.theme}
+            </p>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-white/85 sm:text-xl">
               {galaCopy.hero.body}
             </p>
