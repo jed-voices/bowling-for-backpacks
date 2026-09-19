@@ -53,7 +53,6 @@ export default async function BowlingForBackpacksPage() {
         <BowlingRecap />
         <BowlingWhyItMatters />
         <BowlingImpactSection />
-        <BowlingSupportProvides />
         <BowlingFooterCTA />
       </main>
     );

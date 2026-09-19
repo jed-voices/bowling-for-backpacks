@@ -71,6 +71,7 @@ test.describe("site visual audit", () => {
       ).toBeVisible();
       await expect(page.locator("form")).toHaveCount(0);
       await expect(page.locator("#sponsorships")).toHaveCount(0);
+      await expect(page.locator("main")).not.toContainText(/\$\s*\d/);
     } else {
       const sponsorshipSection = page.locator("#sponsorships");
       // Headings render the sponsorship name only; the price sits in its own element.
