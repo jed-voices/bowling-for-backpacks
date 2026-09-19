@@ -43,7 +43,7 @@ export function SponsorshipGrid() {
               <ul className="mt-6 space-y-3 pb-6">
                 {option.benefits.map((benefit) => (
                   <li key={benefit} className="flex gap-2 text-sm leading-5 text-sftc-ink/70">
-                    <Check aria-hidden="true" className="mt-0.5 shrink-0 text-sftc-hope" size={16} />
+                    <Check aria-hidden="true" className="mt-0.5 shrink-0 text-sftc-brass" size={16} />
                     <span>{benefit}</span>
                   </li>
                 ))}

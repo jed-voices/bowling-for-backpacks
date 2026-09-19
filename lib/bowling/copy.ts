@@ -1,3 +1,40 @@
+export const bowlingClosedHero = {
+  headline: "Thank you for filling the lanes on July 16.",
+  body:
+    "Christmas in July: Bowling for Backpacks is complete for 2026. Teams, sponsors, and families turned a summer afternoon at Andy B's into backpacks, school supplies, and practical Back 2 School support for students in Oklahoma City.",
+};
+
+export const bowlingRecap = {
+  eyebrow: "Thank You",
+  headline: "Christmas in July is a wrap.",
+  body:
+    "On July 16 at Andy B's, teams, sponsors, and families filled the lanes so students across Oklahoma City could start the school year with backpacks, supplies, and people in their corner. Registration for this year is closed.",
+  creditsHeadline: "The people who made it happen",
+  credits: [
+    {
+      label: "Presenting Sponsor",
+      name: "The Kneedy Family",
+    },
+    {
+      label: "Family Night Sponsor",
+      name: "The Shank Family",
+    },
+    {
+      label: "Teams",
+      name: "Trisura Specialty Insurance Company (three teams)",
+    },
+  ],
+  closingNote:
+    "Thank you to every bowler, volunteer, and friend who showed up. Back 2 School support continues year-round at City Center.",
+  nextEvent: {
+    label: "What's next",
+    body:
+      "Stories From the Center, City Center's 9th Annual Gala, is Friday, October 30 at City + State.",
+    cta: "See the Gala",
+    href: "/gala",
+  },
+};
+
 export const bowlingCopy = {
   announcement:
     "July 16, 2026 / Andy B's / Christmas in July: Bowling for Backpacks.",

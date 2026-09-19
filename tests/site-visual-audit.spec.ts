@@ -1,3 +1,4 @@
+import { bowlingEventConfig } from "../lib/bowling/config";
 import { expect, test } from "@playwright/test";
 
 const baseUrl = process.env.PLAYWRIGHT_BASE_URL ?? "http://127.0.0.1:3000";
@@ -63,19 +64,27 @@ test.describe("site visual audit", () => {
     await page.goto(`${baseUrl}/bowling-for-backpacks`, {
       waitUntil: "networkidle",
     });
-    const sponsorshipSection = page.locator("#sponsorships");
-    // Headings render the sponsorship name only; the price sits in its own element.
-    // "Event Sponsor" was renamed to "Corporate Session Sponsor" (see
-    // legacySponsorshipAliases in lib/bowling/config.ts).
-    await expect(
-      sponsorshipSection.getByRole("heading", { name: "Corporate Session Sponsor" }),
-    ).toBeVisible();
-    await expect(
-      sponsorshipSection.getByRole("heading", { name: "Team Sponsor" }),
-    ).toBeVisible();
-    await expect(
-      sponsorshipSection.getByRole("heading", { name: "Lane Sponsor" }),
-    ).toBeVisible();
+    if (bowlingEventConfig.registrationClosed) {
+      // Recap mode: no registration paths, no sponsorship sales, no forms.
+      await expect(
+        page.getByRole("heading", { name: "Christmas in July is a wrap." }),
+      ).toBeVisible();
+      await expect(page.locator("form")).toHaveCount(0);
+      await expect(page.locator("#sponsorships")).toHaveCount(0);
+      await expect(page.locator("main")).not.toContainText(/\$\s*\d/);
+    } else {
+      const sponsorshipSection = page.locator("#sponsorships");
+      // Headings render the sponsorship name only; the price sits in its own element.
+      await expect(
+        sponsorshipSection.getByRole("heading", { name: "Corporate Session Sponsor" }),
+      ).toBeVisible();
+      await expect(
+        sponsorshipSection.getByRole("heading", { name: "Team Sponsor" }),
+      ).toBeVisible();
+      await expect(
+        sponsorshipSection.getByRole("heading", { name: "Lane Sponsor" }),
+      ).toBeVisible();
+    }
 
     await page.goto(`${baseUrl}/gala`, { waitUntil: "networkidle" });
     await expect(
@@ -143,7 +152,10 @@ test.describe("site visual audit", () => {
     const hoverTargets = [
       { path: "/", name: "View supporter events" },
       { path: "/supporters", name: "See details and register" },
-      { path: "/bowling-for-backpacks", name: "Register a Team" },
+      {
+        path: "/bowling-for-backpacks",
+        name: bowlingEventConfig.registrationClosed ? "See the Recap" : "Register a Team",
+      },
       { path: "/gala", name: "Register or Host a Table" },
     ];
 

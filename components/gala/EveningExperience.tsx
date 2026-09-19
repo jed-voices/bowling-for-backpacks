@@ -32,6 +32,7 @@ export function EveningExperience() {
         <div className="relative min-h-[520px]">
           <div className="absolute left-0 top-0 h-[360px] w-[74%] rounded-sm shadow-soft">
             <Image
+              style={{ objectPosition: galaPhotos.eveningPrimary.position }}
               src={galaPhotos.eveningPrimary.src}
               alt={galaPhotos.eveningPrimary.alt}
               fill
@@ -41,6 +42,7 @@ export function EveningExperience() {
           </div>
           <div className="absolute bottom-0 right-0 h-[300px] w-[62%] rounded-sm shadow-soft ring-8 ring-sftc-ivory">
             <Image
+              style={{ objectPosition: galaPhotos.eveningSecondary.position }}
               src={galaPhotos.eveningSecondary.src}
               alt={galaPhotos.eveningSecondary.alt}
               fill

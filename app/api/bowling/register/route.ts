@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { bowlingEventConfig } from "@/lib/bowling/config";
 import type { BowlingRegistrationInput } from "@/lib/bowling/types";
 import {
   createBowlingRegistration,
@@ -16,6 +17,18 @@ export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   let payload: unknown;
+  if (bowlingEventConfig.registrationClosed) {
+    return NextResponse.json(
+      {
+        errors: {
+          form:
+            "Registration for Christmas in July: Bowling for Backpacks is closed. The 2026 event was July 16. Email info@okcitycenter.org if you need help with an existing registration.",
+        },
+      },
+      { status: 410 },
+    );
+  }
+
 
   try {
     payload = await request.json();
